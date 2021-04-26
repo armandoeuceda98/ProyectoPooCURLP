@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class Conexion {
+    //Variables de conexión.
     private static String url = "jdbc:mysql://localhost:3306/inventario_master?zeroDateTimeBehavior=CONVERT_TO_NULL";
     private static String user = "root";
     private static String clave = "2Mas2son4.";
