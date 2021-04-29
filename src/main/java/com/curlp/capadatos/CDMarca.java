@@ -1,6 +1,6 @@
 
 package com.curlp.capadatos;
 
-public class CPMarca {
+public class CDMarca {
     
 }
