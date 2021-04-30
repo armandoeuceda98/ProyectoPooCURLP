@@ -89,7 +89,7 @@ public class CDProveedor {
     }
     
     public List<CLProveedor> mostrarProveedor() throws SQLException{
-        String sql = "{call sp_mostrarMarca()}";
+        String sql = "{call sp_mostrarProveedor()}";
         
         List<CLProveedor> myList= null;
         try {
@@ -116,7 +116,7 @@ public class CDProveedor {
     }
     
     public List<String> cargarProveedor() throws SQLException{
-        String sql = "{call sp_mostrarMarca()}";
+        String sql = "{call sp_mostrarProveedor()}";
         
         List<String> myList= null;
         try {
