@@ -1,9 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.curlp.capapresentacion;
+
+import com.curlp.capadatos.CDCliente;
+import com.curlp.capalogica.CLCliente;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -14,10 +19,258 @@ public class jFraCliente extends javax.swing.JFrame {
     /**
      * Creates new form jFraCliente
      */
-    public jFraCliente() {
+    public jFraCliente() throws SQLException {
         initComponents();
+        poblarTabla();
+        encontrarCorrelativo();
+        this.jTFNombre.requestFocus();
+        this.setLocationRelativeTo(null);
+    }
+    
+    //metodo para limpiar los datos de la tabla
+    private void limpiarTabla(){
+        DefaultTableModel dtm = (DefaultTableModel) this.jTblCliente.getModel();
+        
+        while (dtm.getRowCount() > 0){
+            dtm.removeRow(0);
+        }
+    }
+    
+    //Metodo para poblar de datos la tabla
+    private void poblarTabla() throws SQLException {
+        limpiarTabla();
+        
+        CDCliente cdc = new CDCliente();
+        List<CLCliente> miLista = cdc.obtenerCliente();
+        DefaultTableModel temp = (DefaultTableModel) this.jTblCliente.getModel();
+
+        miLista.stream().map((CLCliente cl) -> {
+        Object[] fila = new Object[8];
+        fila[0] = cl.getCodCliente();
+        fila[1] = cl.getNombre();
+        fila[2] = cl.getDocIdentidad();
+        fila[3] = cl.isBeneficio();
+        fila[4] = cl.getTelefono();
+        fila[5] = cl.getCorreo();
+        fila[6] = cl.getPorcentajeDescuento();
+        fila[7] = cl.isEstadoCliente();
+        
+        return fila;
+    }).forEachOrdered(temp::addRow);
+        
+    }
+    
+    //metodo para encontrar el correlativo del codCliente
+    private void encontrarCorrelativo() throws SQLException {
+        CDCliente cdc = new CDCliente();
+        CLCliente cl = new CLCliente();
+        
+        cl.setCodCliente(cdc.autIncrementarCodCliente());
+        this.jTFNombre.setText(String.valueOf(cl.getCodCliente()));
+    }
+    
+    
+    //Metodo para habilitar y desabilitar botones
+    private void habilitarBotones(boolean guardar, boolean editar, boolean eliminar, boolean limpiar){
+        this.jBtnGuardar.setEnabled(guardar);
+        this.jBtnEditar.setEnabled(editar);
+        this.jBtnEliminar.setEnabled(eliminar);
+        this.jBtnLimpiar.setEnabled(limpiar);
+        
+    }
+    
+    //metodo para limpiar las textfield
+    private void limpiarTF(){
+        this.jTFCodCliente.setText("");
+        this.jTFNombre.setText("");
+        this.jTFDocIdentidad.setText("");
+        this.jCBBeneficio.setEnabled(false);
+        this.jTFTelefono.setText("");
+        this.jTFCorreo.setText("");
+        this.jTFPorcentajeDescuento.setText("");
+        this.jCBEstado.setEnabled(false);
+        this.jTFNombre.requestFocus();
+    }
+    
+    //Metodo para validar la textfield
+    
+    private boolean validarTF(){
+        boolean estado;
+        
+        estado = !this.jTFNombre.getText().equals("");
+        estado = !this.jTFDocIdentidad.equals("");
+        estado = !this.jCBBeneficio.equals(false);
+        estado = !this.jTFTelefono.equals("");
+        estado = !this.jTFCorreo.equals("");
+        estado = !this.jTFPorcentajeDescuento.equals("");
+        estado = !this.jCBEstado.equals(false);
+        return estado;
+    }
+    
+    //metodo para insertar
+    private void insertarCliente() {
+        if (!validarTF()){
+            JOptionPane.showMessageDialog(null, "Tiene que ingresar los datos del cliente", "Control",
+                    JOptionPane.INFORMATION_MESSAGE);
+            this.jTFNombre.requestFocus();
+//            this.jTFDocIdentidad.requestFocus();
+//            this.jCBBeneficio.requestFocus();
+//            this.jTFTelefono.requestFocus();
+//            this.jTFCorreo.requestFocus();
+//            this.jTFPorcentajeDescuento.requestFocus();
+//            this.jCBEstado.requestFocus();
+        }else{
+            try{
+                CDCliente cdc = new CDCliente();
+                CLCliente cl = new CLCliente();
+                cl.setNombre(this.jTFNombre.getText().trim());
+                cl.setDocIdentidad(this.jTFDocIdentidad.getColumns());
+                cl.setBeneficio(this.jCBBeneficio.isEnabled());
+                cl.setTelefono(this.jTFTelefono.getText().trim());
+                cl.setCorreo(this.jTFCorreo.getText().trim());
+                cl.setPorcentajeDescuento(this.jTFPorcentajeDescuento.getColumns());
+                cl.setEstadoCliente(this.jCBEstado.isEnabled());
+                cdc.insertarCliente(cl);
+                
+                JOptionPane.showMessageDialog(null, "Registro almacenado", "Control",
+                                            JOptionPane.INFORMATION_MESSAGE);
+                
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, "Error al almacenar el registro:" + e);
+            this.jTFNombre.requestFocus();
+//            this.jTFDocIdentidad.requestFocus();
+//            this.jCBBeneficio.requestFocus();
+//            this.jTFTelefono.requestFocus();
+//            this.jTFCorreo.requestFocus();
+//            this.jTFPorcentajeDescuento.requestFocus();
+//            this.jCBEstado.requestFocus();
+            }
+        }
+    }
+    
+    //metodo para llamar el metodo de insertar 
+    private void guardar() throws SQLException{
+        insertarCliente();
+        poblarTabla();
+        habilitarBotones(true,false,false,true);
+        limpiarTF();
+        encontrarCorrelativo();
+        
     }
 
+    //metodo para actualiar
+    private void actualizarCliente() {
+        if (!validarTF()){
+            JOptionPane.showMessageDialog(null, "Tiene que ingresar los datos del cliente", "Control",
+                    JOptionPane.INFORMATION_MESSAGE);
+            this.jTFNombre.requestFocus();
+//            this.jTFDocIdentidad.requestFocus();
+//            this.jCBBeneficio.requestFocus();
+//            this.jTFTelefono.requestFocus();
+//            this.jTFCorreo.requestFocus();
+//            this.jTFPorcentajeDescuento.requestFocus();
+//            this.jCBEstado.requestFocus();
+        }else{
+            try{
+                CDCliente cdc = new CDCliente();
+                CLCliente cl = new CLCliente();
+                cl.setCodCliente(Integer.parseInt(this.jTFCodCliente.getText().trim()));
+                cl.setNombre(this.jTFNombre.getText().trim());
+                cl.setDocIdentidad(Integer.parseInt(this.jTFDocIdentidad.getText().trim()));
+                cl.setBeneficio(this.jCBBeneficio.isEnabled());
+                cl.setTelefono(this.jTFTelefono.getText().trim());
+                cl.setCorreo(this.jTFCorreo.getText().trim());
+                cl.setPorcentajeDescuento(Integer.parseInt(this.jTFPorcentajeDescuento.getText().trim()));
+                cl.setEstadoCliente(this.jCBEstado.isEnabled());
+                cdc.actualizarCliente(cl);
+                
+                JOptionPane.showMessageDialog(null, "Registro almacenado", "Control",
+                                            JOptionPane.INFORMATION_MESSAGE);
+                
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, "Error al actualizar el registro:" + e);
+            this.jTFNombre.requestFocus();
+//            this.jTFDocIdentidad.requestFocus();
+//            this.jCBBeneficio.requestFocus();
+//            this.jTFTelefono.requestFocus();
+//            this.jTFCorreo.requestFocus();
+//            this.jTFPorcentajeDescuento.requestFocus();
+//            this.jCBEstado.requestFocus();
+            }
+        }
+    }
+    
+    //metodo para selleccionar los datos de las filas para modificarlos
+    private void filaSeleccionada(){
+        if(this.jTblCliente.getSelectedRow() != -1) {
+            this.jTFCodCliente.setText(String.valueOf(this.jTblCliente.getValueAt(this.jTblCliente.getSelectedRow(),0)));
+            this.jTFNombre.setText(String.valueOf(this.jTblCliente.getValueAt(this.jTblCliente.getSelectedRow(),1)));
+            this.jTFDocIdentidad.setText(String.valueOf(this.jTblCliente.getValueAt(this.jTblCliente.getSelectedRow(),2)));
+            this.jCBBeneficio.setText(String.valueOf(this.jTblCliente.getValueAt(this.jTblCliente.getSelectedRow(),3)));
+            this.jTFTelefono.setText(String.valueOf(this.jTblCliente.getValueAt(this.jTblCliente.getSelectedRow(),4)));
+            this.jTFCorreo.setText(String.valueOf(this.jTblCliente.getValueAt(this.jTblCliente.getSelectedRow(),5)));
+            this.jTFPorcentajeDescuento.setText(String.valueOf(this.jTblCliente.getValueAt(this.jTblCliente.getSelectedRow(),6)));
+            this.jCBEstado.setText(String.valueOf(this.jTblCliente.getValueAt(this.jTblCliente.getSelectedRow(),7)));
+            
+        }
+    }
+    // metodo para llamar el metodo de actualizar
+    private void editar() throws SQLException{
+        actualizarCliente();
+        poblarTabla();
+        habilitarBotones(true,false,false,true);
+        limpiarTF();
+        encontrarCorrelativo();
+        
+    }
+    
+    //metodo para eliminar
+    private void eliminarCliente(){
+                    try{
+                CDCliente cdc = new CDCliente();
+                CLCliente cl = new CLCliente();
+                cl.setCodCliente(Integer.parseInt(this.jTFCodCliente.getText().trim()));
+             
+                cdc.eliminarCliente(cl);
+                
+                JOptionPane.showMessageDialog(null, "Registro eliminado", "Control",
+                                            JOptionPane.INFORMATION_MESSAGE);
+                
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, "Error al eliminar el registro:" + e);
+            this.jTFNombre.requestFocus();
+//            this.jTFDocIdentidad.requestFocus();
+//            this.jCBBeneficio.requestFocus();
+//            this.jTFTelefono.requestFocus();
+//            this.jTFCorreo.requestFocus();
+//            this.jTFPorcentajeDescuento.requestFocus();
+//            this.jCBEstado.requestFocus();
+            }
+    }
+    
+    private void eliminar() throws SQLException{
+        int resp = JOptionPane.showConfirmDialog(null, "Seguro de que desea eliminar?","Control",
+                                                JOptionPane.YES_NO_OPTION);
+        if(resp == JOptionPane.YES_OPTION){
+            try{
+                eliminarCliente();
+        poblarTabla();
+        habilitarBotones(true,false,false,true);
+        limpiarTF();
+        encontrarCorrelativo();
+                
+            } catch (SQLException ex){
+                JOptionPane.showMessageDialog(null, "Error al eliminar el registro:" + ex);
+            }
+        }else{
+            limpiarTF();
+        }
+    }
+    
+    
+    
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -53,7 +306,7 @@ public class jFraCliente extends javax.swing.JFrame {
         jCBEstado = new javax.swing.JCheckBox();
         jPanel5 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jTblCliente = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -127,13 +380,37 @@ public class jFraCliente extends javax.swing.JFrame {
         jLabel7.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel7.setText("Porcentaje Descuento");
 
+        jTFCodCliente.setEditable(false);
+
         jBtnGuardar.setText("Guardar");
+        jBtnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtnGuardarActionPerformed(evt);
+            }
+        });
 
         jBtnEditar.setText("Editar");
+        jBtnEditar.setEnabled(false);
+        jBtnEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtnEditarActionPerformed(evt);
+            }
+        });
 
         jBtnEliminar.setText("Eliminar");
+        jBtnEliminar.setEnabled(false);
+        jBtnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtnEliminarActionPerformed(evt);
+            }
+        });
 
         jBtnLimpiar.setText("Limpiar");
+        jBtnLimpiar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtnLimpiarActionPerformed(evt);
+            }
+        });
 
         jCBBeneficio.setText("Beneficio");
 
@@ -230,7 +507,7 @@ public class jFraCliente extends javax.swing.JFrame {
         jPanel5.setBackground(new java.awt.Color(153, 153, 255));
         jPanel5.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jTblCliente.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -246,7 +523,12 @@ public class jFraCliente extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+        jTblCliente.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTblClienteMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(jTblCliente);
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -314,6 +596,45 @@ public class jFraCliente extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jLabel10MousePressed
 
+    private void jBtnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnGuardarActionPerformed
+        try {
+            // TODO add your handling code here:
+            guardar();
+        } catch (SQLException ex) {
+                            JOptionPane.showMessageDialog(null, "Error al almacenar el registro:" + ex);
+        }
+    }//GEN-LAST:event_jBtnGuardarActionPerformed
+
+    private void jTblClienteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTblClienteMouseClicked
+        // TODO add your handling code here:
+        filaSeleccionada();
+        habilitarBotones(false,true,true,false);
+    }//GEN-LAST:event_jTblClienteMouseClicked
+
+    private void jBtnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnEditarActionPerformed
+        try {
+            // TODO add your handling code here:
+            editar();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error al editar el registro:" + ex);
+        }
+    }//GEN-LAST:event_jBtnEditarActionPerformed
+
+    private void jBtnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnEliminarActionPerformed
+        try {
+            // TODO add your handling code here:
+            eliminar();
+        } catch (SQLException ex) {
+JOptionPane.showMessageDialog(null, "Error al eliminar el registro:" + ex);
+        }
+        
+    }//GEN-LAST:event_jBtnEliminarActionPerformed
+
+    private void jBtnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnLimpiarActionPerformed
+        // TODO add your handling code here:
+        limpiarTF();
+    }//GEN-LAST:event_jBtnLimpiarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -344,7 +665,11 @@ public class jFraCliente extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new jFraCliente().setVisible(true);
+                try {
+                    new jFraCliente().setVisible(true);
+                } catch (SQLException ex) {
+                    Logger.getLogger(jFraCliente.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
@@ -376,6 +701,6 @@ public class jFraCliente extends javax.swing.JFrame {
     private javax.swing.JTextField jTFNombre;
     private javax.swing.JTextField jTFPorcentajeDescuento;
     private javax.swing.JTextField jTFTelefono;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable jTblCliente;
     // End of variables declaration//GEN-END:variables
 }
