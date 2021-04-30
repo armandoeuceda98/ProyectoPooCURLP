@@ -1,7 +1,7 @@
 
 package com.curlp.capadatos;
 
-import com.curlp.capalogica.CLFactura;
+import com.curlp.capalogica.CLDetFactura;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,26 +11,28 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 
-public class CDFactura {
-    
+public class CDDetFactura {
     //Variables de conexión y de consulta
     private final Connection cn;
     PreparedStatement ps;
     ResultSet rs;
     Statement st;
 
-    public CDFactura() throws SQLException{
+    public CDDetFactura() throws SQLException{
         this.cn = Conexion.conectar();
     }
     
     //Método para insertar una ciudad en tabla
-    public void insertarFactura(CLFactura cl)throws SQLException{
-        String sql = "{CALL sp_insertarFactura(?)}";
+    public void insertarFactura(CLDetFactura cl)throws SQLException{
+        String sql = "{CALL sp_insertarDetFactura(?)}";
         
         try{
             ps = cn.prepareCall(sql);
-            ps.setDate(1, cl.getFecha());
-            ps.setInt(2, cl.getCodCliente());
+            ps.setInt(1, cl.getCodDetFactura());
+            ps.setInt(2, cl.getCantidad());
+            ps.setDouble(3, cl.getPrecio());
+            ps.setInt(4, cl.getCodProducto());
+            ps.setInt(5, cl.getCodFactura());
             ps.execute();
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
@@ -38,14 +40,16 @@ public class CDFactura {
     }
     
     //Método para actualizar la ciudad en la tabla
-    public void actalizarFactura(CLFactura cl)throws SQLException{
-        String sql = "{CALL sp_actualizarFactura(?)}";
+    public void actalizarFactura(CLDetFactura cl)throws SQLException{
+        String sql = "{CALL sp_actualizarDetFactura(?)}";
         
         try{
             ps = cn.prepareCall(sql);
-            ps.setInt(1, cl.getCodFactura());
-            ps.setDate(2, cl.getFecha());
-            ps.setInt(3, cl.getCodCliente());
+            ps.setInt(1, cl.getCodDetFactura());
+            ps.setInt(2, cl.getCantidad());
+            ps.setDouble(3, cl.getPrecio());
+            ps.setInt(4, cl.getCodProducto());
+            ps.setInt(5, cl.getCodFactura());
             ps.execute();
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
@@ -53,12 +57,12 @@ public class CDFactura {
     }
     
     //Método para eliminar la ciudad en la tabla
-    public void eliminarFactura(CLFactura cl)throws SQLException{
-        String sql = "{CALL sp_eliminarFactura(?)}";
+    public void eliminarFactura(CLDetFactura cl)throws SQLException{
+        String sql = "{CALL sp_eliminarDetFactura(?)}";
         
         try{
             ps = cn.prepareCall(sql);
-            ps.setInt(1, cl.getCodFactura());
+            ps.setInt(1, cl.getCodDetFactura());
             ps.execute();
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
@@ -66,34 +70,34 @@ public class CDFactura {
     }
     
     //Método para obtener el id autoincrementado de la factura
-    public int autoIncrementarFacturaCod()throws SQLException{
+    public int autoIncrementarDetFacturaCod()throws SQLException{
         
-        int codFactura = 0;
+        int codDetFactura = 0;
         
-        String sql = "{CALL sp_autoIncrementarCodFactura()}";
+        String sql = "{CALL sp_autoIncrementarCodDetFactura()}";
         
         try{
             st = cn.createStatement();
             rs = st.executeQuery(sql);
             rs.next();
             
-            codFactura = rs.getInt("codFactura");
+            codDetFactura = rs.getInt("codDetFactura");
             
-            if(codFactura == 0){
-                codFactura = 1;
+            if(codDetFactura == 0){
+                codDetFactura = 1;
             }
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
         }
-        return codFactura;
+        return codDetFactura;
     }
     
     //Método para poblar de datos la tabla
-    public List<CLFactura> obtenerListaFacturas() throws SQLException{
+    public List<CLDetFactura> obtenerListaFacturas() throws SQLException{
         
-        String sql = "{CALL sp_mostrarFactura()}";
+        String sql = "{CALL sp_mostrarDetFactura()}";
         
-        List<CLFactura> miLista = null;
+        List<CLDetFactura> miLista = null;
         
         try{
             st = cn.createStatement();
@@ -102,11 +106,13 @@ public class CDFactura {
             miLista  = new ArrayList<>();
             
             while(rs.next()){
-                CLFactura cl = new CLFactura();
+                CLDetFactura cl = new CLDetFactura();
                 
+                cl.setCodDetFactura(rs.getInt("codDetFactura"));
+                cl.setCantidad(rs.getInt("cantidad"));
+                cl.setPrecio(rs.getDouble("precio"));
+                cl.setCodProducto(rs.getInt("codProducto"));
                 cl.setCodFactura(rs.getInt("codFactura"));
-                cl.setFecha(rs.getDate("fecha"));
-                cl.setCodCliente(rs.getInt("codCliente"));
                 miLista.add(cl);
             }
         }catch(SQLException e){
@@ -116,24 +122,7 @@ public class CDFactura {
     }
     
     //Método para llenar el combo de factura
-    public List<String> cargarFactura() throws SQLException{
-        String sql = "{call sp_mostrarFactura()}";
-        
-        List<String> myList= null;
-        try {
-            st = cn.createStatement();
-            rs = st.executeQuery(sql);
             
-            myList = new ArrayList<>();
-            myList.add("--Seleccione--");
-            while(rs.next()){
-                myList.add(rs.getString("codFactura"));
-            }
-        } catch (SQLException e){
-            JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
-        }
-        return myList;
-    }        
             
            
 }
