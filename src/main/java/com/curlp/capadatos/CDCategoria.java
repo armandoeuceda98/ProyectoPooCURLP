@@ -1,108 +1,105 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.curlp.capadatos;
 
 
+import com.curlp.capalogica.CLCategoria;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import javax.swing.JOptionPane;
-import com.curlp.capalogica.CLEmpleado;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
 
-public class CDEmpleado {
-
+/**
+ *
+ * @author erick
+ */
+public class CDCategoria {
+    
     private final Connection cn;
     PreparedStatement ps;
     ResultSet rs;
     Statement st;
-
-    public CDEmpleado() throws SQLException {
+    
+    
+    public CDCategoria() throws SQLException {
         this.cn = Conexion.conectar();
     }
-
-    public void insertarEmpleado(CLEmpleado cl) throws SQLException {
-        String sql = "{CALL sp_insertarEmpleado(?,?,?,?,?)}";
+    
+    public void insertarCategoria(CLCategoria cl) throws SQLException {
+        String sql = "{CALL sp_insertarEmpleado(?)}";
         try {
             ps = cn.prepareCall(sql);
             ps.setString(1, cl.getNombre());
-            ps.setString(2, cl.getApellidos());
-            ps.setString(3, cl.getDireccion());
-            ps.setString(4, cl.getTelefono());
-            ps.setBoolean(5, cl.isEstadoEmpleado());
             ps.execute();
 
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
         }
     }
-
-    public void actualizarEmpleado(CLEmpleado cl) throws SQLException {
-        String sql = "{CALL sp_actualizarEmpleado(?,?,?,?,?,?)}";
+        public void actualizarCategoria(CLCategoria cl) throws SQLException {
+        String sql = "{CALL sp_actualizarEmpleado(?,?)}";
         try {
             ps = cn.prepareCall(sql);
-            ps.setInt(1, cl.getCodEmpleado());
+            ps.setInt(1, cl.getIdCategoria());
             ps.setString(2, cl.getNombre());
-            ps.setString(3, cl.getApellidos());
-            ps.setString(4, cl.getDireccion());
-            ps.setString(5, cl.getTelefono());
-            ps.setBoolean(6, cl.isEstadoEmpleado());
             ps.execute();
 
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
         }
     }
-
-    public void eliminarEmpleado(CLEmpleado cl) throws SQLException {
-        String sql = "{CALL sp_eliminarEmpleado(?)}";
+        
+        public void eliminarCategoria(CLCategoria cl) throws SQLException {
+        String sql = "{CALL sp_eliminarCategoria(?)}";
         try {
             ps = cn.prepareCall(sql);
-            ps.setInt(1, cl.getCodEmpleado());
+            ps.setInt(1, cl.getIdCategoria());
             ps.execute();
 
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
         }
     }
-
-    public int autoIncrementarEmpleado() throws SQLException {
-        int codEmpleado = 0;
-        String sql = "{call sp_autoIncrementarCodEmpleado()}";
+        
+        public int autoIncrementarCategoria() throws SQLException {
+        int idCategoria = 0;
+        String sql = "{call sp_autoIncrementarIdCategoria()}";
         try {
            st = cn.createStatement();
            rs = st.executeQuery(sql);
            rs.next();
 
-           codEmpleado = rs.getInt("codEmpleado");
-           if(codEmpleado == 0){
-                codEmpleado = 1;
+           idCategoria = rs.getInt("idCategoria");
+           if(idCategoria == 0){
+                idCategoria = 1;
             }
         
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
         }
-        return codEmpleado;
+        return idCategoria;
     }
     
-public List<CLEmpleado> obtenerEmpleado() throws SQLException{
+        public List<CLCategoria> obtenerCategoria() throws SQLException{
 
-    String sql = "{call sp_mostrarEmpleado()}";
-    List<CLEmpleado> miLista= null;
+    String sql = "{call sp_mostrarCategoria()}";
+    List<CLCategoria> miLista= null;
     try{
        st = cn.createStatement();
             rs = st.executeQuery(sql);
             
             miLista = new ArrayList<>();
             while(rs.next()){
-        CLEmpleado cl = new CLEmpleado();
-        cl.setCodEmpleado(rs.getInt("codEmpleado"));
+        CLCategoria cl = new CLCategoria();
+        cl.setIdCategoria(rs.getInt("idCategoria"));
         cl.setNombre(rs.getString("nombre"));
-        cl.setApellidos(rs.getString("apellidos"));
-        cl.setDireccion(rs.getString("direccion"));
-        cl.setTelefono(rs.getString("telefono"));
-        cl.setEstadoEmpleado(rs.getBoolean("estadoEmpleado"));
         miLista.add(cl);
     }
             
@@ -112,9 +109,10 @@ public List<CLEmpleado> obtenerEmpleado() throws SQLException{
     return miLista;
     
 }
-public List<String> cargarComboEmpleado() throws SQLException{
+        
+        public List<String> cargarComboCategoria() throws SQLException{
 
-    String sql = "{call sp_mostrarEmpleado()}";
+    String sql = "{call sp_mostrarCategoria()}";
     List<String> miLista= null;
     try{
        st = cn.createStatement();
@@ -133,7 +131,9 @@ public List<String> cargarComboEmpleado() throws SQLException{
     return miLista;
     
 }
-
-
-
+        
+    
+    
+    
+    
 }
