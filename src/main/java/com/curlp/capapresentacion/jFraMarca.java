@@ -102,6 +102,8 @@ public class jFraMarca extends javax.swing.JFrame {
         this.jTFNombreMarca.setText("");
         this.jTFBuscar.setText("");
         this.jCBColumna.setSelectedIndex(0);
+        this.jTblMarca.clearSelection();
+        habilitarBotones(true, false, false, true);
         this.jTFNombreMarca.requestFocus();
     }
     //Validar TextFields
@@ -259,12 +261,14 @@ public class jFraMarca extends javax.swing.JFrame {
         setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 0));
+        jPanel1.setBackground(new java.awt.Color(174, 159, 228));
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        jLabel3.setForeground(java.awt.Color.white);
         jLabel3.setText("Gestión de Marcas");
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        jLabel5.setForeground(java.awt.Color.white);
         jLabel5.setText("X");
         jLabel5.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -300,7 +304,7 @@ public class jFraMarca extends javax.swing.JFrame {
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 650, 50));
 
-        jPanel2.setBackground(new java.awt.Color(0, 0, 0));
+        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -315,20 +319,23 @@ public class jFraMarca extends javax.swing.JFrame {
 
         getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 44, 650, 20));
 
-        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel3.setBackground(new java.awt.Color(204, 204, 204));
 
-        jPanel4.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel4.setBackground(new java.awt.Color(51, 34, 89));
         jPanel4.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel1.setForeground(java.awt.Color.white);
         jLabel1.setText("Id Marca");
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel2.setForeground(java.awt.Color.white);
         jLabel2.setText("Nombre de marca");
 
         jTFIdMarca.setEditable(false);
 
-        jBtnGuardar.setBackground(new java.awt.Color(255, 255, 255));
+        jBtnGuardar.setBackground(new java.awt.Color(119, 74, 217));
+        jBtnGuardar.setForeground(java.awt.Color.white);
         jBtnGuardar.setText("Guardar");
         jBtnGuardar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -336,7 +343,8 @@ public class jFraMarca extends javax.swing.JFrame {
             }
         });
 
-        jBtnEditar.setBackground(new java.awt.Color(255, 255, 255));
+        jBtnEditar.setBackground(new java.awt.Color(119, 74, 217));
+        jBtnEditar.setForeground(java.awt.Color.white);
         jBtnEditar.setText("Editar");
         jBtnEditar.setEnabled(false);
         jBtnEditar.addActionListener(new java.awt.event.ActionListener() {
@@ -345,7 +353,8 @@ public class jFraMarca extends javax.swing.JFrame {
             }
         });
 
-        jBtnEliminar.setBackground(new java.awt.Color(255, 255, 255));
+        jBtnEliminar.setBackground(new java.awt.Color(119, 74, 217));
+        jBtnEliminar.setForeground(java.awt.Color.white);
         jBtnEliminar.setText("Eliminar");
         jBtnEliminar.setEnabled(false);
         jBtnEliminar.addActionListener(new java.awt.event.ActionListener() {
@@ -354,7 +363,8 @@ public class jFraMarca extends javax.swing.JFrame {
             }
         });
 
-        jBtnLimpiar.setBackground(new java.awt.Color(255, 255, 255));
+        jBtnLimpiar.setBackground(new java.awt.Color(119, 74, 217));
+        jBtnLimpiar.setForeground(java.awt.Color.white);
         jBtnLimpiar.setText("Limpiar");
         jBtnLimpiar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -411,7 +421,7 @@ public class jFraMarca extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jPanel5.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel5.setBackground(new java.awt.Color(51, 34, 89));
         jPanel5.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         jPanel5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -441,19 +451,26 @@ public class jFraMarca extends javax.swing.JFrame {
 
         jPanel5.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1, 1, 356, 131));
 
+        jLabel6.setForeground(java.awt.Color.white);
         jLabel6.setText("Buscar:");
         jPanel5.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(11, 138, -1, -1));
         jPanel5.add(jTFBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 150, 64, -1));
 
+        jLabel7.setForeground(java.awt.Color.white);
         jLabel7.setText("Columna:");
         jPanel5.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(21, 152, -1, -1));
 
+        jCBColumna.setBackground(new java.awt.Color(119, 74, 217));
+        jCBColumna.setForeground(java.awt.Color.white);
         jCBColumna.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "--Seleccione--", "Id Marca", "Nombre Marca" }));
         jPanel5.add(jCBColumna, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 149, -1, -1));
 
+        jLabel8.setForeground(java.awt.Color.white);
         jLabel8.setText("Dato:");
         jPanel5.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 150, -1, -1));
 
+        jBtnBuscar.setBackground(new java.awt.Color(119, 74, 217));
+        jBtnBuscar.setForeground(java.awt.Color.white);
         jBtnBuscar.setText("Buscar");
         jBtnBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -493,8 +510,11 @@ public class jFraMarca extends javax.swing.JFrame {
     }//GEN-LAST:event_jLabel5MousePressed
 
     private void jBtnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnLimpiarActionPerformed
-        if(validarTF()){
+        try {
             limpiarTF();
+            encontrarCorrelativo();
+        } catch (SQLException ex) {
+            Logger.getLogger(jFraMarca.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jBtnLimpiarActionPerformed
 
