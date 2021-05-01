@@ -303,6 +303,7 @@ public class jFraCliente extends javax.swing.JFrame {
         jTblCliente = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setUndecorated(true);
 
         jPanel1.setBackground(new java.awt.Color(0, 0, 204));
 
@@ -602,7 +603,7 @@ public class jFraCliente extends javax.swing.JFrame {
     private void jTblClienteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTblClienteMouseClicked
         // TODO add your handling code here:
         filaSeleccionada();
-        habilitarBotones(false, true, true, false);
+        habilitarBotones(false, true, true, true);
     }//GEN-LAST:event_jTblClienteMouseClicked
 
     private void jBtnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnEditarActionPerformed
