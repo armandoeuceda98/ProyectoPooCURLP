@@ -124,7 +124,7 @@ public class jFraCliente extends javax.swing.JFrame {
                 CDCliente cdc = new CDCliente();
                 CLCliente cl = new CLCliente();
                 cl.setNombre(this.jTFNombre.getText().trim());
-                cl.setDocIdentidad(this.jTFDocIdentidad.getColumns());
+                cl.setDocIdentidad(this.jTFDocIdentidad.getText().trim());
                 cl.setBeneficio(this.jCBBeneficio.isEnabled());
                 cl.setTelefono(this.jTFTelefono.getText().trim());
                 cl.setCorreo(this.jTFCorreo.getText().trim());
@@ -176,7 +176,7 @@ public class jFraCliente extends javax.swing.JFrame {
                 CLCliente cl = new CLCliente();
                 cl.setCodCliente(Integer.parseInt(this.jTFCodCliente.getText().trim()));
                 cl.setNombre(this.jTFNombre.getText().trim());
-                cl.setDocIdentidad(Integer.parseInt(this.jTFDocIdentidad.getText().trim()));
+                cl.setDocIdentidad(this.jTFDocIdentidad.getText().trim());
                 cl.setBeneficio(this.jCBBeneficio.isEnabled());
                 cl.setTelefono(this.jTFTelefono.getText().trim());
                 cl.setCorreo(this.jTFCorreo.getText().trim());

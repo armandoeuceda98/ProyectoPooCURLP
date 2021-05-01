@@ -4,7 +4,7 @@ package com.curlp.capalogica;
 public class CLCliente {
     private int codCliente;
     private String nombre;
-    private int docIdentidad;
+    private String docIdentidad;
     private boolean beneficio;
     private String telefono;
     private String correo;
@@ -27,11 +27,11 @@ public class CLCliente {
         this.nombre = nombre;
     }
 
-    public int getDocIdentidad() {
+    public String getDocIdentidad() {
         return docIdentidad;
     }
 
-    public void setDocIdentidad(int docIdentidad) {
+    public void setDocIdentidad(String docIdentidad) {
         this.docIdentidad = docIdentidad;
     }
 

@@ -29,7 +29,7 @@ public class CDCliente {
         try {
             ps = cn.prepareCall(sql);
             ps.setString(1, cl.getNombre());
-            ps.setInt(2, cl.getDocIdentidad());
+            ps.setString(2, cl.getDocIdentidad());
             ps.setBoolean(3, cl.isBeneficio());
             ps.setString(4, cl.getTelefono());
             ps.setString(5, cl.getCorreo());
@@ -50,7 +50,7 @@ public class CDCliente {
             ps = cn.prepareCall(sql);
             ps.setInt(1, cl.getCodCliente());
             ps.setString(2, cl.getNombre());
-            ps.setInt(3, cl.getDocIdentidad());
+            ps.setString(3, cl.getDocIdentidad());
             ps.setBoolean(4, cl.isBeneficio());
             ps.setString(5, cl.getTelefono());
             ps.setString(6, cl.getCorreo());
@@ -114,7 +114,7 @@ public class CDCliente {
                 
                 cl.setCodCliente(rs.getInt("codCliente"));
                 cl.setNombre(rs.getString("nombre"));
-                cl.setDocIdentidad(rs.getInt("docIdentidad"));
+                cl.setDocIdentidad(rs.getString("docIdentidad"));
                 cl.setBeneficio(rs.getBoolean("beneficio"));
                 cl.setTelefono(rs.getString("telefono"));
                 cl.setCorreo(rs.getString("correo"));
