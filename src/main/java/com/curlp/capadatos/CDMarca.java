@@ -18,8 +18,8 @@ public class CDMarca {
     PreparedStatement ps;
     Statement st;
     ResultSet rs;
-
-    public CDMarca(Connection cn) throws SQLException{
+    
+    public CDMarca() throws SQLException{
         this.cn = Conexion.conectar();
     }
     
