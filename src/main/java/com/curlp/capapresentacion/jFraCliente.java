@@ -15,9 +15,6 @@ import javax.swing.table.DefaultTableModel;
  */
 public class jFraCliente extends javax.swing.JFrame {
 
-    /**
-     * Creates new form jFraCliente
-     */
     public jFraCliente() throws SQLException {
         initComponents();
         poblarTabla();
@@ -38,11 +35,9 @@ public class jFraCliente extends javax.swing.JFrame {
     //Metodo para poblar de datos la tabla
     private void poblarTabla() throws SQLException {
         limpiarTabla();
-
         CDCliente cdc = new CDCliente();
         List<CLCliente> miLista = cdc.obtenerCliente();
         DefaultTableModel temp = (DefaultTableModel) this.jTblCliente.getModel();
-
         miLista.stream().map((CLCliente cl) -> {
             Object[] fila = new Object[8];
             fila[0] = cl.getCodCliente();
@@ -53,17 +48,14 @@ public class jFraCliente extends javax.swing.JFrame {
             fila[5] = cl.getCorreo();
             fila[6] = cl.getPorcentajeDescuento();
             fila[7] = cl.isEstadoCliente();
-
             return fila;
         }).forEachOrdered(temp::addRow);
-
     }
 
     //metodo para encontrar el correlativo del codCliente
     private void encontrarCorrelativo() throws SQLException {
         CDCliente cdc = new CDCliente();
         CLCliente cl = new CLCliente();
-
         cl.setCodCliente(cdc.autoIncrementarCodCliente());
         this.jTFCodCliente.setText(String.valueOf(cl.getCodCliente()));
     }
@@ -74,7 +66,6 @@ public class jFraCliente extends javax.swing.JFrame {
         this.jBtnEditar.setEnabled(editar);
         this.jBtnEliminar.setEnabled(eliminar);
         this.jBtnLimpiar.setEnabled(limpiar);
-
     }
 
     //metodo para limpiar las textfield
@@ -89,11 +80,14 @@ public class jFraCliente extends javax.swing.JFrame {
         this.jCBEstado.setSelected(false);
         this.jTFNombre.requestFocus();
     }
+    private void limpiarBusqueda(){
+        this.jCBColumna.setSelectedIndex(0);
+        this.jTFBuscar.setText("");
+    }
 
     //Metodo para validar la textfield
     private boolean validarTF() {
         boolean estado;
-
         estado = !this.jTFNombre.getText().equals("");
         estado = !this.jTFDocIdentidad.equals("");
         estado = !this.jCBBeneficio.equals(false);
@@ -110,12 +104,6 @@ public class jFraCliente extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Tiene que ingresar los datos del cliente", "Control",
                     JOptionPane.INFORMATION_MESSAGE);
             this.jTFNombre.requestFocus();
-//            this.jTFDocIdentidad.requestFocus();
-//            this.jCBBeneficio.requestFocus();
-//            this.jTFTelefono.requestFocus();
-//            this.jTFCorreo.requestFocus();
-//            this.jTFPorcentajeDescuento.requestFocus();
-//            this.jCBEstado.requestFocus();
         } else {
             try {
                 CDCliente cdc = new CDCliente();
@@ -128,19 +116,11 @@ public class jFraCliente extends javax.swing.JFrame {
                 cl.setPorcentajeDescuento(Float.parseFloat(this.jTFPorcentajeDescuento.getText().trim()));
                 cl.setEstadoCliente(this.jCBEstado.isSelected());
                 cdc.insertarCliente(cl);
-
                 JOptionPane.showMessageDialog(null, "Registro almacenado", "Control",
                         JOptionPane.INFORMATION_MESSAGE);
-
             } catch (SQLException e) {
                 JOptionPane.showMessageDialog(null, "Error al almacenar el registro:" + e);
                 this.jTFNombre.requestFocus();
-//            this.jTFDocIdentidad.requestFocus();
-//            this.jCBBeneficio.requestFocus();
-//            this.jTFTelefono.requestFocus();
-//            this.jTFCorreo.requestFocus();
-//            this.jTFPorcentajeDescuento.requestFocus();
-//            this.jCBEstado.requestFocus();
             }
         }
     }
@@ -152,7 +132,6 @@ public class jFraCliente extends javax.swing.JFrame {
         habilitarBotones(true, false, false, true);
         limpiarTF();
         encontrarCorrelativo();
-
     }
 
     //metodo para actualiar
@@ -161,12 +140,6 @@ public class jFraCliente extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Tiene que ingresar los datos del cliente", "Control",
                     JOptionPane.INFORMATION_MESSAGE);
             this.jTFNombre.requestFocus();
-//            this.jTFDocIdentidad.requestFocus();
-//            this.jCBBeneficio.requestFocus();
-//            this.jTFTelefono.requestFocus();
-//            this.jTFCorreo.requestFocus();
-//            this.jTFPorcentajeDescuento.requestFocus();
-//            this.jCBEstado.requestFocus();
         } else {
             try {
                 CDCliente cdc = new CDCliente();
@@ -180,19 +153,11 @@ public class jFraCliente extends javax.swing.JFrame {
                 cl.setPorcentajeDescuento(Float.parseFloat(this.jTFPorcentajeDescuento.getText().trim()));
                 cl.setEstadoCliente(this.jCBEstado.isSelected());
                 cdc.actualizarCliente(cl);
-
                 JOptionPane.showMessageDialog(null, "Registro almacenado", "Control",
                         JOptionPane.INFORMATION_MESSAGE);
-
             } catch (SQLException e) {
                 JOptionPane.showMessageDialog(null, "Error al actualizar el registro:" + e);
                 this.jTFNombre.requestFocus();
-//            this.jTFDocIdentidad.requestFocus();
-//            this.jCBBeneficio.requestFocus();
-//            this.jTFTelefono.requestFocus();
-//            this.jTFCorreo.requestFocus();
-//            this.jTFPorcentajeDescuento.requestFocus();
-//            this.jCBEstado.requestFocus();
             }
         }
     }
@@ -203,12 +168,11 @@ public class jFraCliente extends javax.swing.JFrame {
             this.jTFCodCliente.setText(String.valueOf(this.jTblCliente.getValueAt(this.jTblCliente.getSelectedRow(), 0)));
             this.jTFNombre.setText(String.valueOf(this.jTblCliente.getValueAt(this.jTblCliente.getSelectedRow(), 1)));
             this.jTFDocIdentidad.setText(String.valueOf(this.jTblCliente.getValueAt(this.jTblCliente.getSelectedRow(), 2)));
-            this.jCBBeneficio.setText(String.valueOf(this.jTblCliente.getValueAt(this.jTblCliente.getSelectedRow(), 3)));
+            this.jCBBeneficio.setSelected((boolean) this.jTblCliente.getValueAt(this.jTblCliente.getSelectedRow(), 3));
             this.jTFTelefono.setText(String.valueOf(this.jTblCliente.getValueAt(this.jTblCliente.getSelectedRow(), 4)));
             this.jTFCorreo.setText(String.valueOf(this.jTblCliente.getValueAt(this.jTblCliente.getSelectedRow(), 5)));
             this.jTFPorcentajeDescuento.setText(String.valueOf(this.jTblCliente.getValueAt(this.jTblCliente.getSelectedRow(), 6)));
-            this.jCBEstado.setText(String.valueOf(this.jTblCliente.getValueAt(this.jTblCliente.getSelectedRow(), 7)));
-
+            this.jCBEstado.setSelected((boolean) (this.jTblCliente.getValueAt(this.jTblCliente.getSelectedRow(), 7)));
         }
     }
 
@@ -219,7 +183,6 @@ public class jFraCliente extends javax.swing.JFrame {
         habilitarBotones(true, false, false, true);
         limpiarTF();
         encontrarCorrelativo();
-
     }
 
     //metodo para eliminar
@@ -228,21 +191,12 @@ public class jFraCliente extends javax.swing.JFrame {
             CDCliente cdc = new CDCliente();
             CLCliente cl = new CLCliente();
             cl.setCodCliente(Integer.parseInt(this.jTFCodCliente.getText().trim()));
-
             cdc.eliminarCliente(cl);
-
             JOptionPane.showMessageDialog(null, "Registro eliminado", "Control",
                     JOptionPane.INFORMATION_MESSAGE);
-
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error al eliminar el registro:" + e);
             this.jTFNombre.requestFocus();
-//            this.jTFDocIdentidad.requestFocus();
-//            this.jCBBeneficio.requestFocus();
-//            this.jTFTelefono.requestFocus();
-//            this.jTFCorreo.requestFocus();
-//            this.jTFPorcentajeDescuento.requestFocus();
-//            this.jCBEstado.requestFocus();
         }
     }
 
@@ -256,13 +210,69 @@ public class jFraCliente extends javax.swing.JFrame {
                 habilitarBotones(true, false, false, true);
                 limpiarTF();
                 encontrarCorrelativo();
-
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(null, "Error al eliminar el registro:" + ex);
             }
         } else {
             limpiarTF();
         }
+    }
+            
+    private void buscar() throws SQLException {
+        if (!validarBuscar()) {
+            JOptionPane.showMessageDialog(null, "Tiene que ingresar todos los datos de busqueda.", "Inventarios Master", 1);
+        } else {
+            boolean estado = false;
+            for (int i = 0; i < this.jTblCliente.getRowCount(); i++) {
+                if (this.jCBColumna.getSelectedIndex() == 1) {
+                    if (this.jTblCliente.getValueAt(i, 0) == Integer.valueOf(this.jTFBuscar.getText())) {;
+                        String dato = "Codigo Cliente: " + this.jTblCliente.getValueAt(i, 0)
+                                + "\nNombre: " + this.jTblCliente.getValueAt(i, 1)
+                                + "\nDocumento Identidad: " + this.jTblCliente.getValueAt(i, 2)
+                                + "\nBeneficio: " + this.jTblCliente.getValueAt(i, 3)
+                                + "\nTelefono: " + this.jTblCliente.getValueAt(i, 4)
+                                + "\nCorreo: " + this.jTblCliente.getValueAt(i, 5)
+                                + "\nPorcentaje Descuento: " + this.jTblCliente.getValueAt(i, 6)
+                                + "\nEstado Cliente: " + this.jTblCliente.getValueAt(i, 7);
+                        JOptionPane.showMessageDialog(null, dato, "Dato encontrado", 1);
+                        limpiarBusqueda();
+                        estado = true;
+                    }
+                } else if (this.jCBColumna.getSelectedIndex() == 2) {
+                    String c = (String) this.jTblCliente.getValueAt(i, 1);
+                    if (c.equals(this.jTFBuscar.getText())) {
+                        String dato = "Codigo Cliente: " + this.jTblCliente.getValueAt(i, 0)
+                                + "\nNombre: " + this.jTblCliente.getValueAt(i, 1)
+                                + "\nDocumento Identidad: " + this.jTblCliente.getValueAt(i, 2)
+                                + "\nBeneficio: " + this.jTblCliente.getValueAt(i, 3)
+                                + "\nTelefono: " + this.jTblCliente.getValueAt(i, 4)
+                                + "\nCorreo: " + this.jTblCliente.getValueAt(i, 5)
+                                + "\nPorcentaje Descuento: " + this.jTblCliente.getValueAt(i, 6)
+                                + "\nEstado Cliente: " + this.jTblCliente.getValueAt(i, 7);
+                        JOptionPane.showMessageDialog(null, dato, "Dato encontrado", 1);
+                        limpiarBusqueda();
+                        estado = true;
+                    }
+                }
+            }
+            if(estado == false){
+                JOptionPane.showMessageDialog(null, "No se ha encontrado registro", "Dato no encontrado", 1);
+            }
+        }
+        
+    }
+        private boolean validarBuscar(){
+        boolean estado = true;
+        
+        if(this.jCBColumna.getSelectedIndex() == 0){
+            estado = false;
+            this.jCBColumna.requestFocus();
+        }else if(this.jTFBuscar.getText().equals("")){
+            estado = false;
+            this.jTFBuscar.requestFocus();
+        }
+        
+        return estado;
     }
 
     /**
@@ -301,13 +311,20 @@ public class jFraCliente extends javax.swing.JFrame {
         jPanel5 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTblCliente = new javax.swing.JTable();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        jCBColumna = new javax.swing.JComboBox<>();
+        jLabel12 = new javax.swing.JLabel();
+        jTFBuscar = new javax.swing.JTextField();
+        jBtnBuscar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
 
-        jPanel1.setBackground(new java.awt.Color(0, 0, 204));
+        jPanel1.setBackground(new java.awt.Color(174, 159, 228));
 
         jLabel9.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
         jLabel9.setText("Gestión de Clientes");
 
         jLabel10.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
@@ -339,7 +356,7 @@ public class jFraCliente extends javax.swing.JFrame {
                 .addContainerGap(24, Short.MAX_VALUE))
         );
 
-        jPanel2.setBackground(new java.awt.Color(51, 51, 255));
+        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -352,27 +369,33 @@ public class jFraCliente extends javax.swing.JFrame {
             .addGap(0, 20, Short.MAX_VALUE)
         );
 
-        jPanel3.setBackground(new java.awt.Color(153, 153, 255));
+        jPanel3.setBackground(new java.awt.Color(204, 204, 204));
 
-        jPanel4.setBackground(new java.awt.Color(153, 153, 255));
+        jPanel4.setBackground(new java.awt.Color(51, 34, 89));
         jPanel4.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("Codigo Cliente");
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Nombre");
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("Documento Identidad");
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("Telefono");
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("Correo");
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setText("Porcentaje Descuento");
 
         jTFCodCliente.setEditable(false);
@@ -407,8 +430,14 @@ public class jFraCliente extends javax.swing.JFrame {
             }
         });
 
+        jCBBeneficio.setBackground(new java.awt.Color(51, 34, 89));
+        jCBBeneficio.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jCBBeneficio.setForeground(new java.awt.Color(255, 255, 255));
         jCBBeneficio.setText("Beneficio");
 
+        jCBEstado.setBackground(new java.awt.Color(51, 34, 89));
+        jCBEstado.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jCBEstado.setForeground(new java.awt.Color(255, 255, 255));
         jCBEstado.setText("Estado Cliente");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -499,7 +528,7 @@ public class jFraCliente extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel5.setBackground(new java.awt.Color(153, 153, 255));
+        jPanel5.setBackground(new java.awt.Color(51, 34, 89));
         jPanel5.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
 
         jTblCliente.setModel(new javax.swing.table.DefaultTableModel(
@@ -525,18 +554,68 @@ public class jFraCliente extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(jTblCliente);
 
+        jLabel8.setForeground(java.awt.Color.white);
+        jLabel8.setText("Buscar:");
+
+        jLabel11.setForeground(java.awt.Color.white);
+        jLabel11.setText("Columna:");
+
+        jCBColumna.setBackground(new java.awt.Color(119, 74, 217));
+        jCBColumna.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "--Seleccione--", "Codigo Cliente", "Nombre" }));
+
+        jLabel12.setForeground(java.awt.Color.white);
+        jLabel12.setText("Dato:");
+
+        jBtnBuscar.setBackground(new java.awt.Color(119, 74, 217));
+        jBtnBuscar.setText("Buscar");
+        jBtnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtnBuscarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 604, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 604, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(19, Short.MAX_VALUE))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel8)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel11)
+                        .addGap(18, 18, 18)
+                        .addComponent(jCBColumna, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel12)
+                        .addGap(18, 18, 18)
+                        .addComponent(jTFBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jBtnBuscar)
+                        .addGap(46, 46, 46))))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jBtnBuscar)
+                            .addComponent(jTFBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel12)
+                            .addComponent(jCBColumna, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel11)
+                            .addComponent(jLabel8)))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
+                        .addGap(53, 53, 53)))
+                .addGap(14, 14, 14))
         );
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -569,7 +648,7 @@ public class jFraCliente extends javax.swing.JFrame {
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 650, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(40, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -593,7 +672,6 @@ public class jFraCliente extends javax.swing.JFrame {
 
     private void jBtnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnGuardarActionPerformed
         try {
-            // TODO add your handling code here:
             guardar();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Error al almacenar el registro:" + ex);
@@ -601,14 +679,12 @@ public class jFraCliente extends javax.swing.JFrame {
     }//GEN-LAST:event_jBtnGuardarActionPerformed
 
     private void jTblClienteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTblClienteMouseClicked
-        // TODO add your handling code here:
         filaSeleccionada();
         habilitarBotones(false, true, true, true);
     }//GEN-LAST:event_jTblClienteMouseClicked
 
     private void jBtnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnEditarActionPerformed
         try {
-            // TODO add your handling code here:
             editar();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Error al editar el registro:" + ex);
@@ -617,7 +693,6 @@ public class jFraCliente extends javax.swing.JFrame {
 
     private void jBtnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnEliminarActionPerformed
         try {
-            // TODO add your handling code here:
             eliminar();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Error al eliminar el registro:" + ex);
@@ -626,9 +701,16 @@ public class jFraCliente extends javax.swing.JFrame {
     }//GEN-LAST:event_jBtnEliminarActionPerformed
 
     private void jBtnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnLimpiarActionPerformed
-        // TODO add your handling code here:
         limpiarTF();
     }//GEN-LAST:event_jBtnLimpiarActionPerformed
+
+    private void jBtnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnBuscarActionPerformed
+        try {
+            buscar();
+        } catch (SQLException ex) {
+            Logger.getLogger(jFraMarca.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jBtnBuscarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -670,19 +752,24 @@ public class jFraCliente extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jBtnBuscar;
     private javax.swing.JButton jBtnEditar;
     private javax.swing.JButton jBtnEliminar;
     private javax.swing.JButton jBtnGuardar;
     private javax.swing.JButton jBtnLimpiar;
     private javax.swing.JCheckBox jCBBeneficio;
+    private javax.swing.JComboBox<String> jCBColumna;
     private javax.swing.JCheckBox jCBEstado;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -690,6 +777,7 @@ public class jFraCliente extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextField jTFBuscar;
     private javax.swing.JTextField jTFCodCliente;
     private javax.swing.JTextField jTFCorreo;
     private javax.swing.JTextField jTFDocIdentidad;
