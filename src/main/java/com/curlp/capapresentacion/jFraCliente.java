@@ -1,4 +1,3 @@
-
 package com.curlp.capapresentacion;
 
 import com.curlp.capadatos.CDCliente;
@@ -26,77 +25,75 @@ public class jFraCliente extends javax.swing.JFrame {
         this.jTFNombre.requestFocus();
         this.setLocationRelativeTo(null);
     }
-    
+
     //metodo para limpiar los datos de la tabla
-    private void limpiarTabla(){
+    private void limpiarTabla() {
         DefaultTableModel dtm = (DefaultTableModel) this.jTblCliente.getModel();
-        
-        while (dtm.getRowCount() > 0){
+
+        while (dtm.getRowCount() > 0) {
             dtm.removeRow(0);
         }
     }
-    
+
     //Metodo para poblar de datos la tabla
     private void poblarTabla() throws SQLException {
         limpiarTabla();
-        
+
         CDCliente cdc = new CDCliente();
         List<CLCliente> miLista = cdc.obtenerCliente();
         DefaultTableModel temp = (DefaultTableModel) this.jTblCliente.getModel();
 
         miLista.stream().map((CLCliente cl) -> {
-        Object[] fila = new Object[8];
-        fila[0] = cl.getCodCliente();
-        fila[1] = cl.getNombre();
-        fila[2] = cl.getDocIdentidad();
-        fila[3] = cl.isBeneficio();
-        fila[4] = cl.getTelefono();
-        fila[5] = cl.getCorreo();
-        fila[6] = cl.getPorcentajeDescuento();
-        fila[7] = cl.isEstadoCliente();
-        
-        return fila;
-    }).forEachOrdered(temp::addRow);
-        
+            Object[] fila = new Object[8];
+            fila[0] = cl.getCodCliente();
+            fila[1] = cl.getNombre();
+            fila[2] = cl.getDocIdentidad();
+            fila[3] = cl.isBeneficio();
+            fila[4] = cl.getTelefono();
+            fila[5] = cl.getCorreo();
+            fila[6] = cl.getPorcentajeDescuento();
+            fila[7] = cl.isEstadoCliente();
+
+            return fila;
+        }).forEachOrdered(temp::addRow);
+
     }
-    
+
     //metodo para encontrar el correlativo del codCliente
     private void encontrarCorrelativo() throws SQLException {
         CDCliente cdc = new CDCliente();
         CLCliente cl = new CLCliente();
-        
-        cl.setCodCliente(cdc.autIncrementarCodCliente());
-        this.jTFNombre.setText(String.valueOf(cl.getCodCliente()));
+
+        cl.setCodCliente(cdc.autoIncrementarCodCliente());
+        this.jTFCodCliente.setText(String.valueOf(cl.getCodCliente()));
     }
-    
-    
+
     //Metodo para habilitar y desabilitar botones
-    private void habilitarBotones(boolean guardar, boolean editar, boolean eliminar, boolean limpiar){
+    private void habilitarBotones(boolean guardar, boolean editar, boolean eliminar, boolean limpiar) {
         this.jBtnGuardar.setEnabled(guardar);
         this.jBtnEditar.setEnabled(editar);
         this.jBtnEliminar.setEnabled(eliminar);
         this.jBtnLimpiar.setEnabled(limpiar);
-        
+
     }
-    
+
     //metodo para limpiar las textfield
-    private void limpiarTF(){
+    private void limpiarTF() {
         this.jTFCodCliente.setText("");
         this.jTFNombre.setText("");
         this.jTFDocIdentidad.setText("");
-        this.jCBBeneficio.setEnabled(false);
+        this.jCBBeneficio.setSelected(false);
         this.jTFTelefono.setText("");
         this.jTFCorreo.setText("");
         this.jTFPorcentajeDescuento.setText("");
-        this.jCBEstado.setEnabled(false);
+        this.jCBEstado.setSelected(false);
         this.jTFNombre.requestFocus();
     }
-    
+
     //Metodo para validar la textfield
-    
-    private boolean validarTF(){
+    private boolean validarTF() {
         boolean estado;
-        
+
         estado = !this.jTFNombre.getText().equals("");
         estado = !this.jTFDocIdentidad.equals("");
         estado = !this.jCBBeneficio.equals(false);
@@ -106,10 +103,10 @@ public class jFraCliente extends javax.swing.JFrame {
         estado = !this.jCBEstado.equals(false);
         return estado;
     }
-    
+
     //metodo para insertar
     private void insertarCliente() {
-        if (!validarTF()){
+        if (!validarTF()) {
             JOptionPane.showMessageDialog(null, "Tiene que ingresar los datos del cliente", "Control",
                     JOptionPane.INFORMATION_MESSAGE);
             this.jTFNombre.requestFocus();
@@ -119,25 +116,25 @@ public class jFraCliente extends javax.swing.JFrame {
 //            this.jTFCorreo.requestFocus();
 //            this.jTFPorcentajeDescuento.requestFocus();
 //            this.jCBEstado.requestFocus();
-        }else{
-            try{
+        } else {
+            try {
                 CDCliente cdc = new CDCliente();
                 CLCliente cl = new CLCliente();
                 cl.setNombre(this.jTFNombre.getText().trim());
                 cl.setDocIdentidad(this.jTFDocIdentidad.getText().trim());
-                cl.setBeneficio(this.jCBBeneficio.isEnabled());
+                cl.setBeneficio(this.jCBBeneficio.isSelected());
                 cl.setTelefono(this.jTFTelefono.getText().trim());
                 cl.setCorreo(this.jTFCorreo.getText().trim());
-                cl.setPorcentajeDescuento(this.jTFPorcentajeDescuento.getColumns());
-                cl.setEstadoCliente(this.jCBEstado.isEnabled());
+                cl.setPorcentajeDescuento(Float.parseFloat(this.jTFPorcentajeDescuento.getText().trim()));
+                cl.setEstadoCliente(this.jCBEstado.isSelected());
                 cdc.insertarCliente(cl);
-                
+
                 JOptionPane.showMessageDialog(null, "Registro almacenado", "Control",
-                                            JOptionPane.INFORMATION_MESSAGE);
-                
+                        JOptionPane.INFORMATION_MESSAGE);
+
             } catch (SQLException e) {
                 JOptionPane.showMessageDialog(null, "Error al almacenar el registro:" + e);
-            this.jTFNombre.requestFocus();
+                this.jTFNombre.requestFocus();
 //            this.jTFDocIdentidad.requestFocus();
 //            this.jCBBeneficio.requestFocus();
 //            this.jTFTelefono.requestFocus();
@@ -147,20 +144,20 @@ public class jFraCliente extends javax.swing.JFrame {
             }
         }
     }
-    
+
     //metodo para llamar el metodo de insertar 
-    private void guardar() throws SQLException{
+    private void guardar() throws SQLException {
         insertarCliente();
         poblarTabla();
-        habilitarBotones(true,false,false,true);
+        habilitarBotones(true, false, false, true);
         limpiarTF();
         encontrarCorrelativo();
-        
+
     }
 
     //metodo para actualiar
     private void actualizarCliente() {
-        if (!validarTF()){
+        if (!validarTF()) {
             JOptionPane.showMessageDialog(null, "Tiene que ingresar los datos del cliente", "Control",
                     JOptionPane.INFORMATION_MESSAGE);
             this.jTFNombre.requestFocus();
@@ -170,26 +167,26 @@ public class jFraCliente extends javax.swing.JFrame {
 //            this.jTFCorreo.requestFocus();
 //            this.jTFPorcentajeDescuento.requestFocus();
 //            this.jCBEstado.requestFocus();
-        }else{
-            try{
+        } else {
+            try {
                 CDCliente cdc = new CDCliente();
                 CLCliente cl = new CLCliente();
                 cl.setCodCliente(Integer.parseInt(this.jTFCodCliente.getText().trim()));
                 cl.setNombre(this.jTFNombre.getText().trim());
                 cl.setDocIdentidad(this.jTFDocIdentidad.getText().trim());
-                cl.setBeneficio(this.jCBBeneficio.isEnabled());
+                cl.setBeneficio(this.jCBBeneficio.isSelected());
                 cl.setTelefono(this.jTFTelefono.getText().trim());
                 cl.setCorreo(this.jTFCorreo.getText().trim());
-                cl.setPorcentajeDescuento(Integer.parseInt(this.jTFPorcentajeDescuento.getText().trim()));
-                cl.setEstadoCliente(this.jCBEstado.isEnabled());
+                cl.setPorcentajeDescuento(Float.parseFloat(this.jTFPorcentajeDescuento.getText().trim()));
+                cl.setEstadoCliente(this.jCBEstado.isSelected());
                 cdc.actualizarCliente(cl);
-                
+
                 JOptionPane.showMessageDialog(null, "Registro almacenado", "Control",
-                                            JOptionPane.INFORMATION_MESSAGE);
-                
+                        JOptionPane.INFORMATION_MESSAGE);
+
             } catch (SQLException e) {
                 JOptionPane.showMessageDialog(null, "Error al actualizar el registro:" + e);
-            this.jTFNombre.requestFocus();
+                this.jTFNombre.requestFocus();
 //            this.jTFDocIdentidad.requestFocus();
 //            this.jCBBeneficio.requestFocus();
 //            this.jTFTelefono.requestFocus();
@@ -199,45 +196,46 @@ public class jFraCliente extends javax.swing.JFrame {
             }
         }
     }
-    
+
     //metodo para selleccionar los datos de las filas para modificarlos
-    private void filaSeleccionada(){
-        if(this.jTblCliente.getSelectedRow() != -1) {
-            this.jTFCodCliente.setText(String.valueOf(this.jTblCliente.getValueAt(this.jTblCliente.getSelectedRow(),0)));
-            this.jTFNombre.setText(String.valueOf(this.jTblCliente.getValueAt(this.jTblCliente.getSelectedRow(),1)));
-            this.jTFDocIdentidad.setText(String.valueOf(this.jTblCliente.getValueAt(this.jTblCliente.getSelectedRow(),2)));
-            this.jCBBeneficio.setText(String.valueOf(this.jTblCliente.getValueAt(this.jTblCliente.getSelectedRow(),3)));
-            this.jTFTelefono.setText(String.valueOf(this.jTblCliente.getValueAt(this.jTblCliente.getSelectedRow(),4)));
-            this.jTFCorreo.setText(String.valueOf(this.jTblCliente.getValueAt(this.jTblCliente.getSelectedRow(),5)));
-            this.jTFPorcentajeDescuento.setText(String.valueOf(this.jTblCliente.getValueAt(this.jTblCliente.getSelectedRow(),6)));
-            this.jCBEstado.setText(String.valueOf(this.jTblCliente.getValueAt(this.jTblCliente.getSelectedRow(),7)));
-            
+    private void filaSeleccionada() {
+        if (this.jTblCliente.getSelectedRow() != -1) {
+            this.jTFCodCliente.setText(String.valueOf(this.jTblCliente.getValueAt(this.jTblCliente.getSelectedRow(), 0)));
+            this.jTFNombre.setText(String.valueOf(this.jTblCliente.getValueAt(this.jTblCliente.getSelectedRow(), 1)));
+            this.jTFDocIdentidad.setText(String.valueOf(this.jTblCliente.getValueAt(this.jTblCliente.getSelectedRow(), 2)));
+            this.jCBBeneficio.setText(String.valueOf(this.jTblCliente.getValueAt(this.jTblCliente.getSelectedRow(), 3)));
+            this.jTFTelefono.setText(String.valueOf(this.jTblCliente.getValueAt(this.jTblCliente.getSelectedRow(), 4)));
+            this.jTFCorreo.setText(String.valueOf(this.jTblCliente.getValueAt(this.jTblCliente.getSelectedRow(), 5)));
+            this.jTFPorcentajeDescuento.setText(String.valueOf(this.jTblCliente.getValueAt(this.jTblCliente.getSelectedRow(), 6)));
+            this.jCBEstado.setText(String.valueOf(this.jTblCliente.getValueAt(this.jTblCliente.getSelectedRow(), 7)));
+
         }
     }
+
     // metodo para llamar el metodo de actualizar
-    private void editar() throws SQLException{
+    private void editar() throws SQLException {
         actualizarCliente();
         poblarTabla();
-        habilitarBotones(true,false,false,true);
+        habilitarBotones(true, false, false, true);
         limpiarTF();
         encontrarCorrelativo();
-        
+
     }
-    
+
     //metodo para eliminar
-    private void eliminarCliente(){
-                    try{
-                CDCliente cdc = new CDCliente();
-                CLCliente cl = new CLCliente();
-                cl.setCodCliente(Integer.parseInt(this.jTFCodCliente.getText().trim()));
-             
-                cdc.eliminarCliente(cl);
-                
-                JOptionPane.showMessageDialog(null, "Registro eliminado", "Control",
-                                            JOptionPane.INFORMATION_MESSAGE);
-                
-            } catch (SQLException e) {
-                JOptionPane.showMessageDialog(null, "Error al eliminar el registro:" + e);
+    private void eliminarCliente() {
+        try {
+            CDCliente cdc = new CDCliente();
+            CLCliente cl = new CLCliente();
+            cl.setCodCliente(Integer.parseInt(this.jTFCodCliente.getText().trim()));
+
+            cdc.eliminarCliente(cl);
+
+            JOptionPane.showMessageDialog(null, "Registro eliminado", "Control",
+                    JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al eliminar el registro:" + e);
             this.jTFNombre.requestFocus();
 //            this.jTFDocIdentidad.requestFocus();
 //            this.jCBBeneficio.requestFocus();
@@ -245,32 +243,28 @@ public class jFraCliente extends javax.swing.JFrame {
 //            this.jTFCorreo.requestFocus();
 //            this.jTFPorcentajeDescuento.requestFocus();
 //            this.jCBEstado.requestFocus();
-            }
+        }
     }
-    
-    private void eliminar() throws SQLException{
-        int resp = JOptionPane.showConfirmDialog(null, "Seguro de que desea eliminar?","Control",
-                                                JOptionPane.YES_NO_OPTION);
-        if(resp == JOptionPane.YES_OPTION){
-            try{
+
+    private void eliminar() throws SQLException {
+        int resp = JOptionPane.showConfirmDialog(null, "Seguro de que desea eliminar?", "Control",
+                JOptionPane.YES_NO_OPTION);
+        if (resp == JOptionPane.YES_OPTION) {
+            try {
                 eliminarCliente();
-        poblarTabla();
-        habilitarBotones(true,false,false,true);
-        limpiarTF();
-        encontrarCorrelativo();
-                
-            } catch (SQLException ex){
+                poblarTabla();
+                habilitarBotones(true, false, false, true);
+                limpiarTF();
+                encontrarCorrelativo();
+
+            } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(null, "Error al eliminar el registro:" + ex);
             }
-        }else{
+        } else {
             limpiarTF();
         }
     }
-    
-    
-    
-    
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -601,14 +595,14 @@ public class jFraCliente extends javax.swing.JFrame {
             // TODO add your handling code here:
             guardar();
         } catch (SQLException ex) {
-                            JOptionPane.showMessageDialog(null, "Error al almacenar el registro:" + ex);
+            JOptionPane.showMessageDialog(null, "Error al almacenar el registro:" + ex);
         }
     }//GEN-LAST:event_jBtnGuardarActionPerformed
 
     private void jTblClienteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTblClienteMouseClicked
         // TODO add your handling code here:
         filaSeleccionada();
-        habilitarBotones(false,true,true,false);
+        habilitarBotones(false, true, true, false);
     }//GEN-LAST:event_jTblClienteMouseClicked
 
     private void jBtnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnEditarActionPerformed
@@ -625,9 +619,9 @@ public class jFraCliente extends javax.swing.JFrame {
             // TODO add your handling code here:
             eliminar();
         } catch (SQLException ex) {
-JOptionPane.showMessageDialog(null, "Error al eliminar el registro:" + ex);
+            JOptionPane.showMessageDialog(null, "Error al eliminar el registro:" + ex);
         }
-        
+
     }//GEN-LAST:event_jBtnEliminarActionPerformed
 
     private void jBtnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnLimpiarActionPerformed

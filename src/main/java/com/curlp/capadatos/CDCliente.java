@@ -77,10 +77,10 @@ public class CDCliente {
         }
     }
     //metodo para autoincrementar el id
-    public int autIncrementarCodCliente() throws SQLException {
+    public int autoIncrementarCodCliente() throws SQLException {
         int codCliente = 0;
         
-        String sql = "{call sp_autoIncrementarCodliente()}";
+        String sql = "{call sp_autoIncrementarCodCliente()}";
         
         try {
             st = cn.createStatement();
