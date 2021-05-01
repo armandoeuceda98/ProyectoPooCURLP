@@ -17,6 +17,7 @@ public class CLProducto {
     private String nombreEmpresa;
 
     
+    
     public int getCodProducto() {
         return codProducto;
     }
