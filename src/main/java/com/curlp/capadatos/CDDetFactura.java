@@ -23,16 +23,15 @@ public class CDDetFactura {
     }
     
     //Método para insertar una ciudad en tabla
-    public void insertarFactura(CLDetFactura cl)throws SQLException{
-        String sql = "{CALL sp_insertarDetFactura(?)}";
+    public void insertarDetFactura(CLDetFactura cl)throws SQLException{
+        String sql = "{CALL sp_insertarDetFactura(?,?,?,?)}";
         
         try{
             ps = cn.prepareCall(sql);
-            ps.setInt(1, cl.getCodDetFactura());
-            ps.setInt(2, cl.getCantidad());
-            ps.setDouble(3, cl.getPrecio());
-            ps.setInt(4, cl.getCodProducto());
-            ps.setInt(5, cl.getCodFactura());
+            ps.setInt(1, cl.getCantidad());
+            ps.setDouble(2, cl.getPrecio());
+            ps.setInt(3, cl.getCodProducto());
+            ps.setInt(4, cl.getCodFactura());
             ps.execute();
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
@@ -40,8 +39,8 @@ public class CDDetFactura {
     }
     
     //Método para actualizar la ciudad en la tabla
-    public void actalizarFactura(CLDetFactura cl)throws SQLException{
-        String sql = "{CALL sp_actualizarDetFactura(?)}";
+    public void actalizarDetFactura(CLDetFactura cl)throws SQLException{
+        String sql = "{CALL sp_actualizarDetFactura(?,?,?,?,?)}";
         
         try{
             ps = cn.prepareCall(sql);
@@ -57,7 +56,7 @@ public class CDDetFactura {
     }
     
     //Método para eliminar la ciudad en la tabla
-    public void eliminarFactura(CLDetFactura cl)throws SQLException{
+    public void eliminarDetFactura(CLDetFactura cl)throws SQLException{
         String sql = "{CALL sp_eliminarDetFactura(?)}";
         
         try{
@@ -93,7 +92,7 @@ public class CDDetFactura {
     }
     
     //Método para poblar de datos la tabla
-    public List<CLDetFactura> obtenerListaFacturas() throws SQLException{
+    public List<CLDetFactura> obtenerListaDetFacturas() throws SQLException{
         
         String sql = "{CALL sp_mostrarDetFactura()}";
         

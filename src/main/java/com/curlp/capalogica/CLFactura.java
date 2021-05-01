@@ -1,12 +1,38 @@
 
 package com.curlp.capalogica;
 
-import java.sql.Date;
 
 public class CLFactura {
     private int codFactura;
-    private Date fecha;
+    private String fecha;
     private int codCliente;
+    private String nombreCliente;
+    private String nombreEmpleado;
+
+    public String getNombreEmpleado() {
+        return nombreEmpleado;
+    }
+
+    public void setNombreEmpleado(String nombreEmpleado) {
+        this.nombreEmpleado = nombreEmpleado;
+    }
+
+    public String getNombreCliente() {
+        return nombreCliente;
+    }
+
+    public void setNombreCliente(String nombreCliente) {
+        this.nombreCliente = nombreCliente;
+    }
+    private int codEmpleado;
+
+    public int getCodEmpleado() {
+        return codEmpleado;
+    }
+
+    public void setCodEmpleado(int codEmpleado) {
+        this.codEmpleado = codEmpleado;
+    }
 
     public int getCodFactura() {
         return codFactura;
@@ -16,11 +42,11 @@ public class CLFactura {
         this.codFactura = codFactura;
     }
 
-    public Date getFecha() {
+    public String getFecha() {
         return fecha;
     }
 
-    public void setFecha(Date fecha) {
+    public void setFecha(String fecha) {
         this.fecha = fecha;
     }
 
