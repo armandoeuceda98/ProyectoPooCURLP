@@ -19,4 +19,5 @@ public class CDProducto {
         this.cn = Conexion.conectar();
     }
     
+    
 }
