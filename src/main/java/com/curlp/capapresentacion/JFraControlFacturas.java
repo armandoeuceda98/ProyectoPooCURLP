@@ -7,6 +7,8 @@ package com.curlp.capapresentacion;
 
 import com.curlp.capadatos.CDFactura;
 import com.curlp.capalogica.CLFactura;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Level;
@@ -38,20 +40,24 @@ public class JFraControlFacturas extends javax.swing.JFrame {
     }
     
     //Método para obtener la selección de usuario
-    private void seleccion(){
+    private int seleccion(){
+        int resp = 0;
         if(this.jRBCodFactura.isSelected()){
             this.jTFCodFactura.setEnabled(true);
             this.jTFNomCliente.setEnabled(false);
             this.jBtnBuscar.setEnabled(true);
+            resp = 1;
         }else if(this.jRBNomCliente.isSelected()){
             this.jTFNomCliente.setEnabled(true);
             this.jTblFacturas.setEnabled(false);
             this.jBtnBuscar.setEnabled(true);
+            resp = 2;
         }else{
             this.jTFNomCliente.setEnabled(false);
             this.jTblFacturas.setEnabled(false);
             this.jBtnBuscar.setEnabled(false);
         }
+        return resp;
                 
     }
     
@@ -72,6 +78,28 @@ public class JFraControlFacturas extends javax.swing.JFrame {
         }).forEachOrdered(temp::addRow);
     }
     
+    //Limpiar todo
+    private void limpiar(){
+        jTFCodFactura.setText("");
+        jTFNomCliente.setText("");
+        this.jRBCodFactura.setSelected(false);
+        this.jRBNomCliente.setSelected(false);
+    }
+    
+    //Mandar datos al Form Factura
+    private void enviarDatos() throws SQLException{
+        
+        DefaultTableModel temp = (DefaultTableModel) this.jTblFacturas.getModel();
+        if(temp.getRowCount() > 0 && !jTFCodFactura.getText().isEmpty()){
+            JFraFactura.jTFCodFactura.setEnabled(true);
+            JFraFactura.jTFCodFactura.setText(jTFCodFactura.getText());
+            JFraFactura.habilitarRecDato();
+            JFraFactura.poblarForm();
+            this.setVisible(false);
+            limpiar();
+        }
+    }
+    
     //Método para filtrar facturas
     private void buscarFacturas() throws SQLException{
         CLFactura cle = new CLFactura();
@@ -89,6 +117,25 @@ public class JFraControlFacturas extends javax.swing.JFrame {
             fila[3] = cl.getNombreEmpleado();
             return fila;
         }).forEachOrdered(temp::addRow);
+    }
+    
+    //Método para filtrar facturas
+    private void buscarFacturasPorIdentidad(String docIdentidad) throws SQLException{
+        limpiarTabla();
+        CDFactura cdf = new CDFactura();
+        List<CLFactura> miLista = cdf.obtenerFacturasFiltradasPorIdentidad(docIdentidad);
+        DefaultTableModel temp = (DefaultTableModel) this.jTblFacturas.getModel();
+            
+        miLista.stream().map((CLFactura cl) -> {
+            Object[] fila = new Object[4];
+            fila[0] = cl.getCodFactura();
+            fila[1] = cl.getFecha();
+            fila[2] = cl.getNombreCliente();
+            fila[3] = cl.getNombreEmpleado();
+            return fila;
+        }).forEachOrdered((fila) -> {
+            temp.addRow(fila);
+        });
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -115,7 +162,7 @@ public class JFraControlFacturas extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTblFacturas = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
+        jBtnAbrir = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -130,7 +177,7 @@ public class JFraControlFacturas extends javax.swing.JFrame {
 
         jLabel2.setFont(new java.awt.Font("Poppins Light", 0, 14)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setText("Para buscar una factura especifique el código o nombre del cliente.");
+        jLabel2.setText("Para buscar una factura especifique el código de factura o número de identidad del cliente.");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -173,7 +220,7 @@ public class JFraControlFacturas extends javax.swing.JFrame {
         btnGFactura.add(jRBNomCliente);
         jRBNomCliente.setFont(new java.awt.Font("Poppins Medium", 0, 11)); // NOI18N
         jRBNomCliente.setForeground(new java.awt.Color(255, 255, 255));
-        jRBNomCliente.setText("Identidad del Cliente");
+        jRBNomCliente.setText("Identidad de Cliente");
         jRBNomCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jRBNomClienteActionPerformed(evt);
@@ -186,7 +233,7 @@ public class JFraControlFacturas extends javax.swing.JFrame {
 
         jLabel5.setFont(new java.awt.Font("Poppins Medium", 0, 11)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel5.setText("Nombre de Cliente:");
+        jLabel5.setText("Identidad de Cliente:");
 
         jTFCodFactura.setEnabled(false);
 
@@ -251,7 +298,7 @@ public class JFraControlFacturas extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Código de Factura", "Fecha", "Identidad de Cliente", "Código de Empleado"
+                "Código de Factura", "Fecha", "Nombre de Cliente", "Código de Empleado"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -267,8 +314,13 @@ public class JFraControlFacturas extends javax.swing.JFrame {
 
         jPanel3.setBackground(new java.awt.Color(64, 43, 100));
 
-        jButton1.setFont(new java.awt.Font("Poppins Medium", 0, 14)); // NOI18N
-        jButton1.setText("Abrir");
+        jBtnAbrir.setFont(new java.awt.Font("Poppins Medium", 0, 14)); // NOI18N
+        jBtnAbrir.setText("Abrir");
+        jBtnAbrir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtnAbrirActionPerformed(evt);
+            }
+        });
 
         jButton2.setFont(new java.awt.Font("Poppins Medium", 0, 14)); // NOI18N
         jButton2.setText("Eliminar");
@@ -279,7 +331,7 @@ public class JFraControlFacturas extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(23, 23, 23)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jBtnAbrir, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -289,7 +341,7 @@ public class JFraControlFacturas extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(27, 27, 27)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jBtnAbrir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE))
                 .addContainerGap(28, Short.MAX_VALUE))
         );
@@ -336,13 +388,31 @@ public class JFraControlFacturas extends javax.swing.JFrame {
     }//GEN-LAST:event_jRBNomClienteActionPerformed
 
     private void jBtnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnBuscarActionPerformed
+        // TODO add your handling code here:
+        if(seleccion() == 1){
+            try {
+                buscarFacturas();
+            } catch (SQLException ex) {
+                Logger.getLogger(JFraControlFacturas.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }else if(seleccion() == 2){
+            try {
+                String docIdentidad;
+                docIdentidad  = jTFNomCliente.getText();
+                buscarFacturasPorIdentidad(docIdentidad);
+            } catch (SQLException ex) {
+                Logger.getLogger(JFraControlFacturas.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_jBtnBuscarActionPerformed
+
+    private void jBtnAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnAbrirActionPerformed
         try {
-            // TODO add your handling code here:
-            buscarFacturas();
+            enviarDatos();
         } catch (SQLException ex) {
             Logger.getLogger(JFraControlFacturas.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_jBtnBuscarActionPerformed
+    }//GEN-LAST:event_jBtnAbrirActionPerformed
 
     /**
      * @param args the command line arguments
@@ -385,8 +455,8 @@ public class JFraControlFacturas extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup btnGFactura;
+    private javax.swing.JButton jBtnAbrir;
     private javax.swing.JButton jBtnBuscar;
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -394,13 +464,13 @@ public class JFraControlFacturas extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
+    public static javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JRadioButton jRBCodFactura;
     private javax.swing.JRadioButton jRBNomCliente;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTFCodFactura;
-    private javax.swing.JTextField jTFNomCliente;
+    public static javax.swing.JTextField jTFCodFactura;
+    public static javax.swing.JTextField jTFNomCliente;
     private javax.swing.JTable jTblFacturas;
     // End of variables declaration//GEN-END:variables
 }

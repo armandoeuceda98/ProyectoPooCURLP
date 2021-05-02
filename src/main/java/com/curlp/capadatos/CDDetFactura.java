@@ -92,15 +92,16 @@ public class CDDetFactura {
     }
     
     //Método para poblar de datos la tabla
-    public List<CLDetFactura> obtenerListaDetFacturas() throws SQLException{
+    public List<CLDetFactura> obtenerListaDetFacturas(String i) throws SQLException{
         
-        String sql = "{CALL sp_mostrarDetFactura()}";
+        String sql = "{CALL sp_mostrarDetFacturaX(?)}";
         
         List<CLDetFactura> miLista = null;
         
         try{
-            st = cn.createStatement();
-            rs = st.executeQuery(sql);
+            ps = cn.prepareStatement(sql);
+            ps.setString(1, i);
+            rs = ps.executeQuery();
             
             miLista  = new ArrayList<>();
             
@@ -110,7 +111,7 @@ public class CDDetFactura {
                 cl.setCodDetFactura(rs.getInt("codDetFactura"));
                 cl.setCantidad(rs.getInt("cantidad"));
                 cl.setPrecio(rs.getDouble("precio"));
-                cl.setCodProducto(rs.getInt("codProducto"));
+                cl.setNomProducto(rs.getString("producto.nombre"));
                 cl.setCodFactura(rs.getInt("codFactura"));
                 miLista.add(cl);
             }
