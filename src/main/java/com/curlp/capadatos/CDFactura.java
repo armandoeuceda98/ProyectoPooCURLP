@@ -26,12 +26,13 @@ public class CDFactura {
     
     //Método para insertar una ciudad en tabla
     public void insertarFactura(CLFactura cl)throws SQLException{
-        String sql = "{CALL sp_insertarFactura(?)}";
+        String sql = "{CALL sp_insertarFactura(?,?,?)}";
         
         try{
             ps = cn.prepareCall(sql);
             ps.setString(1, cl.getFecha());
             ps.setInt(2, cl.getCodCliente());
+            ps.setInt(3, cl.getCodEmpleado());
             ps.execute();
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());

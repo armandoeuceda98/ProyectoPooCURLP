@@ -14,7 +14,7 @@ public class Conexion {
     public static Connection conectar() throws SQLException {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver"); 
-            
+   
             //Obtener cadena de conexión.
             return DriverManager.getConnection(url, user, clave);
         } catch (ClassNotFoundException e) {

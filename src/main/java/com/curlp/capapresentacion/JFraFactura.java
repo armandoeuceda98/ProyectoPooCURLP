@@ -52,18 +52,22 @@ public class JFraFactura extends javax.swing.JFrame {
             fila[1] = cl.getNomProducto();
             fila[2] = cl.getCantidad();
             fila[3] = cl.getPrecio();
+            fila[4] = cl.getTotal();
             return fila;
         }).forEachOrdered((fila) -> {
             dtm.addRow(fila);
         });
     }
     
-    //recibir datos
+    //Método para ver los resultados de la consulta
     public static void habilitarRecDato(){
         jTFCodFactura.setEnabled(true);
+        jTFCodFactura.setEditable(false);
         jTFCodCliente.setEnabled(true);
+        jTFCodCliente.setEditable(false);
         jTFCliente.setEnabled(true);
         jTFFecha.setEnabled(true);
+        jTFFecha.setEditable(false);
         jTFCodProducto.setEnabled(true);
         jTFStock.setEnabled(true);
         jTFPrecio.setEnabled(true);
@@ -83,6 +87,25 @@ public class JFraFactura extends javax.swing.JFrame {
         jTFCliente.setText(cle.getNombreCliente());
         i = jTFCodFactura.getText();
         poblarTabla(i);
+        suma();
+    }
+    
+    //Método para hacer una suma de todos los totales de factura
+    private static void suma(){
+        int contar  = jTblDetFactura.getRowCount();
+        double suma, total,isv, subtot, desc;
+        suma = 0;
+        desc = 0.10;
+        for(int i = 0 ; i < contar ; i++){
+            suma += Double.parseDouble(jTblDetFactura.getValueAt(i, 4).toString());
+        }
+        isv = suma * 0.15;
+        subtot = suma - isv;
+        total = suma - desc;
+        jTFValorTotal.setText(String.valueOf(suma));
+        jTFIsv.setText(String.valueOf(isv));
+        jTFSubTotal.setText(String.valueOf(subtot));
+        jTFTotal.setText(String.valueOf(suma));
     }
     
     //Obtener el número de factura
@@ -215,6 +238,8 @@ public class JFraFactura extends javax.swing.JFrame {
         jLabel13 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         jTFValorTotal = new javax.swing.JTextField();
+        jLabel16 = new javax.swing.JLabel();
+        jTFDescuento = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -372,16 +397,16 @@ public class JFraFactura extends javax.swing.JFrame {
                                 .addComponent(jLabel4)
                                 .addGap(18, 18, 18)
                                 .addComponent(jTFCliente)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(18, 18, 18)
                         .addComponent(jBtnBuscar)
                         .addGap(18, 18, 18)
                         .addComponent(jBtnAgregarCliente)
-                        .addGap(36, 36, 36)
+                        .addGap(28, 28, 28)
                         .addComponent(jLabel3)
                         .addGap(18, 18, 18)
                         .addComponent(jTFFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(28, 28, 28)))
-                .addContainerGap(192, Short.MAX_VALUE))
+                .addContainerGap(200, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -481,6 +506,8 @@ public class JFraFactura extends javax.swing.JFrame {
         jPanel3.setBackground(new java.awt.Color(51, 34, 89));
 
         jTFTotal.setEditable(false);
+        jTFTotal.setFont(new java.awt.Font("Poppins SemiBold", 1, 11)); // NOI18N
+        jTFTotal.setForeground(new java.awt.Color(0, 255, 0));
 
         jLabel11.setFont(new java.awt.Font("Poppins Medium", 0, 12)); // NOI18N
         jLabel11.setForeground(new java.awt.Color(255, 255, 255));
@@ -504,6 +531,13 @@ public class JFraFactura extends javax.swing.JFrame {
 
         jTFValorTotal.setEditable(false);
 
+        jLabel16.setFont(new java.awt.Font("Poppins Medium", 0, 12)); // NOI18N
+        jLabel16.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel16.setText("Descuento:");
+
+        jTFDescuento.setFont(new java.awt.Font("Poppins SemiBold", 1, 11)); // NOI18N
+        jTFDescuento.setForeground(new java.awt.Color(51, 51, 255));
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -512,32 +546,36 @@ public class JFraFactura extends javax.swing.JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jTFValorTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jTFValorTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(72, 72, 72)
+                        .addGap(62, 62, 62)
                         .addComponent(jLabel12)))
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(30, 30, 30)
-                        .addComponent(jTFSubTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(26, 26, 26)
+                        .addComponent(jTFSubTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jTFIsv, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jTFDescuento, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(119, 119, 119)
-                        .addComponent(jLabel13)))
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(164, 164, 164)
+                        .addGap(83, 83, 83)
+                        .addComponent(jLabel13)
+                        .addGap(158, 158, 158)
                         .addComponent(jLabel14)
-                        .addGap(94, 94, 94))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTFIsv, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 162, Short.MAX_VALUE)
+                        .addComponent(jLabel16)
+                        .addGap(68, 68, 68)))
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTFTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jLabel11)
-                        .addGap(78, 78, 78)))
-                .addContainerGap(18, Short.MAX_VALUE))
+                        .addGap(88, 88, 88))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(13, 13, 13)
+                        .addComponent(jTFTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -547,13 +585,15 @@ public class JFraFactura extends javax.swing.JFrame {
                     .addComponent(jLabel11)
                     .addComponent(jLabel14)
                     .addComponent(jLabel12)
-                    .addComponent(jLabel13))
+                    .addComponent(jLabel13)
+                    .addComponent(jLabel16))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTFTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jTFIsv, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jTFSubTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTFValorTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTFValorTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTFDescuento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(33, 33, 33))
         );
 
@@ -598,7 +638,7 @@ public class JFraFactura extends javax.swing.JFrame {
                     .addComponent(jBtnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jBtnBuscarFact, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jBtnEliminarFact, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(86, Short.MAX_VALUE))
+                .addContainerGap(83, Short.MAX_VALUE))
         );
 
         pack();
@@ -619,7 +659,7 @@ public class JFraFactura extends javax.swing.JFrame {
         // TODO add your handling code here:
         try {
             JFraControlFacturas jfra = new JFraControlFacturas();
-            jBtnEliminar.setEnabled(true);
+            jBtnEliminarFact.setEnabled(true);
             jBtnCancelar.setEnabled(true);
             jfra.setVisible(true);
         } catch (SQLException ex) {
@@ -691,6 +731,7 @@ public class JFraFactura extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -708,15 +749,16 @@ public class JFraFactura extends javax.swing.JFrame {
     public static javax.swing.JTextField jTFCodCliente;
     public static javax.swing.JTextField jTFCodFactura;
     public static javax.swing.JTextField jTFCodProducto;
+    private static javax.swing.JTextField jTFDescuento;
     public static javax.swing.JTextField jTFFecha;
-    private javax.swing.JTextField jTFIsv;
+    private static javax.swing.JTextField jTFIsv;
     public static javax.swing.JTextField jTFNomProducto;
     public static javax.swing.JTextField jTFPrecio;
     public static javax.swing.JTextField jTFStock;
-    private javax.swing.JTextField jTFSubTotal;
-    private javax.swing.JTextField jTFTotal;
+    private static javax.swing.JTextField jTFSubTotal;
+    private static javax.swing.JTextField jTFTotal;
     public static javax.swing.JTextField jTFTotalProduc;
-    private javax.swing.JTextField jTFValorTotal;
+    private static javax.swing.JTextField jTFValorTotal;
     public static javax.swing.JTable jTblDetFactura;
     // End of variables declaration//GEN-END:variables
 }

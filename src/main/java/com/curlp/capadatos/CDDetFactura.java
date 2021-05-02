@@ -95,6 +95,8 @@ public class CDDetFactura {
     public List<CLDetFactura> obtenerListaDetFacturas(String i) throws SQLException{
         
         String sql = "{CALL sp_mostrarDetFacturaX(?)}";
+        int m1;
+        Double m2, result;
         
         List<CLDetFactura> miLista = null;
         
@@ -113,6 +115,7 @@ public class CDDetFactura {
                 cl.setPrecio(rs.getDouble("precio"));
                 cl.setNomProducto(rs.getString("producto.nombre"));
                 cl.setCodFactura(rs.getInt("codFactura"));
+                cl.setTotal(rs.getInt("cantidad")*rs.getDouble("precio"));
                 miLista.add(cl);
             }
         }catch(SQLException e){

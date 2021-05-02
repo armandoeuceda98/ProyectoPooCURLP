@@ -7,6 +7,15 @@ public class CLDetFactura {
     private double precio;
     private int codProducto;
     private String nomProducto;
+    private double total;
+
+    public double getTotal() {
+        return total;
+    }
+
+    public void setTotal(double total) {
+        this.total = total;
+    }
 
     public String getNomProducto() {
         return nomProducto;

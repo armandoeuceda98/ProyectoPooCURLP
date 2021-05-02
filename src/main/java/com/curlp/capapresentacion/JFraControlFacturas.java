@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -20,6 +21,9 @@ import javax.swing.table.DefaultTableModel;
  * @author DELL
  */
 public class JFraControlFacturas extends javax.swing.JFrame {
+    
+    Object[] filas = new Object[4];
+    int fila = 0;
 
     /**
      * Creates new form JFraControlFacturas
@@ -43,17 +47,21 @@ public class JFraControlFacturas extends javax.swing.JFrame {
     private int seleccion(){
         int resp = 0;
         if(this.jRBCodFactura.isSelected()){
-            this.jTFCodFactura.setEnabled(true);
-            this.jTFNomCliente.setEnabled(false);
+            jTFCodFactura.setEnabled(true);
+            jTFNomCliente.setEnabled(false);
+            jTFNomCliente.setText("");
+            this.jTFNumFactura.setText("");
             this.jBtnBuscar.setEnabled(true);
             resp = 1;
         }else if(this.jRBNomCliente.isSelected()){
-            this.jTFNomCliente.setEnabled(true);
-            this.jTblFacturas.setEnabled(false);
+            jTFNomCliente.setEnabled(true);
+            jTFCodFactura.setEnabled(false);
+            jTFCodFactura.setText("");
+            this.jTFNumFactura.setText("");
             this.jBtnBuscar.setEnabled(true);
             resp = 2;
         }else{
-            this.jTFNomCliente.setEnabled(false);
+            jTFNomCliente.setEnabled(false);
             this.jTblFacturas.setEnabled(false);
             this.jBtnBuscar.setEnabled(false);
         }
@@ -88,15 +96,15 @@ public class JFraControlFacturas extends javax.swing.JFrame {
     
     //Mandar datos al Form Factura
     private void enviarDatos() throws SQLException{
-        
-        DefaultTableModel temp = (DefaultTableModel) this.jTblFacturas.getModel();
-        if(temp.getRowCount() > 0 && !jTFCodFactura.getText().isEmpty()){
+        if(!jTFNumFactura.getText().isEmpty()){
             JFraFactura.jTFCodFactura.setEnabled(true);
             JFraFactura.jTFCodFactura.setText(jTFCodFactura.getText());
             JFraFactura.habilitarRecDato();
             JFraFactura.poblarForm();
             this.setVisible(false);
             limpiar();
+        }else{
+            JOptionPane.showMessageDialog(null, "Por favor seleccione una factura en la tabla.");
         }
     }
     
@@ -118,7 +126,9 @@ public class JFraControlFacturas extends javax.swing.JFrame {
             return fila;
         }).forEachOrdered(temp::addRow);
     }
-    
+    private void seleccionTable(){
+        this.jTFNumFactura.setText(String.valueOf(this.jTblFacturas.getValueAt(fila, 0)));
+    }
     //Método para filtrar facturas
     private void buscarFacturasPorIdentidad(String docIdentidad) throws SQLException{
         limpiarTabla();
@@ -150,6 +160,8 @@ public class JFraControlFacturas extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        jTFNumFactura = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jRBCodFactura = new javax.swing.JRadioButton();
@@ -179,6 +191,12 @@ public class JFraControlFacturas extends javax.swing.JFrame {
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Para buscar una factura especifique el código de factura o número de identidad del cliente.");
 
+        jTFNumFactura.setEditable(false);
+
+        jLabel6.setFont(new java.awt.Font("Poppins Medium", 0, 11)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel6.setText("N° Factura:");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -186,15 +204,26 @@ public class JFraControlFacturas extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(50, 50, 50)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 723, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(22, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 723, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(22, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel6)
+                        .addGap(18, 18, 18)
+                        .addComponent(jTFNumFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(33, 33, 33))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(28, 28, 28)
-                .addComponent(jLabel1)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jTFNumFactura, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel6)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(25, Short.MAX_VALUE))
@@ -310,6 +339,11 @@ public class JFraControlFacturas extends javax.swing.JFrame {
             }
         });
         jTblFacturas.setSelectionBackground(new java.awt.Color(51, 34, 89));
+        jTblFacturas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTblFacturasMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTblFacturas);
 
         jPanel3.setBackground(new java.awt.Color(64, 43, 100));
@@ -414,6 +448,12 @@ public class JFraControlFacturas extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jBtnAbrirActionPerformed
 
+    private void jTblFacturasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTblFacturasMouseClicked
+        // TODO add your handling code here:
+        fila = this.jTblFacturas.rowAtPoint(evt.getPoint());
+        seleccionTable();
+    }//GEN-LAST:event_jTblFacturasMouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -463,6 +503,7 @@ public class JFraControlFacturas extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     public static javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -471,6 +512,7 @@ public class JFraControlFacturas extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     public static javax.swing.JTextField jTFCodFactura;
     public static javax.swing.JTextField jTFNomCliente;
+    private javax.swing.JTextField jTFNumFactura;
     private javax.swing.JTable jTblFacturas;
     // End of variables declaration//GEN-END:variables
 }
