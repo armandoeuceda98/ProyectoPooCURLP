@@ -14,7 +14,6 @@ public class CDProducto {
     PreparedStatement ps;
     ResultSet rs;
     Statement st;
-
     
     public CDProducto(Connection cn) throws SQLException {
         this.cn = Conexion.conectar();
