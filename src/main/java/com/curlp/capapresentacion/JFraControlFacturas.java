@@ -98,13 +98,35 @@ public class JFraControlFacturas extends javax.swing.JFrame {
     private void enviarDatos() throws SQLException{
         if(!jTFNumFactura.getText().isEmpty()){
             JFraFactura.jTFCodFactura.setEnabled(true);
-            JFraFactura.jTFCodFactura.setText(jTFCodFactura.getText());
+            JFraFactura.jTFCodFactura.setText(jTFNumFactura.getText());
             JFraFactura.habilitarRecDato();
             JFraFactura.poblarForm();
             this.setVisible(false);
             limpiar();
         }else{
             JOptionPane.showMessageDialog(null, "Por favor seleccione una factura en la tabla.");
+        }
+    }
+    
+    //Eliminar factura
+    private void eliminarFact() throws SQLException{
+        CLFactura cl = new CLFactura();
+        CDFactura cd = new CDFactura();
+        if(!jTFNumFactura.getText().isEmpty()){
+            int opcion;
+            Object[] options = {"Si", "No"};
+            opcion = JOptionPane.showOptionDialog(null, "¿Está seguro que desea eliminar la factura: \"" + jTFNumFactura.getText() + "\"? Esta acción es irreversible.",
+                    "Inventario Master", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
+                    null, options, options[0]);
+            if (opcion == 0) {
+                cl.setCodFactura(Integer.parseInt(jTFNumFactura.getText().trim()));
+                cd.eliminarFactura(cl);
+                poblarTabla();
+                jTFNumFactura.setText("");
+                JOptionPane.showMessageDialog(null, "Factura eliminada exitosamente.");
+            }
+        }else{
+            JOptionPane.showMessageDialog(null, "No ha seleccionado ninguna factura, por favor seleccione una factura en la tabla.");
         }
     }
     
@@ -358,6 +380,11 @@ public class JFraControlFacturas extends javax.swing.JFrame {
 
         jButton2.setFont(new java.awt.Font("Poppins Medium", 0, 14)); // NOI18N
         jButton2.setText("Eliminar");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -453,6 +480,15 @@ public class JFraControlFacturas extends javax.swing.JFrame {
         fila = this.jTblFacturas.rowAtPoint(evt.getPoint());
         seleccionTable();
     }//GEN-LAST:event_jTblFacturasMouseClicked
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        try {
+            // TODO add your handling code here:
+            eliminarFact();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error: "+ex.getMessage());
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments

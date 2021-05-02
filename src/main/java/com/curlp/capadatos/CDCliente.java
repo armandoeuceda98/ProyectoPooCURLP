@@ -151,17 +151,16 @@ public class CDCliente {
     }
 
     //metodo para buscar por identidad
-    public List<CLCliente> obtenerListaClienteXId(String docIdentidad) throws SQLException {
+    public CLCliente obtenerListaClienteXId(CLCliente clc) throws SQLException {
         String sql;
         sql = "{call sp_mostrarClienteXIdentidad(?)}";
         List<CLCliente> miLista = null;
         try {
             ps = cn.prepareStatement(sql);
-            ps.setString(1, docIdentidad);
+            ps.setString(1, clc.getDocIdentidad());
             rs = ps.executeQuery();
             miLista = new ArrayList<>();
             while (rs.next()) {
-                CLCliente clc = new CLCliente();
                 clc.setCodCliente(rs.getInt("codCliente"));
                 clc.setNombre(rs.getString("nombre"));
                 clc.setDocIdentidad(rs.getString("docIdentidad"));
@@ -170,12 +169,11 @@ public class CDCliente {
                 clc.setCorreo(rs.getString("correo"));
                 clc.setPorcentajeDescuento(rs.getFloat("porcentajeDescuento"));
                 clc.setEstadoCliente(rs.getBoolean("estadoCliente"));
-                miLista.add(clc);
             }
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
         }
-        return miLista;
+        return clc;
     }
 
 }

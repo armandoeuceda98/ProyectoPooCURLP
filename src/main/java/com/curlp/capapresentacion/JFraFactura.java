@@ -5,8 +5,10 @@
  */
 package com.curlp.capapresentacion;
 
+import com.curlp.capadatos.CDCliente;
 import com.curlp.capadatos.CDDetFactura;
 import com.curlp.capadatos.CDFactura;
+import com.curlp.capalogica.CLCliente;
 import com.curlp.capalogica.CLDetFactura;
 import com.curlp.capalogica.CLFactura;
 import java.sql.SQLException;
@@ -74,6 +76,24 @@ public class JFraFactura extends javax.swing.JFrame {
         jTFNomProducto.setEnabled(true);
         jTFCantidad.setEnabled(true);
         jTFTotalProduc.setEnabled(true);
+        jTFValorTotal.setEnabled(true);
+        jTFSubTotal.setEnabled(true);
+        jTFIsv.setEnabled(true);
+        jTFTotal.setEnabled(true);
+        jTFDescuento.setEnabled(true);
+    }
+    
+    //Método para buscar un cliente
+    private static void buscarCliente() throws SQLException{
+        CLCliente clc = new CLCliente();
+        CDCliente cdc = new CDCliente();
+        clc.setDocIdentidad(jTFCodCliente.getText().trim());
+        cdc.obtenerListaClienteXId(clc);
+        if(cdc.obtenerListaClienteXId(clc)==null){
+            JOptionPane.showMessageDialog(null, "No se encontró ningún cliente.");
+        }else{
+            jTFCliente.setText(clc.getNombre());
+        }
     }
     
     //poblar Todo el formulario y jTable a partir de abrir factura
@@ -126,6 +146,7 @@ public class JFraFactura extends javax.swing.JFrame {
     private void habilitarBotones(){
         jTFCodFactura.setEnabled(true);
         jTFCodCliente.setEnabled(true);
+        jTFCodCliente.setEditable(true);
         this.jBtnBuscar.setEnabled(true);
         this.jBtnAgregarCliente.setEnabled(true);
         this.jTFCliente.setEnabled(true);
@@ -140,6 +161,7 @@ public class JFraFactura extends javax.swing.JFrame {
         this.jBtnAgregar.setEnabled(true);
         this.jBtnEliminar.setEnabled(true);
         this.jBtnModificar.setEnabled(true);
+        this.jBtnCancelar.setEnabled(true);
         this.jTFValorTotal.setEnabled(true);
         this.jTFSubTotal.setEnabled(true);
         this.jTFIsv.setEnabled(true);
@@ -174,14 +196,19 @@ public class JFraFactura extends javax.swing.JFrame {
         this.jBtnAgregar.setEnabled(false);
         this.jBtnEliminar.setEnabled(false);
         this.jBtnModificar.setEnabled(false);
-        this.jTFValorTotal.setText("");
-        this.jTFSubTotal.setText("");
-        this.jTFIsv.setText("");
-        this.jTFTotal.setText("");
-        this.jTFValorTotal.setEnabled(false);
-        this.jTFSubTotal.setEnabled(false);
-        this.jTFIsv.setEnabled(false);
-        this.jTFTotal.setEnabled(false);
+        jTFValorTotal.setText("");
+        jTFSubTotal.setText("");
+        jTFIsv.setText("");
+        jTFTotal.setText("");
+        jTFValorTotal.setEnabled(false);
+        jTFSubTotal.setEnabled(false);
+        jTFIsv.setEnabled(false);
+        jTFTotal.setEnabled(false);
+        DefaultTableModel dtm = (DefaultTableModel) jTblDetFactura.getModel();
+        int a = jTblDetFactura.getRowCount()-1;
+        for (int i = a; i >= 0; i--) {          
+        dtm.removeRow(dtm.getRowCount()-1);
+        }
     }
 
     /**
@@ -292,6 +319,11 @@ public class JFraFactura extends javax.swing.JFrame {
 
         jBtnBuscar.setText("Buscar");
         jBtnBuscar.setEnabled(false);
+        jBtnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtnBuscarActionPerformed(evt);
+            }
+        });
 
         jLabel5.setText("Cod Producto:");
 
@@ -557,8 +589,7 @@ public class JFraFactura extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(jTFIsv, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jTFDescuento, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                        .addComponent(jTFDescuento, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(83, 83, 83)
                         .addComponent(jLabel13)
@@ -647,6 +678,7 @@ public class JFraFactura extends javax.swing.JFrame {
     private void jBtnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnNuevoActionPerformed
         try {
             // TODO add your handling code here:
+            limpiar();
             obtenerCodFactura();
             habilitarBotones();
             obtenerFecha();
@@ -672,6 +704,15 @@ public class JFraFactura extends javax.swing.JFrame {
         // TODO add your handling code here:
         limpiar();
     }//GEN-LAST:event_jBtnCancelarActionPerformed
+
+    private void jBtnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnBuscarActionPerformed
+        try {
+            // TODO add your handling code here:
+            buscarCliente();
+        } catch (SQLException ex) {
+            Logger.getLogger(JFraFactura.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jBtnBuscarActionPerformed
 
     /**
      * @param args the command line arguments
