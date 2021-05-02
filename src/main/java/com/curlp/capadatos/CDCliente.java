@@ -153,7 +153,7 @@ public class CDCliente {
     //metodo para buscar por identidad
     public List<CLCliente> obtenerListaClienteXId(String docIdentidad) throws SQLException {
         String sql;
-        sql = "{call sp_mostrarClienteXIdentidad()}";
+        sql = "{call sp_mostrarClienteXIdentidad(?)}";
         List<CLCliente> miLista = null;
         try {
             ps = cn.prepareStatement(sql);
