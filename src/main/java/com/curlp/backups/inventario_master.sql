@@ -49,7 +49,7 @@ DROP TABLE IF EXISTS `cliente`;
 CREATE TABLE `cliente` (
   `codCliente` int NOT NULL AUTO_INCREMENT,
   `nombre` varchar(100) COLLATE utf8_spanish_ci NOT NULL,
-  `docIdentidad` varchar(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `docIdentidad` varchar(15) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
   `beneficio` bit(1) NOT NULL,
   `telefono` varchar(9) COLLATE utf8_spanish_ci NOT NULL,
   `correo` varchar(45) COLLATE utf8_spanish_ci NOT NULL,
