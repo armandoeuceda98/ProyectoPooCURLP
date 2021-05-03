@@ -184,33 +184,47 @@ public class CDProducto {
             return miLista;
     }
     
-    public List<CLFactura> obtenerFacturasFiltradasPorIdentidad(String docIdentidad) throws SQLException{
+   //Método para buscar Producto por medio de código
+    public List<CLProducto> obtenerProductoPorCodigo(CLProducto cl) throws SQLException{
         
-        String sql = "{call sp_mostrarFacturaXIdentidad(?)}";
+        String sql = "{call sp_mostrarProductoXCodigo(?)}";
         
-        List<CLFactura> miLista = null;
+        List<CLProducto> miLista = null;
         
         try{
-            ps = cn.prepareStatement(sql);
-            ps.setString(1, docIdentidad);
-            rs = ps.executeQuery();
-            
             miLista  = new ArrayList<>();
             
-
-            while(rs.next()){
-                CLFactura clf = new CLFactura();
-                   clf.setCodFactura(rs.getInt("codFactura"));
-                   clf.setFecha(rs.getString("fecha"));
-                   clf.setNombreCliente(rs.getString("nombre"));
-                   clf.setNombreEmpleado(rs.getString("empleado.nombre"));
-                   miLista.add(clf); 
+            
+            ps = cn.prepareStatement(sql);
+            ps.setInt(1, cl.getCodProducto());
+            rs = ps.executeQuery();
+            
+            miLista  = new ArrayList<>(4);
+                     
+            while(rs.next()){ 
+                CLProducto prod = new CLProducto();
+                
+                
+                prod.setCodProducto(rs.getInt("codProducto"));
+                prod.setNombre(rs.getString("nombre"));
+                prod.setDescripcion(rs.getString("descripcion"));
+                prod.setCosto(rs.getDouble("costo"));
+                prod.setExistencia(rs.getInt("existencia"));
+                prod.setPrecioV1(rs.getDouble("precioV1"));
+                prod.setPrecioV2(rs.getDouble("precioV2"));
+                prod.setPrecioV3(rs.getDouble("precioV3"));
+                
+                prod.setNombreCategoria(rs.getString("categoria.nombre"));
+                prod.setNombreMarca(rs.getString("marca.nombre"));
+                prod.setNombreEmpresa(rs.getString("proveedor.nombreEmpresa"));
+                miLista.add(prod);
             }
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
         }
             return miLista;
     }
+    
     
     //Método para llenar el combo de factura
     public List<String> cargarFactura() throws SQLException{
