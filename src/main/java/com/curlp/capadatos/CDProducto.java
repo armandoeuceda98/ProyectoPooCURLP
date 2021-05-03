@@ -143,7 +143,7 @@ public class CDProducto {
             return cl;
     }
     
-    //Método para buscar factura por medio de código
+    //Método para buscar producto por medio de código
     public List<CLProducto> obtenerProductoFiltrado(JTable jtable, String nombre) throws SQLException{
         
         String sql = "{call sp_mostrarProductoXNombre(?)}";
