@@ -26,13 +26,14 @@ public class CDFactura {
     
     //Método para insertar una ciudad en tabla
     public void insertarFactura(CLFactura cl)throws SQLException{
-        String sql = "{CALL sp_insertarFactura(?,?,?)}";
+        String sql = "{CALL sp_insertarFactura(?,?,?,?)}";
         
         try{
             ps = cn.prepareCall(sql);
-            ps.setString(1, cl.getFecha());
-            ps.setInt(2, cl.getCodCliente());
-            ps.setInt(3, cl.getCodEmpleado());
+            ps.setInt(1, cl.getCodFactura());
+            ps.setString(2, cl.getFecha());
+            ps.setInt(3, cl.getCodCliente());
+            ps.setInt(4, cl.getCodEmpleado());
             ps.execute();
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
@@ -41,13 +42,14 @@ public class CDFactura {
     
     //Método para actualizar la ciudad en la tabla
     public void actalizarFactura(CLFactura cl)throws SQLException{
-        String sql = "{CALL sp_actualizarFactura(?)}";
+        String sql = "{CALL sp_actualizarFactura(?,?,?,?)}";
         
         try{
             ps = cn.prepareCall(sql);
             ps.setInt(1, cl.getCodFactura());
             ps.setString(2, cl.getFecha());
             ps.setInt(3, cl.getCodCliente());
+            ps.setInt(4, cl.getCodEmpleado());
             ps.execute();
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
@@ -170,6 +172,35 @@ public class CDFactura {
             JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
         }
             return miLista;
+    }
+    
+    //Método para mostrar facturas filtradas por código
+    public CLFactura obtenerFacturasFiltradasPorCodigo(CLFactura cl)throws SQLException{
+        String sql = "{call sp_mostrarFacturaX(?)}";
+        
+        List<CLFactura> miLista = null;
+        
+        try{
+            miLista  = new ArrayList<>();
+            
+            
+            ps = cn.prepareStatement(sql);
+            ps.setInt(1, cl.getCodFactura());
+            rs = ps.executeQuery();
+            
+            miLista  = new ArrayList<>(4);
+                     
+            if(rs.next()){ 
+                cl.setCodFactura(rs.getInt("codFactura"));
+                cl.setFecha(rs.getString("fecha"));
+                cl.setNombreCliente(rs.getString("nombre"));
+                cl.setNombreEmpleado(rs.getString("empleado.nombre"));
+                miLista.add(cl);
+            }
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
+        }
+            return cl;
     }
     
     public List<CLFactura> obtenerFacturasFiltradasPorIdentidad(String docIdentidad) throws SQLException{

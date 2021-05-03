@@ -27,9 +27,8 @@ import javax.swing.table.DefaultTableModel;
  */
 public class JFraFactura extends javax.swing.JFrame {
 
-    /**
-     * Creates new form JFraFactura
-     */
+    Object[] filas = new Object[4];
+    static int fila = 0;
 
     public JFraFactura() throws SQLException {
         initComponents();
@@ -99,7 +98,7 @@ public class JFraFactura extends javax.swing.JFrame {
     
     //Método para saber el total a partir de la cantidad de producto por el precio de unidad
     private void totalizarPrecio(){
-        double cant, prec, tot, stock, stockfin;
+        double cant, prec, tot;
         cant = Double.parseDouble(jTFCantidad.getText());
         prec = Double.parseDouble(jTFPrecio.getText());
         tot = cant * prec;
@@ -109,6 +108,21 @@ public class JFraFactura extends javax.swing.JFrame {
 //        jTFStock.setText(String.valueOf(stockfin));
     }
     
+    //Método para actualizar la factura
+    private static void actualizarDatosFactura() {
+        try{
+            CDFactura cdf = new CDFactura();
+            CLFactura cle = new CLFactura();
+            cle.setCodFactura(Integer.parseInt(jTFCodFactura.getText()));
+            cle.setFecha(jTFFecha.getText());
+            cle.setCodCliente(Integer.parseInt(jTFCodigoCliente.getText()));
+            cle.setCodEmpleado(1);
+            cdf.actalizarFactura(cle);
+        }catch(SQLException e){
+             JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
+        }
+        
+    }
     
     //Método para buscar un cliente
     private static void buscarCliente() throws SQLException{
@@ -116,10 +130,23 @@ public class JFraFactura extends javax.swing.JFrame {
         CDCliente cdc = new CDCliente();
         clc.setDocIdentidad(jTFCodCliente.getText().trim());
         cdc.obtenerListaClienteXId(clc);
-        if(cdc.obtenerListaClienteXId(clc)==null){
+        if(clc.getNombre()==null){
             JOptionPane.showMessageDialog(null, "No se encontró ningún cliente.");
         }else{
-            jTFCliente.setText(clc.getNombre());
+            if(jTFCliente.getText().isEmpty()){
+                jTFCliente.setText(clc.getNombre());
+                jTFCodigoCliente.setText(String.valueOf(clc.getCodCliente()));   
+                crearFactura();
+            }else{
+                jTFCliente.setText(clc.getNombre());
+                jTFCodigoCliente.setText(String.valueOf(clc.getCodCliente()));
+                actualizarDatosFactura();
+            }
+            
+            DefaultTableModel dtm = (DefaultTableModel) jTblDetFactura.getModel();
+            if(clc.isBeneficio() == true){
+                jTFDescuento.setText(String.valueOf(0.10));
+            }
         }
     }
     
@@ -137,22 +164,68 @@ public class JFraFactura extends javax.swing.JFrame {
         suma();
     }
     
+    //Método para crear una factura
+    private static void crearFactura(){
+        try{
+            DefaultTableModel dtm = (DefaultTableModel) jTblDetFactura.getModel();
+            if(dtm.getRowCount() == 0){
+                CDFactura cdf = new CDFactura();
+                CLFactura clf = new CLFactura();
+                clf.setCodFactura(Integer.parseInt(jTFCodFactura.getText()));
+                clf.setFecha(jTFFecha.getText());
+                clf.setCodCliente(Integer.parseInt(jTFCodigoCliente.getText()));
+                clf.setCodEmpleado(1); 
+                cdf.insertarFactura(clf);
+            }
+            
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Error: "+e.getLocalizedMessage());
+        }
+        
+    }
+    
+    //Método para evaluar la existencia
+    private void evaluarExistencia(){
+        int stock, cantidad;
+        stock = Integer.parseInt(jTFStock.getText());
+        cantidad = Integer.parseInt(jTFCantidad.getText());
+    }
+    
+    //Insertar detalle factura a la Tabla Mysql
+    private void insertarDetFactura() throws SQLException{
+        CDDetFactura cddf = new CDDetFactura();
+        CLDetFactura cldf = new CLDetFactura();
+        cldf.setCantidad(Integer.parseInt(jTFCantidad.getText()));
+        cldf.setPrecio(Double.parseDouble(jTFPrecio.getText()));
+        cldf.setCodProducto(Integer.parseInt(jTFCodProducto.getText()));
+        cldf.setCodFactura(Integer.parseInt(jTFCodFactura.getText().trim()));
+        cddf.insertarDetFactura(cldf);
+    }
+    
     //Método para hacer una suma de todos los totales de factura
     private static void suma(){
         int contar  = jTblDetFactura.getRowCount();
-        double suma, total,isv, subtot, desc;
+        double suma, total,isv, subtot, desc, descf;
         suma = 0;
-        desc = 0.10;
         for(int i = 0 ; i < contar ; i++){
             suma += Double.parseDouble(jTblDetFactura.getValueAt(i, 4).toString());
         }
         isv = suma * 0.15;
         subtot = suma - isv;
-        total = suma - desc;
+        desc = Double.parseDouble(jTFDescuento.getText());
+        if(!jTFDescuento.getText().isEmpty()){
+            descf = suma * desc;
+            total = suma - descf;
+            jTFDescuento.setText(String.valueOf(descf));
+        }else{
+            total = suma;
+            jTFDescuento.setText("0");
+        }
+        
         jTFValorTotal.setText(String.valueOf(suma));
         jTFIsv.setText(String.valueOf(isv));
         jTFSubTotal.setText(String.valueOf(subtot));
-        jTFTotal.setText(String.valueOf(suma));
+        jTFTotal.setText(String.valueOf(total));
     }
     
     //Obtener el número de factura
@@ -187,12 +260,12 @@ public class JFraFactura extends javax.swing.JFrame {
         this.jTFTotalProduc.setEnabled(true);
         this.jBtnAgregar.setEnabled(true);
         this.jBtnEliminar.setEnabled(true);
-        this.jBtnModificar.setEnabled(true);
-        this.jBtnCancelar.setEnabled(true);
         this.jTFValorTotal.setEnabled(true);
         this.jTFSubTotal.setEnabled(true);
         this.jTFIsv.setEnabled(true);
-        this.jTFTotal.setEnabled(true);  
+        this.jTFTotal.setEnabled(true);
+        jBtnTablaProducto.setEnabled(true);
+        jTFCodigoCliente.setEnabled(true);
     }
     
     //Método para desactivar y limpiar todo
@@ -249,6 +322,19 @@ public class JFraFactura extends javax.swing.JFrame {
             val = false;
         }else if (jTFNomProducto.getText().isEmpty()){
             val = false;
+        }else if (jTFCantidad.getText().isEmpty()){
+            val = false;
+        }else if(!jTFStock.getText().isEmpty() && !jTFCantidad.getText().isEmpty()){
+            int stock, cantidad;
+            stock = Integer.parseInt(jTFStock.getText());
+            cantidad = Integer.parseInt(jTFCantidad.getText());
+            if(cantidad > stock){
+                val = false;
+                JOptionPane.showMessageDialog(null, "El número de producto solicitado es mayor al disponible");
+                jTFCantidad.requestFocus();
+            }else{
+                val = true;
+            }
         }else{
             val = true;
         }
@@ -262,13 +348,31 @@ public class JFraFactura extends javax.swing.JFrame {
         codDetFactura = cdf.autoIncrementarDetFacturaCod();
         Object[] fila = new Object[5];
         DefaultTableModel dtm = (DefaultTableModel) jTblDetFactura.getModel();
-        fila[0] = codDetFactura;
+        fila[0] = jTFCodProducto.getText();
         fila[1] = jTFNomProducto.getText();
         fila[2] = jTFCantidad.getText();
         fila[3] = jTFPrecio.getText();
         fila[4] = jTFTotalProduc.getText();
         dtm.addRow(fila);
+        int cant, stock, stockFin;
+        cant = Integer.parseInt(jTFCantidad.getText());
+        stock = Integer.parseInt(jTFStock.getText());
+        stockFin = stock - cant;
         suma();
+        jTFCodProducto.setText("");
+        jTFStock.setText("");
+        jTFPrecio.setText("");
+        jTFCantidad.setText("");
+        jTFNomProducto.setText("");
+        jTFTotalProduc.setText("");
+    }
+    
+    //Método para tomar la selección de un producto
+    private static void seleccionTable(){
+        jBtnModificar.setEnabled(true);
+        jBtnEliminar.setEnabled(true);
+        jBtnAgregar.setEnabled(false);
+        jTFCodProducto.setText(String.valueOf(jTblDetFactura.getValueAt(fila, 0)));
     }
 
     /**
@@ -310,6 +414,8 @@ public class JFraFactura extends javax.swing.JFrame {
         jTFCodCliente = new javax.swing.JTextField();
         jBtnAgregarCliente = new javax.swing.JButton();
         jBtnTablaProducto = new javax.swing.JButton();
+        jLbl = new javax.swing.JLabel();
+        jTFCodigoCliente = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTblDetFactura = new javax.swing.JTable();
         jBtnGenerarVenta = new javax.swing.JButton();
@@ -376,6 +482,7 @@ public class JFraFactura extends javax.swing.JFrame {
 
         jLabel4.setText("Cliente:");
 
+        jTFCliente.setEditable(false);
         jTFCliente.setEnabled(false);
 
         jBtnBuscar.setText("Buscar");
@@ -457,11 +564,17 @@ public class JFraFactura extends javax.swing.JFrame {
         });
 
         jBtnTablaProducto.setText("Buscar en tabla");
+        jBtnTablaProducto.setEnabled(false);
         jBtnTablaProducto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jBtnTablaProductoActionPerformed(evt);
             }
         });
+
+        jLbl.setText("Código de Cliente:");
+
+        jTFCodigoCliente.setEditable(false);
+        jTFCodigoCliente.setEnabled(false);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -522,15 +635,20 @@ public class JFraFactura extends javax.swing.JFrame {
                                         .addGap(18, 18, 18)
                                         .addComponent(jTFCliente)))
                                 .addGap(18, 18, 18)
-                                .addComponent(jBtnBuscar)))
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jBtnBuscar)
+                                    .addComponent(jLbl))))
                         .addGap(18, 18, 18)
-                        .addComponent(jBtnAgregarCliente)
-                        .addGap(28, 28, 28)
-                        .addComponent(jLabel3)
-                        .addGap(18, 18, 18)
-                        .addComponent(jTFFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jBtnAgregarCliente)
+                                .addGap(28, 28, 28)
+                                .addComponent(jLabel3)
+                                .addGap(18, 18, 18)
+                                .addComponent(jTFFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jTFCodigoCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(28, 28, 28)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
                 .addComponent(jTFPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(44, 44, 44))
         );
@@ -552,7 +670,9 @@ public class JFraFactura extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTFCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
+                    .addComponent(jLabel4)
+                    .addComponent(jLbl)
+                    .addComponent(jTFCodigoCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(8, 8, 8)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
@@ -593,6 +713,11 @@ public class JFraFactura extends javax.swing.JFrame {
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        jTblDetFactura.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTblDetFacturaMouseClicked(evt);
             }
         });
         jScrollPane1.setViewportView(jTblDetFactura);
@@ -662,6 +787,7 @@ public class JFraFactura extends javax.swing.JFrame {
         jLabel16.setForeground(new java.awt.Color(255, 255, 255));
         jLabel16.setText("Descuento:");
 
+        jTFDescuento.setEditable(false);
         jTFDescuento.setFont(new java.awt.Font("Poppins SemiBold", 1, 11)); // NOI18N
         jTFDescuento.setForeground(new java.awt.Color(51, 51, 255));
 
@@ -695,13 +821,12 @@ public class JFraFactura extends javax.swing.JFrame {
                         .addGap(68, 68, 68)))
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jLabel11)
-                        .addGap(88, 88, 88))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(13, 13, 13)
                         .addComponent(jTFTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(20, Short.MAX_VALUE))))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel11)
+                        .addGap(71, 71, 71))))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -842,22 +967,32 @@ public class JFraFactura extends javax.swing.JFrame {
 
     private void jTFCantidadKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTFCantidadKeyReleased
         // TODO add your handling code here:
-        totalizarPrecio();
+        if(!jTFNomProducto.getText().isEmpty()){
+            totalizarPrecio();
+        } 
     }//GEN-LAST:event_jTFCantidadKeyReleased
 
     private void jBtnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnAgregarActionPerformed
         try {
             // TODO add your handling code here:
             if(validar()){
-               agregarProducto(); 
+               insertarDetFactura();
+               agregarProducto();
             }else{
                 JOptionPane.showMessageDialog(null, "Por favor complete todos los campos.");
             }
             
         } catch (SQLException ex) {
-            Logger.getLogger(JFraFactura.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Error: "+ex.getMessage());
         }
     }//GEN-LAST:event_jBtnAgregarActionPerformed
+
+    private void jTblDetFacturaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTblDetFacturaMouseClicked
+        // TODO add your handling code here:
+        fila = jTblDetFactura.rowAtPoint(evt.getPoint());
+        seleccionTable();
+
+    }//GEN-LAST:event_jTblDetFacturaMouseClicked
 
     /**
      * @param args the command line arguments
@@ -899,16 +1034,16 @@ public class JFraFactura extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jBtnAgregar;
+    private static javax.swing.JButton jBtnAgregar;
     private javax.swing.JButton jBtnAgregarCliente;
     private javax.swing.JButton jBtnBuscar;
     private javax.swing.JButton jBtnBuscarFact;
     private javax.swing.JButton jBtnBuscarProduc;
     private javax.swing.JButton jBtnCancelar;
-    private javax.swing.JButton jBtnEliminar;
+    private static javax.swing.JButton jBtnEliminar;
     private javax.swing.JButton jBtnEliminarFact;
     private javax.swing.JButton jBtnGenerarVenta;
-    private javax.swing.JButton jBtnModificar;
+    private static javax.swing.JButton jBtnModificar;
     private javax.swing.JButton jBtnNuevo;
     private javax.swing.JButton jBtnTablaProducto;
     private javax.swing.JLabel jLabel1;
@@ -927,6 +1062,7 @@ public class JFraFactura extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JLabel jLbl;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -936,6 +1072,7 @@ public class JFraFactura extends javax.swing.JFrame {
     public static javax.swing.JTextField jTFCodCliente;
     public static javax.swing.JTextField jTFCodFactura;
     public static javax.swing.JTextField jTFCodProducto;
+    private static javax.swing.JTextField jTFCodigoCliente;
     private static javax.swing.JTextField jTFDescuento;
     public static javax.swing.JTextField jTFFecha;
     private static javax.swing.JTextField jTFIsv;
