@@ -185,44 +185,35 @@ public class CDProducto {
     }
     
    //Método para buscar Producto por medio de código
-    public List<CLProducto> obtenerProductoPorCodigo(CLProducto cl) throws SQLException{
+    public CLProducto obtenerProductoPorCodigo(CLProducto cl) throws SQLException{
         
         String sql = "{call sp_mostrarProductoXCodigo(?)}";
         
-        List<CLProducto> miLista = null;
         
         try{
-            miLista  = new ArrayList<>();
             
             
             ps = cn.prepareStatement(sql);
             ps.setInt(1, cl.getCodProducto());
             rs = ps.executeQuery();
-            
-            miLista  = new ArrayList<>(4);
                      
-            while(rs.next()){ 
-                CLProducto prod = new CLProducto();
-                
-                
-                prod.setCodProducto(rs.getInt("codProducto"));
-                prod.setNombre(rs.getString("nombre"));
-                prod.setDescripcion(rs.getString("descripcion"));
-                prod.setCosto(rs.getDouble("costo"));
-                prod.setExistencia(rs.getInt("existencia"));
-                prod.setPrecioV1(rs.getDouble("precioV1"));
-                prod.setPrecioV2(rs.getDouble("precioV2"));
-                prod.setPrecioV3(rs.getDouble("precioV3"));
-                
-                prod.setNombreCategoria(rs.getString("categoria.nombre"));
-                prod.setNombreMarca(rs.getString("marca.nombre"));
-                prod.setNombreEmpresa(rs.getString("proveedor.nombreEmpresa"));
-                miLista.add(prod);
+            if(rs.next()){ 
+                cl.setCodProducto(rs.getInt("codProducto"));
+                cl.setNombre(rs.getString("nombre"));
+                cl.setDescripcion(rs.getString("descripcion"));
+                cl.setCosto(rs.getDouble("costo"));
+                cl.setExistencia(rs.getInt("existencia"));
+                cl.setPrecioV1(rs.getDouble("precioV1"));
+                cl.setPrecioV2(rs.getDouble("precioV2"));
+                cl.setPrecioV3(rs.getDouble("precioV3"));                
+                cl.setNombreCategoria(rs.getString("categoria.nombre"));
+                cl.setNombreMarca(rs.getString("marca.nombre"));
+                cl.setNombreEmpresa(rs.getString("proveedor.nombreEmpresa"));
             }
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
         }
-            return miLista;
+            return cl;
     }
     
     

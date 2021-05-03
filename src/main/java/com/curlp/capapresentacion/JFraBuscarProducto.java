@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -237,6 +238,11 @@ public class JFraBuscarProducto extends javax.swing.JFrame {
         if(!jTFCodProductEnviar.getText().isEmpty()){
             JFraFactura.jTFCodProducto.setText(jTFCodProductEnviar.getText());
             this.setVisible(false);
+            try {
+                JFraFactura.buscarProducto();
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null, "Error: "+ex.getMessage());
+            }
         }
     }//GEN-LAST:event_jBtnAbrirActionPerformed
 

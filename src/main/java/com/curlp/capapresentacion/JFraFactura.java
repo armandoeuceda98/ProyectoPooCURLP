@@ -8,9 +8,11 @@ package com.curlp.capapresentacion;
 import com.curlp.capadatos.CDCliente;
 import com.curlp.capadatos.CDDetFactura;
 import com.curlp.capadatos.CDFactura;
+import com.curlp.capadatos.CDProducto;
 import com.curlp.capalogica.CLCliente;
 import com.curlp.capalogica.CLDetFactura;
 import com.curlp.capalogica.CLFactura;
+import com.curlp.capalogica.CLProducto;
 import java.sql.SQLException;
 import java.time.*;
 import java.util.List;
@@ -83,6 +85,30 @@ public class JFraFactura extends javax.swing.JFrame {
         jTFTotal.setEnabled(true);
         jTFDescuento.setEnabled(true);
     }
+    
+    //Método para buscar un cliente
+    public static void buscarProducto() throws SQLException{
+        CLProducto clp = new CLProducto();
+        CDProducto cdp = new CDProducto();
+        clp.setCodProducto(Integer.parseInt(jTFCodProducto.getText().trim()));
+        cdp.obtenerProductoPorCodigo(clp);
+        jTFNomProducto.setText(clp.getNombre());
+        jTFStock.setText(String.valueOf(clp.getExistencia()));
+        jTFPrecio.setText(String.valueOf(clp.getPrecioV1()));
+    }
+    
+    //Método para saber el total a partir de la cantidad de producto por el precio de unidad
+    private void totalizarPrecio(){
+        double cant, prec, tot, stock, stockfin;
+        cant = Double.parseDouble(jTFCantidad.getText());
+        prec = Double.parseDouble(jTFPrecio.getText());
+        tot = cant * prec;
+        jTFTotalProduc.setText(String.valueOf(tot));
+//        stock = Double.parseDouble(jTFStock.getText());
+//        stockfin = stock - cant;
+//        jTFStock.setText(String.valueOf(stockfin));
+    }
+    
     
     //Método para buscar un cliente
     private static void buscarCliente() throws SQLException{
@@ -211,6 +237,39 @@ public class JFraFactura extends javax.swing.JFrame {
         dtm.removeRow(dtm.getRowCount()-1);
         }
     }
+    
+    //Método para validar integración de producto
+    private boolean validar(){
+        boolean val;
+        if(jTFCodCliente.getText().isEmpty()){
+            val = false;
+        }else if (jTFCliente.getText().isEmpty()){
+            val = false;
+        }else if (jTFCodProducto.getText().isEmpty()){
+            val = false;
+        }else if (jTFNomProducto.getText().isEmpty()){
+            val = false;
+        }else{
+            val = true;
+        }
+        return val;
+    }
+    
+    //Método para ir agregando productos a la tabla
+    private void agregarProducto() throws SQLException{
+        int codDetFactura = 0;
+        CDDetFactura cdf = new CDDetFactura();
+        codDetFactura = cdf.autoIncrementarDetFacturaCod();
+        Object[] fila = new Object[5];
+        DefaultTableModel dtm = (DefaultTableModel) jTblDetFactura.getModel();
+        fila[0] = codDetFactura;
+        fila[1] = jTFNomProducto.getText();
+        fila[2] = jTFCantidad.getText();
+        fila[3] = jTFPrecio.getText();
+        fila[4] = jTFTotalProduc.getText();
+        dtm.addRow(fila);
+        suma();
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -333,6 +392,11 @@ public class JFraFactura extends javax.swing.JFrame {
 
         jBtnBuscarProduc.setText("Buscar");
         jBtnBuscarProduc.setEnabled(false);
+        jBtnBuscarProduc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtnBuscarProducActionPerformed(evt);
+            }
+        });
 
         jLabel6.setText("Stock:");
 
@@ -346,11 +410,17 @@ public class JFraFactura extends javax.swing.JFrame {
 
         jLabel8.setText("Nombre Producto:");
 
+        jTFNomProducto.setEditable(false);
         jTFNomProducto.setEnabled(false);
 
         jLabel9.setText("Cantidad:");
 
         jTFCantidad.setEnabled(false);
+        jTFCantidad.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTFCantidadKeyReleased(evt);
+            }
+        });
 
         jLabel10.setText("Total:");
 
@@ -360,6 +430,11 @@ public class JFraFactura extends javax.swing.JFrame {
         jBtnAgregar.setFont(new java.awt.Font("Poppins ExtraBold", 0, 11)); // NOI18N
         jBtnAgregar.setText("AGREGAR");
         jBtnAgregar.setEnabled(false);
+        jBtnAgregar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtnAgregarActionPerformed(evt);
+            }
+        });
 
         jBtnEliminar.setFont(new java.awt.Font("Poppins ExtraBold", 0, 11)); // NOI18N
         jBtnEliminar.setText("ELIMINAR");
@@ -755,6 +830,34 @@ public class JFraFactura extends javax.swing.JFrame {
         }
         
     }//GEN-LAST:event_jBtnTablaProductoActionPerformed
+
+    private void jBtnBuscarProducActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnBuscarProducActionPerformed
+        try {
+            // TODO add your handling code here:
+            buscarProducto();
+        } catch (SQLException ex) {
+            Logger.getLogger(JFraFactura.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jBtnBuscarProducActionPerformed
+
+    private void jTFCantidadKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTFCantidadKeyReleased
+        // TODO add your handling code here:
+        totalizarPrecio();
+    }//GEN-LAST:event_jTFCantidadKeyReleased
+
+    private void jBtnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnAgregarActionPerformed
+        try {
+            // TODO add your handling code here:
+            if(validar()){
+               agregarProducto(); 
+            }else{
+                JOptionPane.showMessageDialog(null, "Por favor complete todos los campos.");
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(JFraFactura.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jBtnAgregarActionPerformed
 
     /**
      * @param args the command line arguments
