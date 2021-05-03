@@ -8,9 +8,11 @@ package com.curlp.capapresentacion;
 import com.curlp.capadatos.CDCliente;
 import com.curlp.capadatos.CDDetFactura;
 import com.curlp.capadatos.CDFactura;
+import com.curlp.capadatos.CDProducto;
 import com.curlp.capalogica.CLCliente;
 import com.curlp.capalogica.CLDetFactura;
 import com.curlp.capalogica.CLFactura;
+import com.curlp.capalogica.CLProducto;
 import java.sql.SQLException;
 import java.time.*;
 import java.util.List;
@@ -83,6 +85,18 @@ public class JFraFactura extends javax.swing.JFrame {
         jTFTotal.setEnabled(true);
         jTFDescuento.setEnabled(true);
     }
+    
+    //Método para buscar un cliente
+    public static void buscarProducto() throws SQLException{
+        CLProducto clp = new CLProducto();
+        CDProducto cdp = new CDProducto();
+        clp.setCodProducto(Integer.parseInt(jTFCodProducto.getText().trim()));
+        cdp.obtenerProductoPorCodigo(clp);
+        jTFNomProducto.setText(clp.getNombre());
+        jTFStock.setText(String.valueOf(clp.getExistencia()));
+        jTFPrecio.setText(String.valueOf(clp.getPrecioV1()));
+    }
+    
     
     //Método para buscar un cliente
     private static void buscarCliente() throws SQLException{
@@ -333,6 +347,11 @@ public class JFraFactura extends javax.swing.JFrame {
 
         jBtnBuscarProduc.setText("Buscar");
         jBtnBuscarProduc.setEnabled(false);
+        jBtnBuscarProduc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtnBuscarProducActionPerformed(evt);
+            }
+        });
 
         jLabel6.setText("Stock:");
 
@@ -755,6 +774,15 @@ public class JFraFactura extends javax.swing.JFrame {
         }
         
     }//GEN-LAST:event_jBtnTablaProductoActionPerformed
+
+    private void jBtnBuscarProducActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnBuscarProducActionPerformed
+        try {
+            // TODO add your handling code here:
+            buscarProducto();
+        } catch (SQLException ex) {
+            Logger.getLogger(JFraFactura.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jBtnBuscarProducActionPerformed
 
     /**
      * @param args the command line arguments
