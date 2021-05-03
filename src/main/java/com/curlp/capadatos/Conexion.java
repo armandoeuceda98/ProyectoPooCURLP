@@ -10,7 +10,7 @@ public class Conexion {
     private static String url = "jdbc:mysql://localhost:3306/inventario_master?zeroDateTimeBehavior=CONVERT_TO_NULL";
     private static String user = "root";
     private static String clave = "gustavo01";
-    
+   
     public static Connection conectar() throws SQLException {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver"); 

@@ -1,8 +1,8 @@
 
 package com.curlp.capadatos;
 
-import com.curlp.capalogica.CLCliente;
 import com.curlp.capalogica.CLFactura;
+import com.curlp.capalogica.CLProducto;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,21 +12,21 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 
-public class CDFactura {
-    
-    //Variables de conexión y de consulta
+
+public class CDProducto {
+    //Variables de conexion y de consulta
     private final Connection cn;
     PreparedStatement ps;
     ResultSet rs;
     Statement st;
-
-    public CDFactura() throws SQLException{
+    
+    public CDProducto(Connection cn) throws SQLException {
         this.cn = Conexion.conectar();
     }
     
-    //Método para insertar una ciudad en tabla
-    public void insertarFactura(CLFactura cl)throws SQLException{
-        String sql = "{CALL sp_insertarFactura(?,?,?)}";
+      //Método para insertar una ciudad en tabla
+    public void insertarProducto(CLFactura cl)throws SQLException{
+        String sql = "{CALL sp_insertarProducto(?,?,?,?,?,?,?,?,?,?,?,?,?)}";
         
         try{
             ps = cn.prepareCall(sql);
@@ -143,28 +143,39 @@ public class CDFactura {
     }
     
     //Método para buscar factura por medio de código
-    public List<CLFactura> obtenerFacturasFiltradas(CLFactura cl) throws SQLException{
+    public List<CLProducto> obtenerProductoFiltrado(CLProducto cl) throws SQLException{
         
-        String sql = "{call sp_mostrarFacturaX(?)}";
+        String sql = "{call sp_mostrarProductoXNombre(?)}";
         
-        List<CLFactura> miLista = null;
+        List<CLProducto> miLista = null;
         
         try{
             miLista  = new ArrayList<>();
             
             
             ps = cn.prepareStatement(sql);
-            ps.setInt(1, cl.getCodFactura());
+            ps.setString(1, cl.getNombre());
             rs = ps.executeQuery();
             
             miLista  = new ArrayList<>(4);
                      
             while(rs.next()){ 
-                cl.setCodFactura(rs.getInt("codFactura"));
-                cl.setFecha(rs.getString("fecha"));
-                cl.setNombreCliente(rs.getString("nombre"));
-                cl.setNombreEmpleado(rs.getString("empleado.nombre"));
-                miLista.add(cl);
+                CLProducto prod = new CLProducto();
+                
+                
+                prod.setCodProducto(rs.getInt("codProducto"));
+                prod.setNombre(rs.getString("nombre"));
+                prod.setDescripcion(rs.getString("descripcion"));
+                prod.setCosto(rs.getDouble("costo"));
+                prod.setExistencia(rs.getInt("existencia"));
+                prod.setPrecioV1(rs.getDouble("precioV1"));
+                prod.setPrecioV2(rs.getDouble("precioV2"));
+                prod.setPrecioV3(rs.getDouble("precioV3"));
+                
+                prod.setNombreCategoria(rs.getString("categoria.nombre"));
+                prod.setNombreMarca(rs.getString("marca.nombre"));
+                prod.setNombreEmpresa(rs.getString("proveedor.nombreEmpresa"));
+                miLista.add(prod);
             }
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
@@ -222,3 +233,4 @@ public class CDFactura {
             
            
 }
+
