@@ -28,6 +28,7 @@ public class JFraFactura extends javax.swing.JFrame {
     /**
      * Creates new form JFraFactura
      */
+
     public JFraFactura() throws SQLException {
         initComponents();
     }
@@ -373,6 +374,11 @@ public class JFraFactura extends javax.swing.JFrame {
 
         jBtnAgregarCliente.setText("Agregar");
         jBtnAgregarCliente.setEnabled(false);
+        jBtnAgregarCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtnAgregarClienteActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -713,6 +719,16 @@ public class JFraFactura extends javax.swing.JFrame {
             Logger.getLogger(JFraFactura.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jBtnBuscarActionPerformed
+
+    private void jBtnAgregarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnAgregarClienteActionPerformed
+        try {
+            // TODO add your handling code here:
+            jFraCliente jfc = new jFraCliente();
+            jfc.setVisible(true);
+        } catch (SQLException ex) {
+            Logger.getLogger(JFraFactura.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jBtnAgregarClienteActionPerformed
 
     /**
      * @param args the command line arguments
