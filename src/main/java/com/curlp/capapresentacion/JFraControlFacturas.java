@@ -148,6 +148,8 @@ public class JFraControlFacturas extends javax.swing.JFrame {
             return fila;
         }).forEachOrdered(temp::addRow);
     }
+    
+    //Método para rellenar textfield de codfatura
     private void seleccionTable(){
         this.jTFNumFactura.setText(String.valueOf(this.jTblFacturas.getValueAt(fila, 0)));
     }

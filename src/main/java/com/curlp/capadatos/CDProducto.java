@@ -11,6 +11,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 
 
 public class CDProducto {
@@ -20,7 +21,7 @@ public class CDProducto {
     ResultSet rs;
     Statement st;
     
-    public CDProducto(Connection cn) throws SQLException {
+    public CDProducto() throws SQLException {
         this.cn = Conexion.conectar();
     }
     
@@ -143,7 +144,7 @@ public class CDProducto {
     }
     
     //Método para buscar factura por medio de código
-    public List<CLProducto> obtenerProductoFiltrado(CLProducto cl) throws SQLException{
+    public List<CLProducto> obtenerProductoFiltrado(JTable jtable, String nombre) throws SQLException{
         
         String sql = "{call sp_mostrarProductoXNombre(?)}";
         
@@ -154,7 +155,7 @@ public class CDProducto {
             
             
             ps = cn.prepareStatement(sql);
-            ps.setString(1, cl.getNombre());
+            ps.setString(1, nombre);
             rs = ps.executeQuery();
             
             miLista  = new ArrayList<>(4);
