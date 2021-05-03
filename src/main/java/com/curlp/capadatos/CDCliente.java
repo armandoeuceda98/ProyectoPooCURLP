@@ -25,7 +25,7 @@ public class CDCliente {
 
     public void insertarCliente(CLCliente cl) throws SQLException {
         String sql = "{CALL sp_insertarCliente(?,?,?,?,?,?,?)}";
-        
+
         try {
             ps = cn.prepareCall(sql);
             ps.setString(1, cl.getNombre());
@@ -45,7 +45,7 @@ public class CDCliente {
     //Metodo para actualizar un cliente
     public void actualizarCliente(CLCliente cl) throws SQLException {
         String sql = "{CALL sp_actualizarCliente(?,?,?,?,?,?,?,?)}";
-        
+
         try {
             ps = cn.prepareCall(sql);
             ps.setInt(1, cl.getCodCliente());
@@ -66,7 +66,7 @@ public class CDCliente {
 
     public void eliminarCliente(CLCliente cl) throws SQLException {
         String sql = "{CALL sp_eliminarCliente(?)}";
-        
+
         try {
             ps = cn.prepareCall(sql);
             ps.setInt(1, cl.getCodCliente());
@@ -76,42 +76,43 @@ public class CDCliente {
             JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
         }
     }
+
     //metodo para autoincrementar el id
     public int autoIncrementarCodCliente() throws SQLException {
         int codCliente = 0;
-        
+
         String sql = "{call sp_autoIncrementarCodCliente()}";
-        
+
         try {
             st = cn.createStatement();
             rs = st.executeQuery(sql);
             rs.next();
-            
+
             codCliente = rs.getInt("codCliente");
-            
-            if(codCliente == 0){
+
+            if (codCliente == 0) {
                 codCliente = 1;
             }
-        } catch (SQLException e){
+        } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
         }
         return codCliente;
     }
-    
+
     //Metodo para poblar de adtos la tabla
-        public List<CLCliente> obtenerCliente() throws SQLException{
+    public List<CLCliente> obtenerCliente() throws SQLException {
         String sql = "{call sp_mostrarCliente()}";
-        
-        List<CLCliente> miLista= null;
+
+        List<CLCliente> miLista = null;
         try {
             st = cn.createStatement();
             rs = st.executeQuery(sql);
-            
+
             miLista = new ArrayList<>();
-            
-            while(rs.next()){
+
+            while (rs.next()) {
                 CLCliente cl = new CLCliente();
-                
+
                 cl.setCodCliente(rs.getInt("codCliente"));
                 cl.setNombre(rs.getString("nombre"));
                 cl.setDocIdentidad(rs.getString("docIdentidad"));
@@ -122,31 +123,57 @@ public class CDCliente {
                 cl.setEstadoCliente(rs.getBoolean("estadoCliente"));
                 miLista.add(cl);
             }
-        } catch (SQLException e){
+        } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
         }
         return miLista;
     }
-        
-        //metodo que nos va permitir llenar el combo de ciudad
-            public List<String> cargarComboCliente() throws SQLException{
+
+    //metodo que nos va permitir llenar el combo de ciudad
+    public List<String> cargarComboCliente() throws SQLException {
         String sql = "{call sp_mostrarCliente()}";
-        
-        List<String> miLista= null;
+
+        List<String> miLista = null;
         try {
             st = cn.createStatement();
             rs = st.executeQuery(sql);
-            
+
             miLista = new ArrayList<>();
             miLista.add("--Seleccione--");
-            
-            while(rs.next()){
+
+            while (rs.next()) {
                 miLista.add(rs.getString("codCliente"));
             }
-        } catch (SQLException e){
+        } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
         }
         return miLista;
+    }
+
+    //metodo para buscar por identidad
+    public CLCliente obtenerListaClienteXId(CLCliente clc) throws SQLException {
+        String sql;
+        sql = "{call sp_mostrarClienteXIdentidad(?)}";
+        List<CLCliente> miLista = null;
+        try {
+            ps = cn.prepareStatement(sql);
+            ps.setString(1, clc.getDocIdentidad());
+            rs = ps.executeQuery();
+            miLista = new ArrayList<>();
+            while (rs.next()) {
+                clc.setCodCliente(rs.getInt("codCliente"));
+                clc.setNombre(rs.getString("nombre"));
+                clc.setDocIdentidad(rs.getString("docIdentidad"));
+                clc.setBeneficio(rs.getBoolean("beneficio"));
+                clc.setTelefono(rs.getString("telefono"));
+                clc.setCorreo(rs.getString("correo"));
+                clc.setPorcentajeDescuento(rs.getFloat("porcentajeDescuento"));
+                clc.setEstadoCliente(rs.getBoolean("estadoCliente"));
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+        }
+        return clc;
     }
 
 }
