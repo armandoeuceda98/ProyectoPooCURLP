@@ -239,7 +239,7 @@ public class jFraCliente extends javax.swing.JFrame {
                         estado = true;
                     }
                 } else if (this.jCBColumna.getSelectedIndex() == 2) {
-                    String c = (String) this.jTblCliente.getValueAt(i, 1);
+                    String c = (String) this.jTblCliente.getValueAt(i, 2);
                     if (c.equals(this.jTFBuscar.getText())) {
                         String dato = "Codigo Cliente: " + this.jTblCliente.getValueAt(i, 0)
                                 + "\nNombre: " + this.jTblCliente.getValueAt(i, 1)
@@ -274,6 +274,7 @@ public class jFraCliente extends javax.swing.JFrame {
         
         return estado;
     }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -561,12 +562,11 @@ public class jFraCliente extends javax.swing.JFrame {
         jLabel11.setText("Columna:");
 
         jCBColumna.setBackground(new java.awt.Color(119, 74, 217));
-        jCBColumna.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "--Seleccione--", "Codigo Cliente", "Nombre" }));
+        jCBColumna.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "--Seleccione--", "Codigo Cliente", "Identidad" }));
 
         jLabel12.setForeground(java.awt.Color.white);
         jLabel12.setText("Dato:");
 
-        jBtnBuscar.setBackground(new java.awt.Color(119, 74, 217));
         jBtnBuscar.setText("Buscar");
         jBtnBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

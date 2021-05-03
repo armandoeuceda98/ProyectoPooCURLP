@@ -552,7 +552,7 @@
                   <StringArray count="3">
                     <StringItem index="0" value="--Seleccione--"/>
                     <StringItem index="1" value="Codigo Cliente"/>
-                    <StringItem index="2" value="Nombre"/>
+                    <StringItem index="2" value="Identidad"/>
                   </StringArray>
                 </Property>
               </Properties>
@@ -572,9 +572,6 @@
             </Component>
             <Component class="javax.swing.JButton" name="jBtnBuscar">
               <Properties>
-                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="d9" green="4a" red="77" type="rgb"/>
-                </Property>
                 <Property name="text" type="java.lang.String" value="Buscar"/>
               </Properties>
               <Events>
