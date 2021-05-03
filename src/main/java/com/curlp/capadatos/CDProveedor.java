@@ -134,4 +134,65 @@ public class CDProveedor {
         }
         return myList;
     }
+
+    public List<CLProveedor> buscarProveedor(CLProveedor cl) throws SQLException {
+
+        String sql = "{call sp_buscarProveedor(?)}";
+
+        List<CLProveedor> miLista = null;
+
+        try {
+            miLista = new ArrayList<>();
+
+            ps = cn.prepareStatement(sql);
+            ps.setInt(1, cl.getCodProveedor());
+            rs = ps.executeQuery();
+
+            miLista = new ArrayList<>(2);
+
+            while (rs.next()) {
+                cl.setCodProveedor(rs.getInt("codProveedor"));
+                cl.setNombreEmpresa(rs.getString("nombreEmpresa"));
+                cl.setTelefono(rs.getString("telefono"));
+                cl.setCorreo(rs.getString("correo"));
+                cl.setNombreRepresentante(rs.getString("nombreRepresentante"));
+                cl.setTelefonoRepresentante(rs.getString("telefonoRepresentante"));
+                miLista.add(cl);
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+        }
+        return miLista;
+    }
+
+    public List<CLProveedor> buscarProveedorNombre(CLProveedor cl) throws SQLException {
+
+        String sql = "{call sp_buscarProveedorNombre(?)}";
+
+        List<CLProveedor> miLista = null;
+
+        try {
+            miLista = new ArrayList<>();
+
+            ps = cn.prepareStatement(sql);
+            ps.setString(1, cl.getNombreEmpresa());
+            rs = ps.executeQuery();
+
+            miLista = new ArrayList<>(2);
+
+            while (rs.next()) {
+                cl.setCodProveedor(rs.getInt("codProveedor"));
+                cl.setNombreEmpresa(rs.getString("nombreEmpresa"));
+                cl.setTelefono(rs.getString("telefono"));
+                cl.setCorreo(rs.getString("correo"));
+                cl.setNombreRepresentante(rs.getString("nombreRepresentante"));
+                cl.setTelefonoRepresentante(rs.getString("telefonoRepresentante"));
+                miLista.add(cl);
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+        }
+        return miLista;
+    }
 }
+

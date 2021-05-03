@@ -53,6 +53,36 @@ public class jFraMarca extends javax.swing.JFrame {
             return fila;
         }).forEachOrdered(temp::addRow);
     }
+    //Buscar y mostrar en tabla
+    private void buscarTabla() throws SQLException{
+        limpiarTabla();
+        if (!validarBuscar()) {
+            JOptionPane.showMessageDialog(null, "Tiene que ingresar todos los datos de busqueda.", "Inventarios Master", 1);
+        } else {
+            CDMarca cdm = new CDMarca();
+            CLMarca clm = new CLMarca();
+            
+            List<CLMarca> myList = null;
+            if(this.jCBColumna.getSelectedIndex() == 1){
+                clm.setIdMarca(Integer.valueOf(this.jTFBuscar.getText().trim()));
+                myList = cdm.buscarMarca(clm);
+            }else if(this.jCBColumna.getSelectedIndex() == 2){
+                clm.setNombre(this.jTFBuscar.getText().trim());
+                myList = cdm.buscarMarcaNombre(clm);
+            }
+            
+            DefaultTableModel temp = (DefaultTableModel) this.jTblMarca.getModel();
+
+            myList.stream().map((CLMarca cl) -> {
+                Object[] fila = new Object[2];
+                fila[0] = cl.getIdMarca();
+                fila[1] = cl.getNombre();
+                return fila;
+            }).forEachOrdered(temp::addRow);
+        }
+    }
+    /*
+    //Buscar en tabla con alerta
     private void buscar() throws SQLException {
         if (!validarBuscar()) {
             JOptionPane.showMessageDialog(null, "Tiene que ingresar todos los datos de busqueda.", "Inventarios Master", 1);
@@ -82,6 +112,7 @@ public class jFraMarca extends javax.swing.JFrame {
         }
         
     }
+    */
     //Encontrar Correlativo
     private void encontrarCorrelativo() throws SQLException{
         CDMarca cdm = new CDMarca();
@@ -98,12 +129,13 @@ public class jFraMarca extends javax.swing.JFrame {
         this.jBtnLimpiar.setEnabled(limpiar);
     }
     //Limpiar TextFields
-    private void limpiarTF(){
+    private void limpiarTF() throws SQLException{
         this.jTFNombreMarca.setText("");
         this.jTFBuscar.setText("");
         this.jCBColumna.setSelectedIndex(0);
         this.jTblMarca.clearSelection();
         habilitarBotones(true, false, false, true);
+        poblarTabla();
         this.jTFNombreMarca.requestFocus();
     }
     //Validar TextFields
@@ -549,7 +581,7 @@ public class jFraMarca extends javax.swing.JFrame {
 
     private void jBtnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnBuscarActionPerformed
         try {
-            buscar();
+            buscarTabla();
         } catch (SQLException ex) {
             Logger.getLogger(jFraMarca.class.getName()).log(Level.SEVERE, null, ex);
         }

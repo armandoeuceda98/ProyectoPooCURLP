@@ -118,4 +118,56 @@ public class CDMarca {
         }
         return myList;
     }
+    
+    public List<CLMarca> buscarMarca(CLMarca cl) throws SQLException {
+
+        String sql = "{call sp_buscarMarca(?)}";
+
+        List<CLMarca> miLista = null;
+
+        try {
+            miLista = new ArrayList<>();
+
+            ps = cn.prepareStatement(sql);
+            ps.setInt(1, cl.getIdMarca());
+            rs = ps.executeQuery();
+
+            miLista = new ArrayList<>(2);
+
+            while (rs.next()) {
+                cl.setIdMarca(rs.getInt("idMarca"));
+                cl.setNombre(rs.getString("nombre"));
+                miLista.add(cl);
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+        }
+        return miLista;
+    }
+
+    public List<CLMarca> buscarMarcaNombre(CLMarca cl) throws SQLException {
+
+        String sql = "{call sp_buscarMarcaNombre(?)}";
+
+        List<CLMarca> miLista = null;
+
+        try {
+            miLista = new ArrayList<>();
+
+            ps = cn.prepareStatement(sql);
+            ps.setString(1, cl.getNombre());
+            rs = ps.executeQuery();
+
+            miLista = new ArrayList<>(2);
+
+            while (rs.next()) {
+                cl.setIdMarca(rs.getInt("idMarca"));
+                cl.setNombre(rs.getString("nombre"));
+                miLista.add(cl);
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+        }
+        return miLista;
+    }
 }

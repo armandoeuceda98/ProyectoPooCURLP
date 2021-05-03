@@ -57,7 +57,39 @@ public class jFraProveedor extends javax.swing.JFrame {
             return fila;
         }).forEachOrdered(temp::addRow);
     }
+    //Buscar y mostrar en tabla
+    private void buscarTabla() throws SQLException{
+        limpiarTabla();
+        if (!validarBuscar()) {
+            JOptionPane.showMessageDialog(null, "Tiene que ingresar todos los datos de busqueda.", "Inventarios Master", 1);
+        } else {
+            CDProveedor cdp = new CDProveedor();
+            CLProveedor clp = new CLProveedor();
+            
+            List<CLProveedor> myList = null;
+            if(this.jCBColumna.getSelectedIndex() == 1){
+                clp.setCodProveedor(Integer.valueOf(this.jTFBuscar.getText().trim()));
+                myList = cdp.buscarProveedor(clp);
+            }else if(this.jCBColumna.getSelectedIndex() == 2){
+                clp.setNombreEmpresa(String.valueOf(this.jTFBuscar.getText().trim()));
+                myList = cdp.buscarProveedorNombre(clp);
+            }
+            
+            DefaultTableModel temp = (DefaultTableModel) this.jTblProveedor.getModel();
 
+            myList.stream().map((CLProveedor cl) -> {
+                Object[] fila = new Object[6];
+                fila[0] = cl.getCodProveedor();
+                fila[1] = cl.getNombreEmpresa();
+                fila[2] = cl.getTelefono();
+                fila[3] = cl.getCorreo();
+                fila[4] = cl.getNombreRepresentante();
+                fila[5] = cl.getTelefonoRepresentante();
+                return fila;
+            }).forEachOrdered(temp::addRow);
+        }
+    }
+    /*
     //Buscar en tabla
     private void buscar() throws SQLException {
         if (!validarBuscar()) {
@@ -96,6 +128,7 @@ public class jFraProveedor extends javax.swing.JFrame {
         }
         
     }
+    */
     //Encontrar Correlativo
     private void encontrarCorrelativo() throws SQLException{
         CDProveedor cdp = new CDProveedor();
@@ -112,7 +145,7 @@ public class jFraProveedor extends javax.swing.JFrame {
         this.jBtnLimpiar.setEnabled(limpiar);
     }
     //Limpiar TextFields
-    private void limpiarTF(){
+    private void limpiarTF() throws SQLException{
         this.jTFEmpresa.setText("");
         this.jTFTelefono.setText("");
         this.jTFCorreo.setText("");
@@ -122,6 +155,7 @@ public class jFraProveedor extends javax.swing.JFrame {
         this.jCBColumna.setSelectedIndex(0);
         this.jTblProveedor.clearSelection();
         habilitarBotones(true, false, false, true);
+        poblarTabla();
         this.jTFEmpresa.requestFocus();
     }
     //Validar TextFields
@@ -544,7 +578,7 @@ public class jFraProveedor extends javax.swing.JFrame {
 
     private void jBtnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnBuscarActionPerformed
         try {
-            buscar();
+            buscarTabla();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Error: " + ex);
         }
