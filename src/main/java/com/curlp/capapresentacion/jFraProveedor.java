@@ -526,7 +526,7 @@ public class jFraProveedor extends javax.swing.JFrame {
         jLabel11.setForeground(new java.awt.Color(255, 255, 255));
         jLabel11.setText("Dato:");
         jPanel5.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 220, -1, -1));
-        jPanel5.add(jTFBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 220, 120, -1));
+        jPanel5.add(jTFBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 220, 240, -1));
 
         jBtnBuscar.setBackground(new java.awt.Color(119, 74, 217));
         jBtnBuscar.setForeground(new java.awt.Color(255, 255, 255));
@@ -536,7 +536,7 @@ public class jFraProveedor extends javax.swing.JFrame {
                 jBtnBuscarActionPerformed(evt);
             }
         });
-        jPanel5.add(jBtnBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 220, -1, -1));
+        jPanel5.add(jBtnBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 220, -1, -1));
 
         jPanel3.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 10, 590, 250));
 
