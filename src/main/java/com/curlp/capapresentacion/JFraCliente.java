@@ -13,9 +13,9 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author GustavoAdolfo
  */
-public class jFraCliente extends javax.swing.JFrame {
+public class JFraCliente extends javax.swing.JFrame {
 
-    public jFraCliente() throws SQLException {
+    public JFraCliente() throws SQLException {
         initComponents();
         poblarTabla();
         encontrarCorrelativo();
@@ -77,13 +77,16 @@ public class jFraCliente extends javax.swing.JFrame {
         this.jTFTelefono.setText("");
         this.jTFCorreo.setText("");
         this.jTFPorcentajeDescuento.setText("");
+        this.jTFBuscar.setText("");
         this.jCBEstado.setSelected(false);
+        
         this.jTFNombre.requestFocus();
     }
-    private void limpiarBusqueda(){
-        this.jCBColumna.setSelectedIndex(0);
-        this.jTFBuscar.setText("");
-    }
+
+//    private void limpiarBusqueda() {
+//        this.jCBColumna.setSelectedIndex(0);
+//        this.jTFBuscar.setText("");
+//    }
 
     //Metodo para validar la textfield
     private boolean validarTF() {
@@ -217,64 +220,26 @@ public class jFraCliente extends javax.swing.JFrame {
             limpiarTF();
         }
     }
-            
-    private void buscar() throws SQLException {
-        if (!validarBuscar()) {
-            JOptionPane.showMessageDialog(null, "Tiene que ingresar todos los datos de busqueda.", "Inventarios Master", 1);
-        } else {
-            boolean estado = false;
-            for (int i = 0; i < this.jTblCliente.getRowCount(); i++) {
-                if (this.jCBColumna.getSelectedIndex() == 1) {
-                    if (this.jTblCliente.getValueAt(i, 0) == Integer.valueOf(this.jTFBuscar.getText())) {;
-                        String dato = "Codigo Cliente: " + this.jTblCliente.getValueAt(i, 0)
-                                + "\nNombre: " + this.jTblCliente.getValueAt(i, 1)
-                                + "\nDocumento Identidad: " + this.jTblCliente.getValueAt(i, 2)
-                                + "\nBeneficio: " + this.jTblCliente.getValueAt(i, 3)
-                                + "\nTelefono: " + this.jTblCliente.getValueAt(i, 4)
-                                + "\nCorreo: " + this.jTblCliente.getValueAt(i, 5)
-                                + "\nPorcentaje Descuento: " + this.jTblCliente.getValueAt(i, 6)
-                                + "\nEstado Cliente: " + this.jTblCliente.getValueAt(i, 7);
-                        JOptionPane.showMessageDialog(null, dato, "Dato encontrado", 1);
-                        limpiarBusqueda();
-                        estado = true;
-                    }
-                } else if (this.jCBColumna.getSelectedIndex() == 2) {
-                    String c = (String) this.jTblCliente.getValueAt(i, 2);
-                    if (c.equals(this.jTFBuscar.getText())) {
-                        String dato = "Codigo Cliente: " + this.jTblCliente.getValueAt(i, 0)
-                                + "\nNombre: " + this.jTblCliente.getValueAt(i, 1)
-                                + "\nDocumento Identidad: " + this.jTblCliente.getValueAt(i, 2)
-                                + "\nBeneficio: " + this.jTblCliente.getValueAt(i, 3)
-                                + "\nTelefono: " + this.jTblCliente.getValueAt(i, 4)
-                                + "\nCorreo: " + this.jTblCliente.getValueAt(i, 5)
-                                + "\nPorcentaje Descuento: " + this.jTblCliente.getValueAt(i, 6)
-                                + "\nEstado Cliente: " + this.jTblCliente.getValueAt(i, 7);
-                        JOptionPane.showMessageDialog(null, dato, "Dato encontrado", 1);
-                        limpiarBusqueda();
-                        estado = true;
-                    }
-                }
-            }
-            if(estado == false){
-                JOptionPane.showMessageDialog(null, "No se ha encontrado registro", "Dato no encontrado", 1);
-            }
-        }
-        
-    }
-        private boolean validarBuscar(){
-        boolean estado = true;
-        
-        if(this.jCBColumna.getSelectedIndex() == 0){
-            estado = false;
-            this.jCBColumna.requestFocus();
-        }else if(this.jTFBuscar.getText().equals("")){
-            estado = false;
-            this.jTFBuscar.requestFocus();
-        }
-        
-        return estado;
-    }
 
+    private void buscarClienteXIdentidad() throws SQLException {
+        CLCliente clc = new CLCliente();
+        CDCliente cdc = new CDCliente();
+        clc.setDocIdentidad(jTFBuscar.getText().trim());
+        cdc.obtenerListaClienteXId(clc);
+        if (clc.getNombre() == null) {
+            JOptionPane.showMessageDialog(null, "No se encontró ningún cliente.");
+        } else {
+            jTFCodCliente.setText(String.valueOf(clc.getCodCliente()));
+            jTFNombre.setText(clc.getNombre());
+            jTFDocIdentidad.setText(clc.getDocIdentidad());
+            jCBBeneficio.setSelected((boolean)(clc.isBeneficio()));            
+            jTFTelefono.setText(clc.getNombre());
+            jTFCorreo.setText(clc.getNombre());
+            jTFPorcentajeDescuento.setText(clc.getNombre());
+            jCBEstado.setSelected((boolean)(clc.isEstadoCliente()));
+            habilitarBotones(false, true, true, true);
+        }
+        }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -313,8 +278,6 @@ public class jFraCliente extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTblCliente = new javax.swing.JTable();
         jLabel8 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
-        jCBColumna = new javax.swing.JComboBox<>();
         jLabel12 = new javax.swing.JLabel();
         jTFBuscar = new javax.swing.JTextField();
         jBtnBuscar = new javax.swing.JButton();
@@ -555,17 +518,13 @@ public class jFraCliente extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(jTblCliente);
 
+        jLabel8.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel8.setForeground(java.awt.Color.white);
         jLabel8.setText("Buscar:");
 
-        jLabel11.setForeground(java.awt.Color.white);
-        jLabel11.setText("Columna:");
-
-        jCBColumna.setBackground(new java.awt.Color(119, 74, 217));
-        jCBColumna.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "--Seleccione--", "Codigo Cliente", "Identidad" }));
-
+        jLabel12.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel12.setForeground(java.awt.Color.white);
-        jLabel12.setText("Dato:");
+        jLabel12.setText("Ingrese el ID");
 
         jBtnBuscar.setText("Buscar");
         jBtnBuscar.addActionListener(new java.awt.event.ActionListener() {
@@ -588,16 +547,12 @@ public class jFraCliente extends javax.swing.JFrame {
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jLabel8)
                         .addGap(18, 18, 18)
-                        .addComponent(jLabel11)
-                        .addGap(18, 18, 18)
-                        .addComponent(jCBColumna, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
                         .addComponent(jLabel12)
                         .addGap(18, 18, 18)
-                        .addComponent(jTFBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jTFBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jBtnBuscar)
-                        .addGap(46, 46, 46))))
+                        .addGap(118, 118, 118))))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -609,8 +564,6 @@ public class jFraCliente extends javax.swing.JFrame {
                             .addComponent(jBtnBuscar)
                             .addComponent(jTFBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel12)
-                            .addComponent(jCBColumna, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel11)
                             .addComponent(jLabel8)))
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
@@ -706,7 +659,7 @@ public class jFraCliente extends javax.swing.JFrame {
 
     private void jBtnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnBuscarActionPerformed
         try {
-            buscar();
+            buscarClienteXIdentidad();
         } catch (SQLException ex) {
             Logger.getLogger(jFraMarca.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -729,23 +682,24 @@ public class jFraCliente extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(jFraCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JFraCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(jFraCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JFraCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(jFraCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JFraCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(jFraCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JFraCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    new jFraCliente().setVisible(true);
+                    new JFraCliente().setVisible(true);
                 } catch (SQLException ex) {
-                    Logger.getLogger(jFraCliente.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(JFraCliente.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
@@ -758,11 +712,9 @@ public class jFraCliente extends javax.swing.JFrame {
     private javax.swing.JButton jBtnGuardar;
     private javax.swing.JButton jBtnLimpiar;
     private javax.swing.JCheckBox jCBBeneficio;
-    private javax.swing.JComboBox<String> jCBColumna;
     private javax.swing.JCheckBox jCBEstado;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
