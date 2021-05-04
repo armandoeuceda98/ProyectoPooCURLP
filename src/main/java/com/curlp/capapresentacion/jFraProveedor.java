@@ -147,10 +147,10 @@ public class jFraProveedor extends javax.swing.JFrame {
     //Limpiar TextFields
     private void limpiarTF() throws SQLException{
         this.jTFEmpresa.setText("");
-        this.jTFTelefono.setText("");
+        this.jFTFTelefono.setValue(null);
         this.jTFCorreo.setText("");
         this.jTFRepresentante.setText("");
-        this.jTFTelefonoRepresentante.setText("");
+        this.jFTFTelefonoRepresentante.setValue(null);
         this.jTFBuscar.setText("");
         this.jCBColumna.setSelectedIndex(0);
         this.jTblProveedor.clearSelection();
@@ -165,18 +165,18 @@ public class jFraProveedor extends javax.swing.JFrame {
         if(this.jTFEmpresa.getText().equals("")){
             estado = false;
             this.jTFEmpresa.requestFocus();
-        }else if(this.jTFTelefono.getText().equals("")){
+        }else if(this.jFTFTelefono.getText().equals("")){
             estado = false;
-            this.jTFEmpresa.requestFocus();
+            this.jFTFTelefono.requestFocus();
         }else if(this.jTFCorreo.getText().equals("")){
             estado = false;
             this.jTFCorreo.requestFocus();
         }else if(this.jTFRepresentante.getText().equals("")){
             estado = false;
             this.jTFRepresentante.requestFocus();
-        }else if(this.jTFTelefonoRepresentante.getText().equalsIgnoreCase("")){
+        }else if(this.jFTFTelefonoRepresentante.getText().equalsIgnoreCase("")){
             estado = false;
-            this.jTFTelefonoRepresentante.requestFocus();
+            this.jFTFTelefonoRepresentante.requestFocus();
         }
         
         return estado;
@@ -204,10 +204,10 @@ public class jFraProveedor extends javax.swing.JFrame {
                 CDProveedor cdp = new CDProveedor();
                 CLProveedor cl = new CLProveedor();
                 cl.setNombreEmpresa(this.jTFEmpresa.getText().trim());
-                cl.setTelefono(this.jTFTelefono.getText());
+                cl.setTelefono(this.jFTFTelefono.getText());
                 cl.setCorreo(this.jTFCorreo.getText());
                 cl.setNombreRepresentante(this.jTFRepresentante.getText());
-                cl.setTelefonoRepresentante(this.jTFTelefonoRepresentante.getText());
+                cl.setTelefonoRepresentante(this.jFTFTelefonoRepresentante.getText());
                 
                 cdp.insertarProveedor(cl);
                 JOptionPane.showMessageDialog(null, "Registro ingresado de manera correcta", "Inventarios Master", 1);
@@ -242,10 +242,10 @@ public class jFraProveedor extends javax.swing.JFrame {
                 CLProveedor cl = new CLProveedor();
                 cl.setCodProveedor(Integer.valueOf(this.jTFCodProveedor.getText()));
                 cl.setNombreEmpresa(this.jTFEmpresa.getText().trim());
-                cl.setTelefono(this.jTFTelefono.getText());
+                cl.setTelefono(this.jFTFTelefono.getText());
                 cl.setCorreo(this.jTFCorreo.getText());
                 cl.setNombreRepresentante(this.jTFRepresentante.getText());
-                cl.setTelefonoRepresentante(this.jTFTelefonoRepresentante.getText());
+                cl.setTelefonoRepresentante(this.jFTFTelefonoRepresentante.getText());
                 
                 cdp.actualizarProveedor(cl);
                 JOptionPane.showMessageDialog(null, "Registro actualizado de manera correcta", "Inventarios Master", 1);
@@ -259,10 +259,10 @@ public class jFraProveedor extends javax.swing.JFrame {
         if (this.jTblProveedor.getSelectedRow() != -1){
             this.jTFCodProveedor.setText(String.valueOf(this.jTblProveedor.getValueAt(this.jTblProveedor.getSelectedRow(), 0)));
             this.jTFEmpresa.setText(String.valueOf(this.jTblProveedor.getValueAt(this.jTblProveedor.getSelectedRow(), 1)));
-            this.jTFTelefono.setText(String.valueOf(this.jTblProveedor.getValueAt(this.jTblProveedor.getSelectedRow(), 2)));
+            this.jFTFTelefono.setText(String.valueOf(this.jTblProveedor.getValueAt(this.jTblProveedor.getSelectedRow(), 2)));
             this.jTFCorreo.setText(String.valueOf(this.jTblProveedor.getValueAt(this.jTblProveedor.getSelectedRow(), 3)));
             this.jTFRepresentante.setText(String.valueOf(this.jTblProveedor.getValueAt(this.jTblProveedor.getSelectedRow(), 4)));
-            this.jTFTelefonoRepresentante.setText(String.valueOf(this.jTblProveedor.getValueAt(this.jTblProveedor.getSelectedRow(), 5)));
+            this.jFTFTelefonoRepresentante.setText(String.valueOf(this.jTblProveedor.getValueAt(this.jTblProveedor.getSelectedRow(), 5)));
         }
     }
     //Método para eliminar
@@ -321,13 +321,13 @@ public class jFraProveedor extends javax.swing.JFrame {
         jBtnEliminar = new javax.swing.JButton();
         jBtnLimpiar = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
-        jTFTelefono = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         jTFCorreo = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
         jTFRepresentante = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
-        jTFTelefonoRepresentante = new javax.swing.JTextField();
+        jFTFTelefono = new javax.swing.JFormattedTextField();
+        jFTFTelefonoRepresentante = new javax.swing.JFormattedTextField();
         jPanel5 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTblProveedor = new javax.swing.JTable();
@@ -358,9 +358,9 @@ public class jFraProveedor extends javax.swing.JFrame {
                 jLabel5MousePressed(evt);
             }
         });
-        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 0, -1, -1));
+        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(940, 0, -1, -1));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 890, 50));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 970, 50));
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setForeground(new java.awt.Color(153, 153, 153));
@@ -369,14 +369,14 @@ public class jFraProveedor extends javax.swing.JFrame {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 890, Short.MAX_VALUE)
+            .addGap(0, 970, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 20, Short.MAX_VALUE)
         );
 
-        getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 44, 890, 20));
+        getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 44, 970, 20));
 
         jPanel3.setBackground(new java.awt.Color(204, 204, 204));
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -388,7 +388,7 @@ public class jFraProveedor extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("Código Proveedor");
-        jPanel4.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(11, 17, -1, -1));
+        jPanel4.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
@@ -396,8 +396,8 @@ public class jFraProveedor extends javax.swing.JFrame {
         jPanel4.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 40, -1, -1));
 
         jTFCodProveedor.setEditable(false);
-        jPanel4.add(jTFCodProveedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(145, 12, 99, -1));
-        jPanel4.add(jTFEmpresa, new org.netbeans.lib.awtextra.AbsoluteConstraints(145, 38, 99, -1));
+        jPanel4.add(jTFCodProveedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 10, 180, -1));
+        jPanel4.add(jTFEmpresa, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 40, 180, -1));
 
         jBtnGuardar.setBackground(new java.awt.Color(119, 74, 217));
         jBtnGuardar.setForeground(new java.awt.Color(255, 255, 255));
@@ -407,7 +407,7 @@ public class jFraProveedor extends javax.swing.JFrame {
                 jBtnGuardarActionPerformed(evt);
             }
         });
-        jPanel4.add(jBtnGuardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(11, 186, -1, -1));
+        jPanel4.add(jBtnGuardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 190, 90, -1));
 
         jBtnEditar.setBackground(new java.awt.Color(119, 74, 217));
         jBtnEditar.setForeground(new java.awt.Color(255, 255, 255));
@@ -418,7 +418,7 @@ public class jFraProveedor extends javax.swing.JFrame {
                 jBtnEditarActionPerformed(evt);
             }
         });
-        jPanel4.add(jBtnEditar, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 186, -1, -1));
+        jPanel4.add(jBtnEditar, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 190, 90, -1));
 
         jBtnEliminar.setBackground(new java.awt.Color(119, 74, 217));
         jBtnEliminar.setForeground(new java.awt.Color(255, 255, 255));
@@ -429,7 +429,7 @@ public class jFraProveedor extends javax.swing.JFrame {
                 jBtnEliminarActionPerformed(evt);
             }
         });
-        jPanel4.add(jBtnEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(179, 186, -1, -1));
+        jPanel4.add(jBtnEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 190, 90, -1));
 
         jBtnLimpiar.setBackground(new java.awt.Color(119, 74, 217));
         jBtnLimpiar.setForeground(new java.awt.Color(255, 255, 255));
@@ -439,33 +439,45 @@ public class jFraProveedor extends javax.swing.JFrame {
                 jBtnLimpiarActionPerformed(evt);
             }
         });
-        jPanel4.add(jBtnLimpiar, new org.netbeans.lib.awtextra.AbsoluteConstraints(11, 215, 237, -1));
+        jPanel4.add(jBtnLimpiar, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 220, 310, -1));
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("Teléfono");
-        jPanel4.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(68, 66, -1, -1));
-        jPanel4.add(jTFTelefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(145, 64, 99, -1));
+        jPanel4.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 70, -1, -1));
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setText("Correo");
-        jPanel4.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 92, -1, -1));
-        jPanel4.add(jTFCorreo, new org.netbeans.lib.awtextra.AbsoluteConstraints(145, 90, 99, -1));
+        jPanel4.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 100, -1, -1));
+        jPanel4.add(jTFCorreo, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 100, 180, -1));
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setText("Representante");
-        jPanel4.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 118, -1, -1));
-        jPanel4.add(jTFRepresentante, new org.netbeans.lib.awtextra.AbsoluteConstraints(145, 116, 99, -1));
+        jPanel4.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 130, -1, -1));
+        jPanel4.add(jTFRepresentante, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 130, 180, -1));
 
         jLabel9.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(255, 255, 255));
         jLabel9.setText("Tel. Representante");
-        jPanel4.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(11, 144, -1, -1));
-        jPanel4.add(jTFTelefonoRepresentante, new org.netbeans.lib.awtextra.AbsoluteConstraints(145, 142, 99, -1));
+        jPanel4.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 160, -1, -1));
 
-        jPanel3.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 11, 261, 250));
+        try {
+            jFTFTelefono.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("####-####")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+        jPanel4.add(jFTFTelefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 70, 180, -1));
+
+        try {
+            jFTFTelefonoRepresentante.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("####-####")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+        jPanel4.add(jFTFTelefonoRepresentante, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 160, 180, -1));
+
+        jPanel3.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 11, 340, 250));
 
         jPanel5.setBackground(new java.awt.Color(51, 34, 89));
         jPanel5.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
@@ -503,13 +515,13 @@ public class jFraProveedor extends javax.swing.JFrame {
         jPanel5.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 200, -1, -1));
 
         jLabel10.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel10.setText("Columna:");
-        jPanel5.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 220, -1, -1));
+        jLabel10.setText("Por:");
+        jPanel5.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 220, -1, -1));
 
         jCBColumna.setBackground(new java.awt.Color(119, 74, 217));
         jCBColumna.setForeground(new java.awt.Color(255, 255, 255));
         jCBColumna.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "--Seleccione--", "Código de Proveedor", "Empresa" }));
-        jPanel5.add(jCBColumna, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 220, 110, -1));
+        jPanel5.add(jCBColumna, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 220, 110, -1));
 
         jLabel11.setForeground(new java.awt.Color(255, 255, 255));
         jLabel11.setText("Dato:");
@@ -526,9 +538,9 @@ public class jFraProveedor extends javax.swing.JFrame {
         });
         jPanel5.add(jBtnBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 220, -1, -1));
 
-        jPanel3.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(289, 11, 590, 250));
+        jPanel3.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 10, 590, 250));
 
-        getContentPane().add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 60, 890, 280));
+        getContentPane().add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 60, 970, 290));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -633,6 +645,8 @@ public class jFraProveedor extends javax.swing.JFrame {
     private javax.swing.JButton jBtnGuardar;
     private javax.swing.JButton jBtnLimpiar;
     private javax.swing.JComboBox<String> jCBColumna;
+    private javax.swing.JFormattedTextField jFTFTelefono;
+    private javax.swing.JFormattedTextField jFTFTelefonoRepresentante;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -655,8 +669,6 @@ public class jFraProveedor extends javax.swing.JFrame {
     private javax.swing.JTextField jTFCorreo;
     private javax.swing.JTextField jTFEmpresa;
     private javax.swing.JTextField jTFRepresentante;
-    private javax.swing.JTextField jTFTelefono;
-    private javax.swing.JTextField jTFTelefonoRepresentante;
     private javax.swing.JTable jTblProveedor;
     // End of variables declaration//GEN-END:variables
 }
