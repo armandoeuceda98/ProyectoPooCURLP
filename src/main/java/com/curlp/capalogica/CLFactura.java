@@ -7,6 +7,24 @@ public class CLFactura {
     private String fecha;
     private int codCliente;
     private String nombreCliente;
+    private boolean beneficio;
+    private String docIdentidad;
+
+    public String getDocIdentidad() {
+        return docIdentidad;
+    }
+
+    public void setDocIdentidad(String docIdentidad) {
+        this.docIdentidad = docIdentidad;
+    }
+
+    public boolean isBeneficio() {
+        return beneficio;
+    }
+
+    public void setBeneficio(boolean beneficio) {
+        this.beneficio = beneficio;
+    }
     private String nombreEmpleado;
 
     public String getNombreEmpleado() {

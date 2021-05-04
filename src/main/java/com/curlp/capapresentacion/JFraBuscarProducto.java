@@ -237,7 +237,7 @@ public class JFraBuscarProducto extends javax.swing.JFrame {
         // TODO add your handling code here:
         if(!jTFCodProductEnviar.getText().isEmpty()){
             JFraFactura.jTFCodProducto.setText(jTFCodProductEnviar.getText());
-            this.setVisible(false);
+            this.dispose();
             try {
                 JFraFactura.buscarProducto();
             } catch (SQLException ex) {

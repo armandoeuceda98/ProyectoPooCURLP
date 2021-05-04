@@ -5,7 +5,9 @@
  */
 package com.curlp.capapresentacion;
 
+import com.curlp.capadatos.CDDetFactura;
 import com.curlp.capadatos.CDFactura;
+import com.curlp.capalogica.CLDetFactura;
 import com.curlp.capalogica.CLFactura;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -95,36 +97,39 @@ public class JFraControlFacturas extends javax.swing.JFrame {
     }
     
     //Mandar datos al Form Factura
-    private void enviarDatos() throws SQLException{
-        if(!jTFNumFactura.getText().isEmpty()){
+    private void enviarDatos() throws SQLException {
+        if (!jTFNumFactura.getText().isEmpty()) {
             JFraFactura.jTFCodFactura.setEnabled(true);
             JFraFactura.jTFCodFactura.setText(jTFNumFactura.getText());
             JFraFactura.habilitarRecDato();
             JFraFactura.poblarForm();
-            this.setVisible(false);
-            limpiar();
-        }else{
+            this.dispose();
+        } else {
             JOptionPane.showMessageDialog(null, "Por favor seleccione una factura en la tabla.");
         }
     }
     
     //Eliminar factura
-    private void eliminarFact() throws SQLException{
+    private void eliminarFact() throws SQLException {
         CLFactura cl = new CLFactura();
         CDFactura cd = new CDFactura();
-        if(!jTFNumFactura.getText().isEmpty()){
+        CDDetFactura cddf = new CDDetFactura();
+        CLDetFactura cldf = new CLDetFactura();
+        if (!jTFNumFactura.getText().isEmpty()) {
             int opcion;
             Object[] options = {"Si", "No"};
             opcion = JOptionPane.showOptionDialog(null, "¿Está seguro que desea eliminar la factura: \"" + jTFNumFactura.getText() + "\"? Esta acción es irreversible.",
                     "Inventario Master", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
                     null, options, options[0]);
             if (opcion == 0) {
+                cldf.setCodFactura(Integer.parseInt(jTFNumFactura.getText()));
+                cddf.eliminarDetFacturaPorCodFactura(cldf);
                 cl.setCodFactura(Integer.parseInt(jTFNumFactura.getText().trim()));
                 cd.eliminarFactura(cl);
                 poblarTabla();
                 jTFNumFactura.setText("");
                 JOptionPane.showMessageDialog(null, "Factura eliminada exitosamente.");
-            }
+             }
         }else{
             JOptionPane.showMessageDialog(null, "No ha seleccionado ninguna factura, por favor seleccione una factura en la tabla.");
         }

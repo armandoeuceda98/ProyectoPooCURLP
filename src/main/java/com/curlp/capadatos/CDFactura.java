@@ -125,7 +125,7 @@ public class CDFactura {
     //Método para poblar form factura
     public CLFactura poblarForm(CLFactura cl) throws SQLException{
         
-        String sql = "{call sp_mostrarFacturaX(?)}";
+        String sql = "{call sp_mostrarFacturaXCodFactura(?)}";
         
         try{
             ps = cn.prepareStatement(sql);
@@ -135,8 +135,11 @@ public class CDFactura {
             while(rs.next()){
                 cl.setCodFactura(rs.getInt("codFactura"));
                 cl.setFecha(rs.getString("fecha"));
+                cl.setCodCliente(rs.getInt("factura.codCliente"));
                 cl.setNombreCliente(rs.getString("nombre"));
-                cl.setNombreEmpleado(rs.getString("empleado.nombre"));
+                cl.setBeneficio(rs.getBoolean("beneficio"));
+                cl.setDocIdentidad(rs.getNString("docIdentidad"));
+                cl.setNombreEmpleado(rs.getString("codCliente"));
             }
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());

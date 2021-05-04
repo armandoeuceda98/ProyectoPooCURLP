@@ -24,14 +24,15 @@ public class CDDetFactura {
     
     //Método para insertar una ciudad en tabla
     public void insertarDetFactura(CLDetFactura cl)throws SQLException{
-        String sql = "{CALL sp_insertarDetFactura(?,?,?,?)}";
+        String sql = "{CALL sp_insertarDetFactura(?,?,?,?,?)}";
         
         try{
             ps = cn.prepareCall(sql);
-            ps.setInt(1, cl.getCantidad());
-            ps.setDouble(2, cl.getPrecio());
-            ps.setInt(3, cl.getCodProducto());
-            ps.setInt(4, cl.getCodFactura());
+            ps.setInt(1, cl.getCodDetFactura());
+            ps.setInt(2, cl.getCantidad());
+            ps.setDouble(3, cl.getPrecio());
+            ps.setInt(4, cl.getCodProducto());
+            ps.setInt(5, cl.getCodFactura());
             ps.execute();
         }catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
@@ -92,7 +93,7 @@ public class CDDetFactura {
     }
     
     //Método para poblar de datos la tabla
-    public List<CLDetFactura> obtenerListaDetFacturas(String i) throws SQLException{
+    public List<CLDetFactura> obtenerListaDetFacturas(CLDetFactura cldf) throws SQLException{
         
         String sql = "{CALL sp_mostrarDetFacturaX(?)}";
         int m1;
@@ -102,7 +103,7 @@ public class CDDetFactura {
         
         try{
             ps = cn.prepareStatement(sql);
-            ps.setString(1, i);
+            ps.setInt(1, cldf.getCodFactura());
             rs = ps.executeQuery();
             
             miLista  = new ArrayList<>();
@@ -113,6 +114,7 @@ public class CDDetFactura {
                 cl.setCodDetFactura(rs.getInt("codDetFactura"));
                 cl.setCantidad(rs.getInt("cantidad"));
                 cl.setPrecio(rs.getDouble("precio"));
+                cl.setCodProducto(rs.getInt("codProducto"));
                 cl.setNomProducto(rs.getString("producto.nombre"));
                 cl.setCodFactura(rs.getInt("codFactura"));
                 cl.setTotal(rs.getInt("cantidad")*rs.getDouble("precio"));
@@ -124,7 +126,19 @@ public class CDDetFactura {
             return miLista;
     }
     
-    //Método para llenar el combo de factura
+    //Método para eliminar la ciudad en la tabla
+    public void eliminarDetFacturaPorCodFactura(CLDetFactura cl)throws SQLException {
+        
+        String sql = "{CALL sp_eliminarDetFacturaPorCodigo(?)}";
+        
+        try {
+            ps = cn.prepareCall(sql);
+            ps.setInt(1, cl.getCodFactura());
+            ps.execute();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
+        }
+    }
             
             
            
