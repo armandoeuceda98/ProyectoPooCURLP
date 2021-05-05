@@ -23,7 +23,7 @@ import javax.swing.table.DefaultTableModel;
  * @author DELL
  */
 public class JFraControlFacturas extends javax.swing.JFrame {
-    
+
     Object[] filas = new Object[4];
     int fila = 0;
 
@@ -35,49 +35,48 @@ public class JFraControlFacturas extends javax.swing.JFrame {
         poblarTabla();
     }
 
-    
     //Método para limpiar la tabla
-    private void limpiarTabla(){
+    private void limpiarTabla() {
         DefaultTableModel dtm = (DefaultTableModel) this.jTblFacturas.getModel();
-        
-        while(dtm.getRowCount() > 0){
-            dtm.removeRow(0);   
+
+        while (dtm.getRowCount() > 0) {
+            dtm.removeRow(0);
         }
     }
-    
+
     //Método para obtener la selección de usuario
-    private int seleccion(){
+    private int seleccion() {
         int resp = 0;
-        if(this.jRBCodFactura.isSelected()){
+        if (this.jRBCodFactura.isSelected()) {
             jTFCodFactura.setEnabled(true);
             jTFNomCliente.setEnabled(false);
             jTFNomCliente.setText("");
             this.jTFNumFactura.setText("");
             this.jBtnBuscar.setEnabled(true);
             resp = 1;
-        }else if(this.jRBNomCliente.isSelected()){
+        } else if (this.jRBNomCliente.isSelected()) {
             jTFNomCliente.setEnabled(true);
             jTFCodFactura.setEnabled(false);
             jTFCodFactura.setText("");
             this.jTFNumFactura.setText("");
             this.jBtnBuscar.setEnabled(true);
             resp = 2;
-        }else{
+        } else {
             jTFNomCliente.setEnabled(false);
             this.jTblFacturas.setEnabled(false);
             this.jBtnBuscar.setEnabled(false);
         }
         return resp;
-                
+
     }
-    
+
     //Método para poblar de datos la tabla
-    private void poblarTabla() throws SQLException{
+    private void poblarTabla() throws SQLException {
         limpiarTabla();
         CDFactura cdf = new CDFactura();
         List<CLFactura> miLista = cdf.obtenerListaFacturas();
         DefaultTableModel temp = (DefaultTableModel) this.jTblFacturas.getModel();
-            
+
         miLista.stream().map((CLFactura cl) -> {
             Object[] fila = new Object[4];
             fila[0] = cl.getCodFactura();
@@ -87,15 +86,15 @@ public class JFraControlFacturas extends javax.swing.JFrame {
             return fila;
         }).forEachOrdered(temp::addRow);
     }
-    
+
     //Limpiar todo
-    private void limpiar(){
+    private void limpiar() {
         jTFCodFactura.setText("");
         jTFNomCliente.setText("");
         this.jRBCodFactura.setSelected(false);
         this.jRBNomCliente.setSelected(false);
     }
-    
+
     //Mandar datos al Form Factura
     private void enviarDatos() throws SQLException {
         if (!jTFNumFactura.getText().isEmpty()) {
@@ -108,7 +107,7 @@ public class JFraControlFacturas extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Por favor seleccione una factura en la tabla.");
         }
     }
-    
+
     //Eliminar factura
     private void eliminarFact() throws SQLException {
         CLFactura cl = new CLFactura();
@@ -129,21 +128,21 @@ public class JFraControlFacturas extends javax.swing.JFrame {
                 poblarTabla();
                 jTFNumFactura.setText("");
                 JOptionPane.showMessageDialog(null, "Factura eliminada exitosamente.");
-             }
-        }else{
+            }
+        } else {
             JOptionPane.showMessageDialog(null, "No ha seleccionado ninguna factura, por favor seleccione una factura en la tabla.");
         }
     }
-    
+
     //Método para filtrar facturas
-    private void buscarFacturas() throws SQLException{
+    private void buscarFacturas() throws SQLException {
         CLFactura cle = new CLFactura();
         cle.setCodFactura(Integer.parseInt(this.jTFCodFactura.getText().trim()));
         limpiarTabla();
         CDFactura cdf = new CDFactura();
         List<CLFactura> miLista = cdf.obtenerFacturasFiltradas(cle);
         DefaultTableModel temp = (DefaultTableModel) this.jTblFacturas.getModel();
-            
+
         miLista.stream().map((CLFactura cl) -> {
             Object[] fila = new Object[4];
             fila[0] = cl.getCodFactura();
@@ -153,18 +152,19 @@ public class JFraControlFacturas extends javax.swing.JFrame {
             return fila;
         }).forEachOrdered(temp::addRow);
     }
-    
+
     //Método para rellenar textfield de codfatura
-    private void seleccionTable(){
+    private void seleccionTable() {
         this.jTFNumFactura.setText(String.valueOf(this.jTblFacturas.getValueAt(fila, 0)));
     }
+
     //Método para filtrar facturas
-    private void buscarFacturasPorIdentidad(String docIdentidad) throws SQLException{
+    private void buscarFacturasPorIdentidad(String docIdentidad) throws SQLException {
         limpiarTabla();
         CDFactura cdf = new CDFactura();
         List<CLFactura> miLista = cdf.obtenerFacturasFiltradasPorIdentidad(docIdentidad);
         DefaultTableModel temp = (DefaultTableModel) this.jTblFacturas.getModel();
-            
+
         miLista.stream().map((CLFactura cl) -> {
             Object[] fila = new Object[4];
             fila[0] = cl.getCodFactura();
@@ -176,6 +176,7 @@ public class JFraControlFacturas extends javax.swing.JFrame {
             temp.addRow(fila);
         });
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -457,16 +458,16 @@ public class JFraControlFacturas extends javax.swing.JFrame {
 
     private void jBtnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnBuscarActionPerformed
         // TODO add your handling code here:
-        if(seleccion() == 1){
+        if (seleccion() == 1) {
             try {
                 buscarFacturas();
             } catch (SQLException ex) {
                 Logger.getLogger(JFraControlFacturas.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }else if(seleccion() == 2){
+        } else if (seleccion() == 2) {
             try {
                 String docIdentidad;
-                docIdentidad  = jTFNomCliente.getText();
+                docIdentidad = jTFNomCliente.getText();
                 buscarFacturasPorIdentidad(docIdentidad);
             } catch (SQLException ex) {
                 Logger.getLogger(JFraControlFacturas.class.getName()).log(Level.SEVERE, null, ex);
@@ -493,7 +494,7 @@ public class JFraControlFacturas extends javax.swing.JFrame {
             // TODO add your handling code here:
             eliminarFact();
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Error: "+ex.getMessage());
+            JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage());
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 

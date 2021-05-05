@@ -37,23 +37,23 @@ public class JFraFactura extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
     }
-    
+
     //Método para limpiar la tabla
-    private static void limpiarTabla(){
+    private static void limpiarTabla() {
         DefaultTableModel dtm = (DefaultTableModel) jTblDetFactura.getModel();
-        
-        while(dtm.getRowCount() > 0){
-            dtm.removeRow(0);   
+
+        while (dtm.getRowCount() > 0) {
+            dtm.removeRow(0);
         }
     }
-    
+
     //Método para poblar de datos la tabla
-    private static void poblarTabla(CLDetFactura cldf) throws SQLException{  
+    private static void poblarTabla(CLDetFactura cldf) throws SQLException {
         limpiarTabla();
         CDDetFactura cddf = new CDDetFactura();
         List<CLDetFactura> miLista = cddf.obtenerListaDetFacturas(cldf);
         DefaultTableModel dtm = (DefaultTableModel) jTblDetFactura.getModel();
-        
+
         miLista.stream().map((CLDetFactura cl) -> {
             Object[] fila = new Object[6];
             fila[0] = cl.getCodDetFactura();
@@ -67,9 +67,9 @@ public class JFraFactura extends javax.swing.JFrame {
             dtm.addRow(fila);
         });
     }
-    
+
     //Método para ver los resultados de la consulta
-    public static void habilitarRecDato(){
+    public static void habilitarRecDato() {
         jTFCodFactura.setEnabled(true);
         jTFCodFactura.setEditable(false);
         jTFCodCliente.setEnabled(true);
@@ -94,9 +94,9 @@ public class JFraFactura extends javax.swing.JFrame {
         jTFDescuento.setEnabled(true);
         jTFDescuento.setEditable(false);
     }
-    
+
     //Método para buscar un cliente
-    public static void buscarProducto() throws SQLException{
+    public static void buscarProducto() throws SQLException {
         CLProducto clp = new CLProducto();
         CDProducto cdp = new CDProducto();
         clp.setCodProducto(Integer.parseInt(jTFCodProducto.getText().trim()));
@@ -105,9 +105,9 @@ public class JFraFactura extends javax.swing.JFrame {
         jTFStock.setText(String.valueOf(clp.getExistencia()));
         jTFPrecio.setText(String.valueOf(clp.getPrecioV1()));
     }
-    
+
     //Método para saber el total a partir de la cantidad de producto por el precio de unidad
-    private void totalizarPrecio(){
+    private void totalizarPrecio() {
         double cant, prec, tot;
         cant = Double.parseDouble(jTFCantidad.getText());
         prec = Double.parseDouble(jTFPrecio.getText());
@@ -117,10 +117,10 @@ public class JFraFactura extends javax.swing.JFrame {
 //        stockfin = stock - cant;
 //        jTFStock.setText(String.valueOf(stockfin));
     }
-    
+
     //Método para actualizar la factura
     private static void actualizarDatosFactura() {
-        try{
+        try {
             CDFactura cdf = new CDFactura();
             CLFactura cle = new CLFactura();
             cle.setCodFactura(Integer.parseInt(jTFCodFactura.getText()));
@@ -128,44 +128,42 @@ public class JFraFactura extends javax.swing.JFrame {
             cle.setCodCliente(Integer.parseInt(jTFCodigoCliente.getText()));
             cle.setCodEmpleado(1);
             cdf.actalizarFactura(cle);
-        }catch(SQLException e){
-             JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
         }
-        
+
     }
-    
+
     //Método para buscar un cliente
-    public static void buscarCliente() throws SQLException{
+    public static void buscarCliente() throws SQLException {
         CLCliente clc = new CLCliente();
         CDCliente cdc = new CDCliente();
         clc.setDocIdentidad(jTFCodCliente.getText().trim());
         cdc.obtenerListaClienteXId(clc);
-        if(clc.getNombre()==null){
+        if (clc.getNombre() == null) {
             JOptionPane.showMessageDialog(null, "No se encontró ningún cliente.");
-        }else{
-            if(jTFCliente.getText().isEmpty()){
+        } else {
+            if (jTFCliente.getText().isEmpty()) {
                 jTFCliente.setText(clc.getNombre());
-                jTFCodigoCliente.setText(String.valueOf(clc.getCodCliente()));   
+                jTFCodigoCliente.setText(String.valueOf(clc.getCodCliente()));
                 crearFactura();
-            }else{
+            } else {
                 jTFCliente.setText(clc.getNombre());
                 jTFCodigoCliente.setText(String.valueOf(clc.getCodCliente()));
                 actualizarDatosFactura();
             }
-            
+
             DefaultTableModel dtm = (DefaultTableModel) jTblDetFactura.getModel();
-            if(clc.isBeneficio() == true){
+            if (clc.isBeneficio() == true) {
                 beneficio = true;
-            }else{
+            } else {
                 beneficio = false;
             }
         }
     }
-    
-    
-    
+
     //poblar Todo el formulario y jTable a partir de abrir factura
-    public static void poblarForm() throws SQLException{
+    public static void poblarForm() throws SQLException {
         String i;
         CDFactura cdf = new CDFactura();
         CLFactura cle = new CLFactura();
@@ -176,9 +174,9 @@ public class JFraFactura extends javax.swing.JFrame {
         jTFCliente.setText(cle.getNombreCliente());
         jTFCodCliente.setText(cle.getDocIdentidad());
         jTFCodigoCliente.setText(String.valueOf(cle.getCodCliente()));
-        if(cle.isBeneficio()){
+        if (cle.isBeneficio()) {
             beneficio = true;
-        }else{
+        } else {
             beneficio = false;
         }
         cldf.setCodFactura(Integer.parseInt(jTFCodFactura.getText().trim()));
@@ -186,42 +184,41 @@ public class JFraFactura extends javax.swing.JFrame {
         activar = false;
         suma();
     }
-    
+
     //Método para crear una factura
-    private static void crearFactura(){
-        try{
+    private static void crearFactura() {
+        try {
             DefaultTableModel dtm = (DefaultTableModel) jTblDetFactura.getModel();
-            if(dtm.getRowCount() == 0){
+            if (dtm.getRowCount() == 0) {
                 CDFactura cdf = new CDFactura();
                 CLFactura clf = new CLFactura();
                 clf.setCodFactura(Integer.parseInt(jTFCodFactura.getText()));
                 clf.setFecha(jTFFecha.getText());
                 clf.setCodCliente(Integer.parseInt(jTFCodigoCliente.getText()));
-                clf.setCodEmpleado(2); 
+                clf.setCodEmpleado(2);
                 cdf.insertarFactura(clf);
             }
-            
-        }catch(SQLException e){
-            JOptionPane.showMessageDialog(null, "Error: "+e.getLocalizedMessage());
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error: " + e.getLocalizedMessage());
         }
-        
+
     }
-    
+
     //Método para evaluar la existencia
-    private void evaluarExistencia(){
+    private void evaluarExistencia() {
         int stock, cantidad;
         stock = Integer.parseInt(jTFStock.getText());
         cantidad = Integer.parseInt(jTFCantidad.getText());
     }
-    
-    
+
     //Método para hacer una suma de todos los totales de factura
     private static void suma() {
-        
-        int contar  = jTblDetFactura.getRowCount();
-        double suma, total,isv, subtot, desc, descf;
+
+        int contar = jTblDetFactura.getRowCount();
+        double suma, total, isv, subtot, desc, descf;
         suma = 0;
-        for (int i = 0 ; i < contar ; i++) {
+        for (int i = 0; i < contar; i++) {
             suma += Double.parseDouble(jTblDetFactura.getValueAt(i, 5).toString());
         }
         isv = suma * 0.15;
@@ -242,23 +239,23 @@ public class JFraFactura extends javax.swing.JFrame {
         jTFSubTotal.setText(String.valueOf(subtot));
         jTFTotal.setText(String.valueOf(total));
     }
-    
+
     //Obtener el número de factura
-    private void obtenerCodFactura() throws SQLException{
+    private void obtenerCodFactura() throws SQLException {
         int codFactura = 0;
         CDFactura cdf = new CDFactura();
         codFactura = cdf.autoIncrementarFacturaCod();
         jTFCodFactura.setText(String.valueOf(codFactura));
     }
-    
+
     //Obtener fecha actual
-    private void obtenerFecha(){
+    private void obtenerFecha() {
         LocalDate.now();
         jTFFecha.setText(String.valueOf(LocalDate.now()));
         //java.util.Date fecha;
         //this.jDCFecha.setDate(fecha);
     }
-    
+
     //Método para habilitar textFields y botones
     private void habilitarBotones() {
         jTFCodFactura.setEnabled(true);
@@ -271,7 +268,7 @@ public class JFraFactura extends javax.swing.JFrame {
         jTFFecha.setEnabled(true);
         jTFCodProducto.setEnabled(true);
         jTFCodProducto.setEditable(true);
-        jBtnBuscarProduc.setEnabled(true);       
+        jBtnBuscarProduc.setEnabled(true);
         jTFStock.setEnabled(true);
         jTFPrecio.setEnabled(true);
         jTFNomProducto.setEnabled(true);
@@ -288,7 +285,7 @@ public class JFraFactura extends javax.swing.JFrame {
         jBtnBuscarFact.setEnabled(false);
         activar = true;
     }
-    
+
     //Método para validar que la factura lleve detalle
     private static void validarGenerarFactura() {
         int length = jTblDetFactura.getRowCount();
@@ -298,7 +295,7 @@ public class JFraFactura extends javax.swing.JFrame {
             jBtnGenerarVenta.setEnabled(false);
         }
     }
-    
+
     //Método para desactivar y limpiar todo
     private static void limpiar() {
         jTFCodFactura.setText("");
@@ -341,49 +338,49 @@ public class JFraFactura extends javax.swing.JFrame {
         jTFIsv.setEnabled(false);
         jTFTotal.setEnabled(false);
         DefaultTableModel dtm = (DefaultTableModel) jTblDetFactura.getModel();
-        int a = jTblDetFactura.getRowCount()-1;
-        for (int i = a; i >= 0; i--) {          
-        dtm.removeRow(dtm.getRowCount()-1);
+        int a = jTblDetFactura.getRowCount() - 1;
+        for (int i = a; i >= 0; i--) {
+            dtm.removeRow(dtm.getRowCount() - 1);
         }
     }
-    
+
     //Método para validar integración de producto
-    private static boolean validar(){
+    private static boolean validar() {
         boolean val;
-        if(jTFCodCliente.getText().isEmpty()){
+        if (jTFCodCliente.getText().isEmpty()) {
             val = false;
             jTFCodCliente.requestFocus();
-        }else if (jTFCliente.getText().isEmpty()){
+        } else if (jTFCliente.getText().isEmpty()) {
             val = false;
             jTFCliente.requestFocus();
-        }else if (jTFCodProducto.getText().isEmpty()){
+        } else if (jTFCodProducto.getText().isEmpty()) {
             val = false;
             jTFCodProducto.requestFocus();
-        }else if (jTFNomProducto.getText().isEmpty()){
+        } else if (jTFNomProducto.getText().isEmpty()) {
             val = false;
             jTFNomProducto.requestFocus();
-        }else if (jTFCantidad.getText().isEmpty()){
+        } else if (jTFCantidad.getText().isEmpty()) {
             val = false;
             jTFCantidad.requestFocus();
-        }else if(!jTFStock.getText().isEmpty() && !jTFCantidad.getText().isEmpty()){
+        } else if (!jTFStock.getText().isEmpty() && !jTFCantidad.getText().isEmpty()) {
             int stock, cantidad;
             stock = Integer.parseInt(jTFStock.getText());
             cantidad = Integer.parseInt(jTFCantidad.getText());
-            if(cantidad > stock){
+            if (cantidad > stock) {
                 val = false;
                 JOptionPane.showMessageDialog(null, "El número de producto solicitado es mayor al disponible");
                 jTFCantidad.requestFocus();
-            }else{
+            } else {
                 val = true;
             }
-        }else{
+        } else {
             val = true;
         }
         return val;
     }
-    
+
     //Método para despejar los campos de producto
-    private static void vaciarCamposProductos(){
+    private static void vaciarCamposProductos() {
         jTFCodProducto.setText("");
         jTFStock.setText("");
         jTFPrecio.setText("");
@@ -391,7 +388,7 @@ public class JFraFactura extends javax.swing.JFrame {
         jTFNomProducto.setText("");
         jTFTotalProduc.setText("");
     }
-    
+
     //Método para deseleccionar
     private static void desseleccionar() {
         jTblDetFactura.clearSelection();
@@ -401,11 +398,11 @@ public class JFraFactura extends javax.swing.JFrame {
         vaciarCamposProductos();
         jBtnDes.setEnabled(false);
     }
-    
+
     //Método para actualizar un detalle de factura
     private static void actulizarDetFactura() {
         DefaultTableModel model = (DefaultTableModel) jTblDetFactura.getModel();
-        if (validar()) {   
+        if (validar()) {
             int codDetFactura = 0;
             codDetFactura = Integer.parseInt(jTblDetFactura.getValueAt(fila, 0).toString().trim());
             System.out.print(jTblDetFactura.getValueAt(fila, 0).toString());
@@ -428,38 +425,39 @@ public class JFraFactura extends javax.swing.JFrame {
                     model.setValueAt(filas[i], fila, i);
                 }
                 jTblDetFactura.setModel(model);
-                 desseleccionar();
-            } catch(SQLException e){
-                 JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
+                desseleccionar();
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
             }
         }
     }
+
     //Método para eliminar un detalle de factura
-    private static void eliminarDetFactura() throws SQLException{
+    private static void eliminarDetFactura() throws SQLException {
         int opcion;
-            Object[] options = {"Si", "No"};
-            opcion = JOptionPane.showOptionDialog(null, "¿Esta seguro de cancelar esta factura? Esta información no se podrá recuperar.",
-                    "Inventarios master", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
-                    null, options, options[0]);
+        Object[] options = {"Si", "No"};
+        opcion = JOptionPane.showOptionDialog(null, "¿Esta seguro de cancelar esta factura? Esta información no se podrá recuperar.",
+                "Inventarios master", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
+                null, options, options[0]);
         if (opcion == 0) {
             int codDetFactura = 0;
             DefaultTableModel model = (DefaultTableModel) jTblDetFactura.getModel();
             codDetFactura = Integer.parseInt(jTblDetFactura.getValueAt(fila, 0).toString());
             System.out.print(jTblDetFactura.getValueAt(fila, 0).toString());
-             CDDetFactura cddf = new CDDetFactura();
-             CLDetFactura cldf = new CLDetFactura();
-             cldf.setCodDetFactura(codDetFactura);
-             cddf.eliminarDetFactura(cldf);
-             model.removeRow(fila);
-             desseleccionar();
-             
+            CDDetFactura cddf = new CDDetFactura();
+            CLDetFactura cldf = new CLDetFactura();
+            cldf.setCodDetFactura(codDetFactura);
+            cddf.eliminarDetFactura(cldf);
+            model.removeRow(fila);
+            desseleccionar();
+
         } else {
-            
+
         }
     }
-    
+
     //Insertar detalle factura a la Tabla Mysql
-    private void insertarDetFactura() throws SQLException{
+    private void insertarDetFactura() throws SQLException {
         CDDetFactura cddf = new CDDetFactura();
         CLDetFactura cldf = new CLDetFactura();
         codDetFacturaUni = cddf.autoIncrementarDetFacturaCod();
@@ -471,15 +469,15 @@ public class JFraFactura extends javax.swing.JFrame {
         cddf.insertarDetFactura(cldf);
         System.out.print(cldf.getCodDetFactura());
     }
-    
+
     //Método para borrar todo de las dos tablas
-    private static void borrarRegistros() throws SQLException{
+    private static void borrarRegistros() throws SQLException {
         int opcion;
-            Object[] options = {"Si", "No"};
-            opcion = JOptionPane.showOptionDialog(null, "¿Esta seguro de realizar esta acción? Esta información no se podrá recuperar.",
-                    "Inventarios master", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
-                    null, options, options[0]);
-         if (opcion == 0) {
+        Object[] options = {"Si", "No"};
+        opcion = JOptionPane.showOptionDialog(null, "¿Esta seguro de realizar esta acción? Esta información no se podrá recuperar.",
+                "Inventarios master", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
+                null, options, options[0]);
+        if (opcion == 0) {
             CDDetFactura cddf = new CDDetFactura();
             CLDetFactura cldf = new CLDetFactura();
             CDFactura cdf = new CDFactura();
@@ -487,14 +485,14 @@ public class JFraFactura extends javax.swing.JFrame {
             cldf.setCodFactura(Integer.parseInt(jTFCodFactura.getText()));
             cddf.eliminarDetFacturaPorCodFactura(cldf);
             cl.setCodFactura(Integer.parseInt(jTFCodFactura.getText()));
-            cdf.eliminarFactura(cl); 
+            cdf.eliminarFactura(cl);
             limpiar();
-         }   
-        
+        }
+
     }
-    
+
     //Método para ir agregando productos a la tabla
-    private static void agregarProducto() throws SQLException{
+    private static void agregarProducto() throws SQLException {
         CDDetFactura cdf = new CDDetFactura();
         Object[] fila = new Object[6];
         DefaultTableModel dtm = (DefaultTableModel) jTblDetFactura.getModel();
@@ -512,9 +510,9 @@ public class JFraFactura extends javax.swing.JFrame {
         suma();
         vaciarCamposProductos();
     }
-    
+
     //Método para tomar la selección de un producto
-    private static void seleccionTable() throws SQLException{
+    private static void seleccionTable() throws SQLException {
         jBtnModificar.setEnabled(true);
         jBtnEliminar.setEnabled(true);
         jBtnDes.setEnabled(true);
@@ -524,8 +522,8 @@ public class JFraFactura extends javax.swing.JFrame {
         jTFCodProducto.setText(String.valueOf(jTblDetFactura.getValueAt(fila, 1)));
         buscarProducto();
     }
-    
-    private void generar(){
+
+    private void generar() {
         jBtnGenerarVenta.setEnabled(false);
         jBtnCancelar.setEnabled(false);
         jBtnNuevo.setEnabled(true);
@@ -1114,7 +1112,7 @@ public class JFraFactura extends javax.swing.JFrame {
             jBtnNuevo.setEnabled(false);
             obtenerFecha();
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Error: "+ex.getMessage());
+            JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage());
         }
     }//GEN-LAST:event_jBtnNuevoActionPerformed
 
@@ -1128,7 +1126,7 @@ public class JFraFactura extends javax.swing.JFrame {
         } catch (SQLException ex) {
             Logger.getLogger(JFraFactura.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }//GEN-LAST:event_jBtnBuscarFactActionPerformed
 
     private void jBtnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnCancelarActionPerformed
@@ -1142,12 +1140,12 @@ public class JFraFactura extends javax.swing.JFrame {
             } catch (SQLException ex) {
                 Logger.getLogger(JFraFactura.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }else{
+        } else {
             limpiar();
             jBtnCancelar.setEnabled(false);
             jBtnEliminarFact.setEnabled(false);
         }
-        
+
     }//GEN-LAST:event_jBtnCancelarActionPerformed
 
     private void jBtnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnBuscarActionPerformed
@@ -1178,7 +1176,7 @@ public class JFraFactura extends javax.swing.JFrame {
         } catch (SQLException ex) {
             Logger.getLogger(JFraFactura.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }//GEN-LAST:event_jBtnTablaProductoActionPerformed
 
     private void jBtnBuscarProducActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnBuscarProducActionPerformed
@@ -1192,37 +1190,37 @@ public class JFraFactura extends javax.swing.JFrame {
 
     private void jTFCantidadKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTFCantidadKeyReleased
         // TODO add your handling code here:
-        if(!jTFNomProducto.getText().isEmpty()){
+        if (!jTFNomProducto.getText().isEmpty()) {
             totalizarPrecio();
-        } 
+        }
     }//GEN-LAST:event_jTFCantidadKeyReleased
 
     private void jBtnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnAgregarActionPerformed
         try {
             // TODO add your handling code here:
-            if(validar()){
-               insertarDetFactura();
-               agregarProducto();
-               validarGenerarFactura();
-            }else{
+            if (validar()) {
+                insertarDetFactura();
+                agregarProducto();
+                validarGenerarFactura();
+            } else {
                 JOptionPane.showMessageDialog(null, "Por favor complete todos los campos.");
             }
-            
+
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Error: "+ex.getMessage());
+            JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage());
         }
     }//GEN-LAST:event_jBtnAgregarActionPerformed
 
     private void jTblDetFacturaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTblDetFacturaMouseClicked
         // TODO add your handling code here:
         if (activar == false) {
-            
+
         } else {
             fila = jTblDetFactura.rowAtPoint(evt.getPoint());
             try {
                 seleccionTable();
             } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(null, "Error: "+ex.getMessage());
+                JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage());
             }
         }
 
@@ -1234,7 +1232,7 @@ public class JFraFactura extends javax.swing.JFrame {
             eliminarDetFactura();
             validarGenerarFactura();
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Error: "+ex);
+            JOptionPane.showMessageDialog(null, "Error: " + ex);
         }
     }//GEN-LAST:event_jBtnEliminarActionPerformed
 
@@ -1267,14 +1265,14 @@ public class JFraFactura extends javax.swing.JFrame {
         limpiar();
         JOptionPane.showMessageDialog(null, "Factura generada exitosamente.");
         generar();
-        
+
     }//GEN-LAST:event_jBtnGenerarVentaActionPerformed
 
     private void jLblCerrarMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLblCerrarMousePressed
         // TODO add your handling code here:
         if (jTFCliente.getText().isEmpty()) {
             this.dispose();
-        }else{
+        } else {
             try {
                 borrarRegistros();
             } catch (SQLException ex) {
