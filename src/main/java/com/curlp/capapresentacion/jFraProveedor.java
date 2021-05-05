@@ -30,22 +30,24 @@ public class jFraProveedor extends javax.swing.JFrame {
         this.jTFEmpresa.requestFocus();
         this.setLocationRelativeTo(null);
     }
+
     //Limpiar tabla
-    private void limpiarTabla(){
+    private void limpiarTabla() {
         DefaultTableModel dtm = (DefaultTableModel) this.jTblProveedor.getModel();
-        
-        while (dtm.getRowCount() > 0){
+
+        while (dtm.getRowCount() > 0) {
             dtm.removeRow(0);
         }
     }
+
     //Poblar tabla
-    private void poblarTabla() throws SQLException{
+    private void poblarTabla() throws SQLException {
         limpiarTabla();
-        
+
         CDProveedor cdp = new CDProveedor();
         List<CLProveedor> myList = cdp.mostrarProveedor();
         DefaultTableModel temp = (DefaultTableModel) this.jTblProveedor.getModel();
-        
+
         myList.stream().map((CLProveedor cl) -> {
             Object[] fila = new Object[6];
             fila[0] = cl.getCodProveedor();
@@ -57,24 +59,25 @@ public class jFraProveedor extends javax.swing.JFrame {
             return fila;
         }).forEachOrdered(temp::addRow);
     }
+
     //Buscar y mostrar en tabla
-    private void buscarTabla() throws SQLException{
+    private void buscarTabla() throws SQLException {
         limpiarTabla();
         if (!validarBuscar()) {
             JOptionPane.showMessageDialog(null, "Tiene que ingresar todos los datos de busqueda.", "Inventarios Master", 1);
         } else {
             CDProveedor cdp = new CDProveedor();
             CLProveedor clp = new CLProveedor();
-            
+
             List<CLProveedor> myList = null;
-            if(this.jCBColumna.getSelectedIndex() == 1){
+            if (this.jCBColumna.getSelectedIndex() == 1) {
                 clp.setCodProveedor(Integer.valueOf(this.jTFBuscar.getText().trim()));
                 myList = cdp.buscarProveedor(clp);
-            }else if(this.jCBColumna.getSelectedIndex() == 2){
+            } else if (this.jCBColumna.getSelectedIndex() == 2) {
                 clp.setNombreEmpresa(String.valueOf(this.jTFBuscar.getText().trim()));
                 myList = cdp.buscarProveedorNombre(clp);
             }
-            
+
             DefaultTableModel temp = (DefaultTableModel) this.jTblProveedor.getModel();
 
             myList.stream().map((CLProveedor cl) -> {
@@ -89,6 +92,7 @@ public class jFraProveedor extends javax.swing.JFrame {
             }).forEachOrdered(temp::addRow);
         }
     }
+
     /*
     //Buscar en tabla
     private void buscar() throws SQLException {
@@ -128,24 +132,26 @@ public class jFraProveedor extends javax.swing.JFrame {
         }
         
     }
-    */
+     */
     //Encontrar Correlativo
-    private void encontrarCorrelativo() throws SQLException{
+    private void encontrarCorrelativo() throws SQLException {
         CDProveedor cdp = new CDProveedor();
         CLProveedor cl = new CLProveedor();
-        
+
         cl.setCodProveedor(cdp.autoIncrementarCodProveedor());
         this.jTFCodProveedor.setText(String.valueOf(cl.getCodProveedor()));
     }
+
     //Habilitar y deshabilitar botones
-    private void habilitarBotones(boolean guardar, boolean editar, boolean eliminar, boolean limpiar){
+    private void habilitarBotones(boolean guardar, boolean editar, boolean eliminar, boolean limpiar) {
         this.jBtnGuardar.setEnabled(guardar);
         this.jBtnEditar.setEnabled(editar);
         this.jBtnEliminar.setEnabled(eliminar);
         this.jBtnLimpiar.setEnabled(limpiar);
     }
+
     //Limpiar TextFields
-    private void limpiarTF() throws SQLException{
+    private void limpiarTF() throws SQLException {
         this.jTFEmpresa.setText("");
         this.jFTFTelefono.setValue(null);
         this.jTFCorreo.setText("");
@@ -158,48 +164,51 @@ public class jFraProveedor extends javax.swing.JFrame {
         poblarTabla();
         this.jTFEmpresa.requestFocus();
     }
+
     //Validar TextFields
-    private boolean validarTF(){
+    private boolean validarTF() {
         boolean estado = true;
-        
-        if(this.jTFEmpresa.getText().equals("")){
+
+        if (this.jTFEmpresa.getText().equals("")) {
             estado = false;
             this.jTFEmpresa.requestFocus();
-        }else if(this.jFTFTelefono.getText().equals("")){
+        } else if (this.jFTFTelefono.getText().equals("")) {
             estado = false;
             this.jFTFTelefono.requestFocus();
-        }else if(this.jTFCorreo.getText().equals("")){
+        } else if (this.jTFCorreo.getText().equals("")) {
             estado = false;
             this.jTFCorreo.requestFocus();
-        }else if(this.jTFRepresentante.getText().equals("")){
+        } else if (this.jTFRepresentante.getText().equals("")) {
             estado = false;
             this.jTFRepresentante.requestFocus();
-        }else if(this.jFTFTelefonoRepresentante.getText().equalsIgnoreCase("")){
+        } else if (this.jFTFTelefonoRepresentante.getText().equalsIgnoreCase("")) {
             estado = false;
             this.jFTFTelefonoRepresentante.requestFocus();
         }
-        
+
         return estado;
     }
+
     //Validar busqueda
-    private boolean validarBuscar(){
+    private boolean validarBuscar() {
         boolean estado = true;
-        
-        if(this.jCBColumna.getSelectedIndex() == 0){
+
+        if (this.jCBColumna.getSelectedIndex() == 0) {
             estado = false;
             this.jCBColumna.requestFocus();
-        }else if(this.jTFBuscar.getText().equals("")){
+        } else if (this.jTFBuscar.getText().equals("")) {
             estado = false;
             this.jTFBuscar.requestFocus();
         }
-        
+
         return estado;
     }
+
     //Insertar a tabla
-    private void insertarProveedor(){
-        if (!validarTF()){
+    private void insertarProveedor() {
+        if (!validarTF()) {
             JOptionPane.showMessageDialog(null, "Tiene que ingresar todos los datos.", "Inventarios Master", 1);
-        }else{
+        } else {
             try {
                 CDProveedor cdp = new CDProveedor();
                 CLProveedor cl = new CLProveedor();
@@ -208,35 +217,38 @@ public class jFraProveedor extends javax.swing.JFrame {
                 cl.setCorreo(this.jTFCorreo.getText());
                 cl.setNombreRepresentante(this.jTFRepresentante.getText());
                 cl.setTelefonoRepresentante(this.jFTFTelefonoRepresentante.getText());
-                
+
                 cdp.insertarProveedor(cl);
                 JOptionPane.showMessageDialog(null, "Registro ingresado de manera correcta", "Inventarios Master", 1);
-            } catch (SQLException ex){
+            } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(null, "Error: " + ex);
             }
         }
     }
+
     //Método para el evento guardar
-    private void guardar() throws SQLException{
+    private void guardar() throws SQLException {
         insertarProveedor();
         poblarTabla();
         habilitarBotones(true, false, false, true);
         limpiarTF();
         encontrarCorrelativo();
     }
+
     //Método para el evento editar
-    private void editar() throws SQLException{
+    private void editar() throws SQLException {
         actualizarProveedor();
         poblarTabla();
         habilitarBotones(true, false, false, true);
         limpiarTF();
         encontrarCorrelativo();
     }
+
     //Método para actualizar
-    private void actualizarProveedor(){
-        if (!validarTF()){
+    private void actualizarProveedor() {
+        if (!validarTF()) {
             JOptionPane.showMessageDialog(null, "Tiene que ingresar todos los datos.", "Inventarios Master", 1);
-        }else{
+        } else {
             try {
                 CDProveedor cdp = new CDProveedor();
                 CLProveedor cl = new CLProveedor();
@@ -246,17 +258,18 @@ public class jFraProveedor extends javax.swing.JFrame {
                 cl.setCorreo(this.jTFCorreo.getText());
                 cl.setNombreRepresentante(this.jTFRepresentante.getText());
                 cl.setTelefonoRepresentante(this.jFTFTelefonoRepresentante.getText());
-                
+
                 cdp.actualizarProveedor(cl);
                 JOptionPane.showMessageDialog(null, "Registro actualizado de manera correcta", "Inventarios Master", 1);
-            } catch (SQLException ex){
+            } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(null, "Error: " + ex);
             }
         }
     }
+
     //Método para seleccionar datos
-    private void filaSeleccionada(){
-        if (this.jTblProveedor.getSelectedRow() != -1){
+    private void filaSeleccionada() {
+        if (this.jTblProveedor.getSelectedRow() != -1) {
             this.jTFCodProveedor.setText(String.valueOf(this.jTblProveedor.getValueAt(this.jTblProveedor.getSelectedRow(), 0)));
             this.jTFEmpresa.setText(String.valueOf(this.jTblProveedor.getValueAt(this.jTblProveedor.getSelectedRow(), 1)));
             this.jFTFTelefono.setText(String.valueOf(this.jTblProveedor.getValueAt(this.jTblProveedor.getSelectedRow(), 2)));
@@ -265,38 +278,41 @@ public class jFraProveedor extends javax.swing.JFrame {
             this.jFTFTelefonoRepresentante.setText(String.valueOf(this.jTblProveedor.getValueAt(this.jTblProveedor.getSelectedRow(), 5)));
         }
     }
+
     //Método para eliminar
-    private void eliminarProveedor(){
-        if (!validarTF()){
+    private void eliminarProveedor() {
+        if (!validarTF()) {
             JOptionPane.showMessageDialog(null, "Tiene que ingresar todos los datos.", "Inventarios Master", 1);
-        }else{
+        } else {
             try {
                 CDProveedor cdp = new CDProveedor();
                 CLProveedor cl = new CLProveedor();
                 cl.setCodProveedor(Integer.valueOf(this.jTFCodProveedor.getText()));
-                
+
                 cdp.eliminarProveedor(cl);
-            } catch (SQLException ex){
+            } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(null, "Error al eliminar registro: " + ex);
                 this.jTFEmpresa.requestFocus();
             }
         }
     }
+
     //Método para el evento eliminar
-    private void eliminar() throws SQLException{
+    private void eliminar() throws SQLException {
         int resp = JOptionPane.showConfirmDialog(null, "¿Está seguro de eliminar este registro?", "Inventarios Master", JOptionPane.YES_NO_OPTION);
-        if (resp == JOptionPane.YES_OPTION){
+        if (resp == JOptionPane.YES_OPTION) {
             try {
                 eliminarProveedor();
                 poblarTabla();
                 habilitarBotones(true, false, false, true);
                 limpiarTF();
                 encontrarCorrelativo();
-            } catch (SQLException ex){
+            } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(null, "Error: " + ex);
             }
         }
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -556,7 +572,7 @@ public class jFraProveedor extends javax.swing.JFrame {
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Error: " + ex);
         }
-        
+
     }//GEN-LAST:event_jBtnLimpiarActionPerformed
 
     private void jBtnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnGuardarActionPerformed

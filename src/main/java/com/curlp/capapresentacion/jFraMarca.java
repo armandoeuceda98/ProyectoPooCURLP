@@ -23,29 +23,31 @@ public class jFraMarca extends javax.swing.JFrame {
     /**
      * Creates new form jFraMarca
      */
-    public jFraMarca() throws SQLException{
+    public jFraMarca() throws SQLException {
         initComponents();
         poblarTabla();
         encontrarCorrelativo();
         this.jTFNombreMarca.requestFocus();
         this.setLocationRelativeTo(null);
     }
+
     //Limpiar tabla
-    private void limpiarTabla(){
+    private void limpiarTabla() {
         DefaultTableModel dtm = (DefaultTableModel) this.jTblMarca.getModel();
-        
-        while (dtm.getRowCount() > 0){
+
+        while (dtm.getRowCount() > 0) {
             dtm.removeRow(0);
         }
     }
+
     //Poblar tabla
-    private void poblarTabla() throws SQLException{
+    private void poblarTabla() throws SQLException {
         limpiarTabla();
-        
+
         CDMarca cdm = new CDMarca();
         List<CLMarca> myList = cdm.mostrarMarca();
         DefaultTableModel temp = (DefaultTableModel) this.jTblMarca.getModel();
-        
+
         myList.stream().map((CLMarca cl) -> {
             Object[] fila = new Object[2];
             fila[0] = cl.getIdMarca();
@@ -53,24 +55,25 @@ public class jFraMarca extends javax.swing.JFrame {
             return fila;
         }).forEachOrdered(temp::addRow);
     }
+
     //Buscar y mostrar en tabla
-    private void buscarTabla() throws SQLException{
+    private void buscarTabla() throws SQLException {
         limpiarTabla();
         if (!validarBuscar()) {
             JOptionPane.showMessageDialog(null, "Tiene que ingresar todos los datos de busqueda.", "Inventarios Master", 1);
         } else {
             CDMarca cdm = new CDMarca();
             CLMarca clm = new CLMarca();
-            
+
             List<CLMarca> myList = null;
-            if(this.jCBColumna.getSelectedIndex() == 1){
+            if (this.jCBColumna.getSelectedIndex() == 1) {
                 clm.setIdMarca(Integer.valueOf(this.jTFBuscar.getText().trim()));
                 myList = cdm.buscarMarca(clm);
-            }else if(this.jCBColumna.getSelectedIndex() == 2){
+            } else if (this.jCBColumna.getSelectedIndex() == 2) {
                 clm.setNombre(this.jTFBuscar.getText().trim());
                 myList = cdm.buscarMarcaNombre(clm);
             }
-            
+
             DefaultTableModel temp = (DefaultTableModel) this.jTblMarca.getModel();
 
             myList.stream().map((CLMarca cl) -> {
@@ -81,55 +84,26 @@ public class jFraMarca extends javax.swing.JFrame {
             }).forEachOrdered(temp::addRow);
         }
     }
-    /*
-    //Buscar en tabla con alerta
-    private void buscar() throws SQLException {
-        if (!validarBuscar()) {
-            JOptionPane.showMessageDialog(null, "Tiene que ingresar todos los datos de busqueda.", "Inventarios Master", 1);
-        } else {
-            boolean estado = false;
-            for (int i = 0; i < this.jTblMarca.getRowCount(); i++) {
-                if (this.jCBColumna.getSelectedIndex() == 1) {
-                    if (this.jTblMarca.getValueAt(i, 0) == Integer.valueOf(this.jTFBuscar.getText())) {;
-                        String dato = "Id Marca: " + this.jTblMarca.getValueAt(i, 0)
-                                + "\nNombre Marca: " + this.jTblMarca.getValueAt(i, 1);
-                        JOptionPane.showMessageDialog(null, dato, "Dato encontrado", 1);
-                        estado = true;
-                    }
-                } else if (this.jCBColumna.getSelectedIndex() == 2) {
-                    String c = (String) this.jTblMarca.getValueAt(i, 1);
-                    if (c.equals(this.jTFBuscar.getText())) {
-                        String dato = "Id Marca: " + this.jTblMarca.getValueAt(i, 0)
-                                + "\nNombre Marca: " + this.jTblMarca.getValueAt(i, 1);
-                        JOptionPane.showMessageDialog(null, dato, "Dato encontrado", 1);
-                        estado = true;
-                    }
-                }
-            }
-            if(estado == false){
-                JOptionPane.showMessageDialog(null, "No se ha encontrado registro", "Dato no encontrado", 1);
-            }
-        }
-        
-    }
-    */
+
     //Encontrar Correlativo
-    private void encontrarCorrelativo() throws SQLException{
+    private void encontrarCorrelativo() throws SQLException {
         CDMarca cdm = new CDMarca();
         CLMarca cl = new CLMarca();
-        
+
         cl.setIdMarca(cdm.autoIncrementarIdMarca());
         this.jTFIdMarca.setText(String.valueOf(cl.getIdMarca()));
     }
+
     //Habilitar y deshabilitar botones
-    private void habilitarBotones(boolean guardar, boolean editar, boolean eliminar, boolean limpiar){
+    private void habilitarBotones(boolean guardar, boolean editar, boolean eliminar, boolean limpiar) {
         this.jBtnGuardar.setEnabled(guardar);
         this.jBtnEditar.setEnabled(editar);
         this.jBtnEliminar.setEnabled(eliminar);
         this.jBtnLimpiar.setEnabled(limpiar);
     }
+
     //Limpiar TextFields
-    private void limpiarTF() throws SQLException{
+    private void limpiarTF() throws SQLException {
         this.jTFNombreMarca.setText("");
         this.jTFBuscar.setText("");
         this.jCBColumna.setSelectedIndex(0);
@@ -138,122 +112,131 @@ public class jFraMarca extends javax.swing.JFrame {
         poblarTabla();
         this.jTFNombreMarca.requestFocus();
     }
+
     //Validar TextFields
-    private boolean validarTF(){
+    private boolean validarTF() {
         boolean estado;
-        
+
         estado = !this.jTFIdMarca.getText().equals("");
-        
+
         return estado;
     }
-    private boolean validarBuscar(){
+
+    private boolean validarBuscar() {
         boolean estado = true;
-        
-        if(this.jCBColumna.getSelectedIndex() == 0){
+
+        if (this.jCBColumna.getSelectedIndex() == 0) {
             estado = false;
             this.jCBColumna.requestFocus();
-        }else if(this.jTFBuscar.getText().equals("")){
+        } else if (this.jTFBuscar.getText().equals("")) {
             estado = false;
             this.jTFBuscar.requestFocus();
         }
-        
+
         return estado;
     }
+
     //Insertar a tabla
-    private void insertarMarca(){
-        if (!validarTF()){
+    private void insertarMarca() {
+        if (!validarTF()) {
             JOptionPane.showMessageDialog(null, "Tiene que ingresar nombre de la marca", "Inventarios Master", 1);
             this.jTFNombreMarca.requestFocus();
-        }else{
+        } else {
             try {
                 CDMarca cdm = new CDMarca();
                 CLMarca cl = new CLMarca();
                 cl.setNombre(this.jTFNombreMarca.getText().trim());
-                
+
                 cdm.insertarMarca(cl);
                 JOptionPane.showMessageDialog(null, "Registro ingresado de manera correcta", "Inventarios Master", 1);
-            } catch (SQLException ex){
+            } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(null, "Error: " + ex);
                 this.jTFNombreMarca.requestFocus();
             }
         }
     }
+
     //Método para el evento guardar
-    private void guardar() throws SQLException{
+    private void guardar() throws SQLException {
         insertarMarca();
         poblarTabla();
         habilitarBotones(true, false, false, true);
         limpiarTF();
         encontrarCorrelativo();
     }
+
     //Método para el evento editar
-    private void editar() throws SQLException{
+    private void editar() throws SQLException {
         actualizarMarca();
         poblarTabla();
         habilitarBotones(true, false, false, true);
         limpiarTF();
         encontrarCorrelativo();
     }
+
     //Método para actualizar
-    private void actualizarMarca(){
-        if (!validarTF()){
+    private void actualizarMarca() {
+        if (!validarTF()) {
             JOptionPane.showMessageDialog(null, "Tiene que ingresar nombre de la marca", "Inventarios Master", 1);
             this.jTFNombreMarca.requestFocus();
-        }else{
+        } else {
             try {
                 CDMarca cdm = new CDMarca();
                 CLMarca cl = new CLMarca();
                 cl.setIdMarca(Integer.valueOf(this.jTFIdMarca.getText()));
                 cl.setNombre(this.jTFNombreMarca.getText().trim());
-                
+
                 cdm.actualizarMarca(cl);
-            } catch (SQLException ex){
+            } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(null, "Error al actualizar registro: " + ex);
                 this.jTFNombreMarca.requestFocus();
             }
         }
     }
+
     //Método para seleccionar datos
-    private void filaSeleccionada(){
-        if (this.jTblMarca.getSelectedRow() != -1){
+    private void filaSeleccionada() {
+        if (this.jTblMarca.getSelectedRow() != -1) {
             this.jTFIdMarca.setText(String.valueOf(this.jTblMarca.getValueAt(this.jTblMarca.getSelectedRow(), 0)));
             this.jTFNombreMarca.setText(String.valueOf(this.jTblMarca.getValueAt(this.jTblMarca.getSelectedRow(), 1)));
         }
     }
+
     //Método para eliminar
-    private void eliminarMarca(){
-        if (!validarTF()){
+    private void eliminarMarca() {
+        if (!validarTF()) {
             JOptionPane.showMessageDialog(null, "Tiene que ingresar nombre de la marca", "Inventarios Master", 1);
             this.jTFNombreMarca.requestFocus();
-        }else{
+        } else {
             try {
                 CDMarca cdm = new CDMarca();
                 CLMarca cl = new CLMarca();
                 cl.setIdMarca(Integer.valueOf(this.jTFIdMarca.getText()));
-                
+
                 cdm.eliminarMarca(cl);
-            } catch (SQLException ex){
+            } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(null, "Error al eliminar registro: " + ex);
                 this.jTFNombreMarca.requestFocus();
             }
         }
     }
+
     //Método para el evento eliminar
-    private void eliminar() throws SQLException{
+    private void eliminar() throws SQLException {
         int resp = JOptionPane.showConfirmDialog(null, "¿Está seguro de eliminar este registro?", "Inventarios Master", JOptionPane.YES_NO_OPTION);
-        if (resp == JOptionPane.YES_OPTION){
+        if (resp == JOptionPane.YES_OPTION) {
             try {
                 eliminarMarca();
                 poblarTabla();
                 habilitarBotones(true, false, false, true);
                 limpiarTF();
                 encontrarCorrelativo();
-            } catch (SQLException ex){
+            } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(null, "Error: " + ex);
             }
         }
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
