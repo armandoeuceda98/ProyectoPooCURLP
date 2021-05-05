@@ -33,7 +33,7 @@ public class CDCategoria {
     }
     
     public void insertarCategoria(CLCategoria cl) throws SQLException {
-        String sql = "{CALL sp_insertarEmpleado(?)}";
+        String sql = "{CALL sp_insertarCategoria(?)}";
         try {
             ps = cn.prepareCall(sql);
             ps.setString(1, cl.getNombre());
@@ -44,7 +44,7 @@ public class CDCategoria {
         }
     }
         public void actualizarCategoria(CLCategoria cl) throws SQLException {
-        String sql = "{CALL sp_actualizarEmpleado(?,?)}";
+        String sql = "{CALL sp_actualizarCategoria(?,?)}";
         try {
             ps = cn.prepareCall(sql);
             ps.setInt(1, cl.getIdCategoria());
@@ -129,11 +129,37 @@ public class CDCategoria {
             JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
         }
     return miLista;
+        }
     
-}
+    public List<CLCategoria> buscarCategoria(CLCategoria cl) throws SQLException {
+
+        String sql = "{call sp_buscarCategoria(?)}";
+
+        List<CLCategoria> miLista = null;
+
+        try {
+            miLista = new ArrayList<>();
+
+            ps = cn.prepareStatement(sql);
+            ps.setInt(1, cl.getIdCategoria());
+            rs = ps.executeQuery();
+
+            miLista = new ArrayList<>(2);
+
+            while (rs.next()) {
+                cl.setIdCategoria(rs.getInt("idMarca"));
+                cl.setNombre(rs.getString("nombre"));
+                miLista.add(cl);
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+        }
+        return miLista;
+    }
+
         
     
+}  
+
     
-    
-    
-}
+

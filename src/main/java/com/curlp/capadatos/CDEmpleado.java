@@ -133,6 +133,35 @@ public List<String> cargarComboEmpleado() throws SQLException{
     return miLista;
     
 }
+public List<CLEmpleado> buscarEmpleado(CLEmpleado cl) throws SQLException {
+
+        String sql = "{call sp_buscarEmpleado(?)}";
+
+        List<CLEmpleado> miLista = null;
+
+        try {
+            miLista = new ArrayList<>();
+
+            ps = cn.prepareStatement(sql);
+            ps.setInt(1, cl.getCodEmpleado());
+            rs = ps.executeQuery();
+
+            miLista = new ArrayList<>(2);
+
+            while (rs.next()) {
+                cl.setCodEmpleado(rs.getInt("codEmpleado"));
+                cl.setNombre(rs.getString("nombre"));
+                cl.setApellidos(rs.getString("Apellidos"));
+                cl.setDireccion(rs.getString("Direccion"));
+                cl.setTelefono(rs.getString("telefono"));
+                cl.setEstadoEmpleado(rs.getBoolean("estadoEmpleado"));
+                miLista.add(cl);
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+        }
+        return miLista;
+    }
 
 
 
