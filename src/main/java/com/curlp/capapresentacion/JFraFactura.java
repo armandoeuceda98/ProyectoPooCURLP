@@ -524,6 +524,13 @@ public class JFraFactura extends javax.swing.JFrame {
         jTFCodProducto.setText(String.valueOf(jTblDetFactura.getValueAt(fila, 1)));
         buscarProducto();
     }
+    
+    private void generar(){
+        jBtnGenerarVenta.setEnabled(false);
+        jBtnCancelar.setEnabled(false);
+        jBtnNuevo.setEnabled(true);
+        jBtnBuscarFact.setEnabled(true);
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -1130,6 +1137,7 @@ public class JFraFactura extends javax.swing.JFrame {
                 // TODO add your handling code here:
                 borrarRegistros();
                 jBtnCancelar.setEnabled(false);
+                jBtnEliminarFact.setEnabled(false);
                 limpiar();
             } catch (SQLException ex) {
                 Logger.getLogger(JFraFactura.class.getName()).log(Level.SEVERE, null, ex);
@@ -1137,6 +1145,7 @@ public class JFraFactura extends javax.swing.JFrame {
         }else{
             limpiar();
             jBtnCancelar.setEnabled(false);
+            jBtnEliminarFact.setEnabled(false);
         }
         
     }//GEN-LAST:event_jBtnCancelarActionPerformed
@@ -1257,6 +1266,8 @@ public class JFraFactura extends javax.swing.JFrame {
         // TODO add your handling code here:
         limpiar();
         JOptionPane.showMessageDialog(null, "Factura generada exitosamente.");
+        generar();
+        
     }//GEN-LAST:event_jBtnGenerarVentaActionPerformed
 
     private void jLblCerrarMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLblCerrarMousePressed
