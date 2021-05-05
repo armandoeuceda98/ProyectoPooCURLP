@@ -53,34 +53,34 @@ public class jFraCategoria extends javax.swing.JFrame {
             return fila;
         }).forEachOrdered(temp::addRow);
     }
-    private void buscar() throws SQLException {
+    //Buscar y mostrar
+    //Buscar y mostrar en tabla
+    private void buscarTabla() throws SQLException{
+        limpiarTabla();
         if (!validarBuscar()) {
             JOptionPane.showMessageDialog(null, "Tiene que ingresar todos los datos de busqueda.", "Inventarios Master", 1);
         } else {
-            boolean estado = false;
-            for (int i = 0; i < this.jTblCategoria.getRowCount(); i++) {
-                if (this.jCBColumna.getSelectedIndex() == 1) {
-                    if (this.jTblCategoria.getValueAt(i, 0) == Integer.valueOf(this.jTFBuscar.getText())) {;
-                        String dato = "Id Categoria: " + this.jTblCategoria.getValueAt(i, 0)
-                                + "\nNombre Categoria: " + this.jTblCategoria.getValueAt(i, 1);
-                        JOptionPane.showMessageDialog(null, dato, "Dato encontrado", 1);
-                        estado = true;
-                    }
-                } else if (this.jCBColumna.getSelectedIndex() == 2) {
-                    String c = (String) this.jTblCategoria.getValueAt(i, 1);
-                    if (c.equals(this.jTFBuscar.getText())) {
-                        String dato = "Id Categoria: " + this.jTblCategoria.getValueAt(i, 0)
-                                + "\nNombre Categoria: " + this.jTblCategoria.getValueAt(i, 1);
-                        JOptionPane.showMessageDialog(null, dato, "Dato encontrado", 1);
-                        estado = true;
-                    }
-                }
+            CDCategoria cdm = new CDCategoria();
+            CLCategoria clm = new CLCategoria();
+            
+            List<CLCategoria> myList = null;
+            if(this.jCBColumna.getSelectedIndex() == 1){
+                clm.setIdCategoria(Integer.valueOf(this.jTFBuscar.getText().trim()));
+                myList = cdm.buscarCategoria(clm);
+            }else if(this.jCBColumna.getSelectedIndex() == 2){
+                clm.setNombre(this.jTFBuscar.getText().trim());
+                myList = cdm.buscarCategoria(clm);
             }
-            if(estado == false){
-                JOptionPane.showMessageDialog(null, "No se ha encontrado registro", "Dato no encontrado", 1);
-            }
+            
+            DefaultTableModel temp = (DefaultTableModel) this.jTblCategoria.getModel();
+
+            myList.stream().map((CLCategoria cl) -> {
+                Object[] fila = new Object[2];
+                fila[0] = cl.getIdCategoria();
+                fila[1] = cl.getNombre();
+                return fila;
+            }).forEachOrdered(temp::addRow);
         }
-        
     }
     //Encontrar Correlativo
     private void encontrarCorrelativo() throws SQLException{
@@ -139,7 +139,7 @@ public class jFraCategoria extends javax.swing.JFrame {
                 cl.setNombre(this.jTFNombreCategoria.getText().trim());
                 
                 cdm.insertarCategoria(cl);
-                JOptionPane.showMessageDialog(null, "Registro ingresado de manera marca", "Inventarios Master", 1);
+                JOptionPane.showMessageDialog(null, "Registro ingresado de manera Categoria", "Inventarios Master", 1);
             } catch (SQLException ex){
                 JOptionPane.showMessageDialog(null, "Error: " + ex);
                 this.jTFNombreCategoria.requestFocus();
@@ -436,7 +436,7 @@ public class jFraCategoria extends javax.swing.JFrame {
 
         jCBColumna.setBackground(new java.awt.Color(119, 74, 217));
         jCBColumna.setForeground(java.awt.Color.white);
-        jCBColumna.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "--Seleccione--", "Id Marca", "Nombre Marca" }));
+        jCBColumna.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "--Seleccione--", "Id Categoia", "Nombre Categoria" }));
         jPanel5.add(jCBColumna, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 149, -1, -1));
 
         jLabel8.setForeground(java.awt.Color.white);
@@ -461,6 +461,11 @@ public class jFraCategoria extends javax.swing.JFrame {
                 "Id Categoria", "Nombre Categoria"
             }
         ));
+        jTblCategoria.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTblCategoriaMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(jTblCategoria);
 
         jPanel5.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 360, 130));
@@ -530,11 +535,15 @@ public class jFraCategoria extends javax.swing.JFrame {
 
     private void jBtnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnBuscarActionPerformed
         try {
-            buscar();
+            buscarTabla();
         } catch (SQLException ex) {
             Logger.getLogger(jFraCategoria.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jBtnBuscarActionPerformed
+
+    private void jTblCategoriaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTblCategoriaMouseClicked
+        filaSeleccionada();
+    }//GEN-LAST:event_jTblCategoriaMouseClicked
 
     /**
      * @param args the command line arguments
