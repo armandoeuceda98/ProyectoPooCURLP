@@ -655,6 +655,11 @@ public class JFraCliente extends javax.swing.JFrame {
 
     private void jBtnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnLimpiarActionPerformed
         limpiarTF();
+        try {
+            encontrarCorrelativo();
+        } catch (SQLException ex) {
+            Logger.getLogger(JFraCliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jBtnLimpiarActionPerformed
 
     private void jBtnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnBuscarActionPerformed

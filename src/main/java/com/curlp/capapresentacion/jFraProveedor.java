@@ -93,46 +93,6 @@ public class jFraProveedor extends javax.swing.JFrame {
         }
     }
 
-    /*
-    //Buscar en tabla
-    private void buscar() throws SQLException {
-        if (!validarBuscar()) {
-            JOptionPane.showMessageDialog(null, "Tiene que ingresar todos los datos de busqueda.", "Inventarios Master", 1);
-        } else {
-            boolean estado = false;
-            for (int i = 0; i < this.jTblProveedor.getRowCount(); i++) {
-                if (this.jCBColumna.getSelectedIndex() == 1) {
-                    if (this.jTblProveedor.getValueAt(i, 0) == Integer.valueOf(this.jTFBuscar.getText())) {;
-                        String dato = "Código: " + this.jTblProveedor.getValueAt(i, 0)
-                                + "\nEmpresa: " + this.jTblProveedor.getValueAt(i, 1)
-                                + "\nTelefono: " + this.jTblProveedor.getValueAt(i, 2)
-                                + "\nCorreo: " + this.jTblProveedor.getValueAt(i, 3)
-                                + "\nRepresentante: " + this.jTblProveedor.getValueAt(i, 4)
-                                + "\nTel. Representante: " + this.jTblProveedor.getValueAt(i, 5);
-                        JOptionPane.showMessageDialog(null, dato, "Dato encontrado", 1);
-                        estado = true;
-                    }
-                } else if (this.jCBColumna.getSelectedIndex() == 2) {
-                    String c = (String) this.jTblProveedor.getValueAt(i, 1);
-                    if (c.equals(this.jTFBuscar.getText())) {
-                        String dato = "Código: " + this.jTblProveedor.getValueAt(i, 0)
-                                + " Empresa: " + this.jTblProveedor.getValueAt(i, 1)
-                                + " Telefono: " + this.jTblProveedor.getValueAt(i, 2)
-                                + " Correo: " + this.jTblProveedor.getValueAt(i, 3)
-                                + " Representante: " + this.jTblProveedor.getValueAt(i, 4)
-                                + " Tel. Representante: " + this.jTblProveedor.getValueAt(i, 5);
-                        JOptionPane.showMessageDialog(null, dato, "Dato encontrado", 1);
-                        estado = true;
-                    }
-                }
-            }
-            if(estado == false){
-                JOptionPane.showMessageDialog(null, "No se ha encontrado registro", "Dato no encontrado", 1);
-            }
-        }
-        
-    }
-     */
     //Encontrar Correlativo
     private void encontrarCorrelativo() throws SQLException {
         CDProveedor cdp = new CDProveedor();
