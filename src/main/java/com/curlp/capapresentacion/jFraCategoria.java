@@ -543,6 +543,7 @@ public class jFraCategoria extends javax.swing.JFrame {
 
     private void jTblCategoriaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTblCategoriaMouseClicked
         filaSeleccionada();
+        habilitarBotones(false, true, true, true);
     }//GEN-LAST:event_jTblCategoriaMouseClicked
 
     /**

@@ -147,7 +147,7 @@ public class CDCategoria {
             miLista = new ArrayList<>(2);
 
             while (rs.next()) {
-                cl.setIdCategoria(rs.getInt("idMarca"));
+                cl.setIdCategoria(rs.getInt("idCategoria"));
                 cl.setNombre(rs.getString("nombre"));
                 miLista.add(cl);
             }
