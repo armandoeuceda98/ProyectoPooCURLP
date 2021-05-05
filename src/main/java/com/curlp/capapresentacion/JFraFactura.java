@@ -35,6 +35,7 @@ public class JFraFactura extends javax.swing.JFrame {
 
     public JFraFactura() throws SQLException {
         initComponents();
+        this.setLocationRelativeTo(null);
     }
     
     //Método para limpiar la tabla
@@ -475,7 +476,7 @@ public class JFraFactura extends javax.swing.JFrame {
     private static void borrarRegistros() throws SQLException{
         int opcion;
             Object[] options = {"Si", "No"};
-            opcion = JOptionPane.showOptionDialog(null, "¿Esta seguro de cancelar esta factura? Esta información no se podrá recuperar.",
+            opcion = JOptionPane.showOptionDialog(null, "¿Esta seguro de realizar esta acción? Esta información no se podrá recuperar.",
                     "Inventarios master", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
                     null, options, options[0]);
          if (opcion == 0) {
@@ -587,6 +588,7 @@ public class JFraFactura extends javax.swing.JFrame {
         jTFDescuento = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setUndecorated(true);
 
         jPanel1.setBackground(new java.awt.Color(119, 74, 217));
 
@@ -1259,7 +1261,16 @@ public class JFraFactura extends javax.swing.JFrame {
 
     private void jLblCerrarMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLblCerrarMousePressed
         // TODO add your handling code here:
-        this.dispose();
+        if (jTFCliente.getText().isEmpty()) {
+            this.dispose();
+        }else{
+            try {
+                borrarRegistros();
+            } catch (SQLException ex) {
+                Logger.getLogger(JFraFactura.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            this.dispose();
+        }
     }//GEN-LAST:event_jLblCerrarMousePressed
 
     /**
