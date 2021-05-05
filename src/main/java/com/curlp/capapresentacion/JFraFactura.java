@@ -197,7 +197,7 @@ public class JFraFactura extends javax.swing.JFrame {
                 clf.setCodFactura(Integer.parseInt(jTFCodFactura.getText()));
                 clf.setFecha(jTFFecha.getText());
                 clf.setCodCliente(Integer.parseInt(jTFCodigoCliente.getText()));
-                clf.setCodEmpleado(1); 
+                clf.setCodEmpleado(2); 
                 cdf.insertarFactura(clf);
             }
             
