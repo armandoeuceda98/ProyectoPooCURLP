@@ -29,6 +29,7 @@ public class JFraBuscarProducto extends javax.swing.JFrame {
     public JFraBuscarProducto() throws SQLException {
         initComponents();
         cargarProductos("");
+        this.setLocationRelativeTo(null);
     }
     
     //Método para limpiar la tabla
@@ -74,6 +75,7 @@ public class JFraBuscarProducto extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jTFCodProductEnviar = new javax.swing.JTextField();
+        jLblCerrar = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTblProductos = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
@@ -84,6 +86,7 @@ public class JFraBuscarProducto extends javax.swing.JFrame {
         jBtnAbrir = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setUndecorated(true);
 
         jPanel1.setBackground(new java.awt.Color(119, 74, 217));
 
@@ -98,6 +101,15 @@ public class JFraBuscarProducto extends javax.swing.JFrame {
 
         jTFCodProductEnviar.setEditable(false);
 
+        jLblCerrar.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        jLblCerrar.setForeground(new java.awt.Color(255, 255, 255));
+        jLblCerrar.setText("X");
+        jLblCerrar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jLblCerrarMousePressed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -109,21 +121,22 @@ public class JFraBuscarProducto extends javax.swing.JFrame {
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jTFCodProductEnviar, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30))
+                .addGap(30, 30, 30)
+                .addComponent(jLblCerrar)
+                .addGap(28, 28, 28))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(29, 29, 29)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLblCerrar)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
                             .addComponent(jTFCodProductEnviar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel1)))
-                .addContainerGap(31, Short.MAX_VALUE))
+                    .addComponent(jLabel1))
+                .addContainerGap(25, Short.MAX_VALUE))
         );
 
         jTblProductos.setModel(new javax.swing.table.DefaultTableModel(
@@ -252,6 +265,11 @@ public class JFraBuscarProducto extends javax.swing.JFrame {
         seleccionTable();
     }//GEN-LAST:event_jTblProductosMouseClicked
 
+    private void jLblCerrarMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLblCerrarMousePressed
+        // TODO add your handling code here:
+        this.dispose();
+    }//GEN-LAST:event_jLblCerrarMousePressed
+
     /**
      * @param args the command line arguments
      */
@@ -298,6 +316,7 @@ public class JFraBuscarProducto extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLblCerrar;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
