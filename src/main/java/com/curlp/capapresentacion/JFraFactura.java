@@ -134,7 +134,7 @@ public class JFraFactura extends javax.swing.JFrame {
     }
     
     //Método para buscar un cliente
-    private static void buscarCliente() throws SQLException{
+    public static void buscarCliente() throws SQLException{
         CLCliente clc = new CLCliente();
         CDCliente cdc = new CDCliente();
         clc.setDocIdentidad(jTFCodCliente.getText().trim());
@@ -537,6 +537,7 @@ public class JFraFactura extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jTFCodFactura = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
+        jLblCerrar = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jTFFecha = new javax.swing.JTextField();
@@ -600,6 +601,15 @@ public class JFraFactura extends javax.swing.JFrame {
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("N° de Factura:");
 
+        jLblCerrar.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        jLblCerrar.setForeground(new java.awt.Color(255, 255, 255));
+        jLblCerrar.setText("X");
+        jLblCerrar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jLblCerrarMousePressed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -611,7 +621,9 @@ public class JFraFactura extends javax.swing.JFrame {
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jTFCodFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(87, 87, 87))
+                .addGap(83, 83, 83)
+                .addComponent(jLblCerrar)
+                .addGap(24, 24, 24))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -622,6 +634,10 @@ public class JFraFactura extends javax.swing.JFrame {
                     .addComponent(jLabel2)
                     .addComponent(jTFCodFactura, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLblCerrar)
+                .addContainerGap())
         );
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
@@ -1074,7 +1090,7 @@ public class JFraFactura extends javax.swing.JFrame {
                     .addComponent(jBtnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jBtnBuscarFact, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jBtnEliminarFact, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(76, Short.MAX_VALUE))
+                .addContainerGap(69, Short.MAX_VALUE))
         );
 
         pack();
@@ -1133,13 +1149,13 @@ public class JFraFactura extends javax.swing.JFrame {
     }//GEN-LAST:event_jBtnBuscarActionPerformed
 
     private void jBtnAgregarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnAgregarClienteActionPerformed
-//        try {
-//            // TODO add your handling code here:
-//            jFraCliente jfc = new jFraCliente();
-//            jfc.setVisible(true);
-//        } catch (SQLException ex) {
-//            Logger.getLogger(JFraFactura.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+        try {
+            // TODO add your handling code here:
+            JFraAgregarCliente jfc = new JFraAgregarCliente();
+            jfc.setVisible(true);
+        } catch (SQLException ex) {
+            Logger.getLogger(JFraFactura.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jBtnAgregarClienteActionPerformed
 
     private void jBtnTablaProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnTablaProductoActionPerformed
@@ -1241,6 +1257,11 @@ public class JFraFactura extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(null, "Factura generada exitosamente.");
     }//GEN-LAST:event_jBtnGenerarVentaActionPerformed
 
+    private void jLblCerrarMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLblCerrarMousePressed
+        // TODO add your handling code here:
+        this.dispose();
+    }//GEN-LAST:event_jLblCerrarMousePressed
+
     /**
      * @param args the command line arguments
      */
@@ -1311,6 +1332,7 @@ public class JFraFactura extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JLabel jLbl;
+    private javax.swing.JLabel jLblCerrar;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
